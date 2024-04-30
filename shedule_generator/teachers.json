@@ -1,0 +1,1201 @@
+[
+  {
+    "_id": "6621b6162d2721658819a380",
+    "name": "معلم الرياضيات - أساسي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "thu",
+        "offLectures": [
+          3,
+          4
+        ],
+        "_id": "6621b6162d2721658819a381"
+      }
+    ],
+    "workDays": 6,
+    "subjects": [
+      {
+        "_id": "6621b61d2d2721658819a3d8",
+        "name": "رياضيات",
+        "weeklyLectures": 6,
+        "level": "6621b61c2d2721658819a3cf",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a380"
+      },
+      {
+        "_id": "6621b6202d2721658819a3f3",
+        "name": "رياضيات",
+        "weeklyLectures": 6,
+        "level": "6621b61f2d2721658819a3ea",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a380"
+      },
+      {
+        "_id": "6621b6242d2721658819a40e",
+        "name": "رياضيات",
+        "weeklyLectures": 4,
+        "level": "6621b6232d2721658819a405",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a380"
+      },
+      {
+        "_id": "6621b6272d2721658819a429",
+        "name": "رياضيات",
+        "weeklyLectures": 6,
+        "level": "6621b6262d2721658819a420",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a380"
+      },
+      {
+        "_id": "6621b62a2d2721658819a444",
+        "name": "رياضيات",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a38f"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6162d2721658819a384",
+    "name": "معلم القرآن - أساسي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "mon",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b6162d2721658819a385"
+      }
+    ],
+    "workDays": 3,
+    "subjects": [
+      {
+        "_id": "6621b61f2d2721658819a3e4",
+        "name": "قرآن كريم",
+        "weeklyLectures": 3,
+        "level": "6621b61c2d2721658819a3cf",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a384"
+      },
+      {
+        "_id": "6621b6222d2721658819a3ff",
+        "name": "قرآن كريم",
+        "weeklyLectures": 5,
+        "level": "6621b61f2d2721658819a3ea",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a384"
+      },
+      {
+        "_id": "6621b6252d2721658819a41a",
+        "name": "قرآن كريم",
+        "weeklyLectures": 3,
+        "level": "6621b6232d2721658819a405",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a384"
+      },
+      {
+        "_id": "6621b6282d2721658819a42f",
+        "name": "لغة عربية",
+        "weeklyLectures": 4,
+        "level": "6621b6262d2721658819a420",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a388"
+      },
+      {
+        "_id": "6621b6292d2721658819a435",
+        "name": "قرآن كريم",
+        "weeklyLectures": 5,
+        "level": "6621b6262d2721658819a420",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a384"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6162d2721658819a388",
+    "name": "معلم اللغة العربية - أساسي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "sat",
+        "offLectures": [
+          0,
+          1,
+          2
+        ],
+        "_id": "6621b6162d2721658819a389"
+      }
+    ],
+    "workDays": 5,
+    "subjects": [
+      {
+        "_id": "6621b61e2d2721658819a3de",
+        "name": "لغة عربية",
+        "weeklyLectures": 5,
+        "level": "6621b61c2d2721658819a3cf",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a388"
+      },
+      {
+        "_id": "6621b6212d2721658819a3f9",
+        "name": "لغة عربية",
+        "weeklyLectures": 4,
+        "level": "6621b61f2d2721658819a3ea",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a388"
+      },
+      {
+        "_id": "6621b6242d2721658819a414",
+        "name": "لغة عربية",
+        "weeklyLectures": 6,
+        "level": "6621b6232d2721658819a405",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a388"
+      },
+      {
+        "_id": "6621b6282d2721658819a42f",
+        "name": "لغة عربية",
+        "weeklyLectures": 4,
+        "level": "6621b6262d2721658819a420",
+        "__v": 0,
+        "teacher": "6621b6162d2721658819a388"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6172d2721658819a38c",
+    "name": "معلم الإسلامية - أساسي",
+    "school": "6621b20d3382dedae1149f32",
+    "workDays": 4,
+    "subjects": [
+      {
+        "_id": "6621b61c2d2721658819a3d2",
+        "name": "تربية إسلامية",
+        "weeklyLectures": 4,
+        "level": "6621b61c2d2721658819a3cf",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a38c"
+      },
+      {
+        "_id": "6621b6202d2721658819a3ed",
+        "name": "تربية إسلامية",
+        "weeklyLectures": 6,
+        "level": "6621b61f2d2721658819a3ea",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a38c"
+      },
+      {
+        "_id": "6621b6232d2721658819a408",
+        "name": "تربية إسلامية",
+        "weeklyLectures": 5,
+        "level": "6621b6232d2721658819a405",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a38c"
+      },
+      {
+        "_id": "6621b6262d2721658819a423",
+        "name": "تربية إسلامية",
+        "weeklyLectures": 4,
+        "level": "6621b6262d2721658819a420",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a38c"
+      }
+    ],
+    "offDaysAndLectures": [],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6172d2721658819a38f",
+    "name": "معلم الرياضيات - إعدادي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "sun",
+        "offLectures": [
+          0,
+          1
+        ],
+        "_id": "6621b6172d2721658819a390"
+      }
+    ],
+    "workDays": 6,
+    "subjects": [
+      {
+        "_id": "6621b62a2d2721658819a444",
+        "name": "رياضيات",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a38f"
+      },
+      {
+        "_id": "6621b6302d2721658819a471",
+        "name": "رياضيات",
+        "weeklyLectures": 5,
+        "level": "6621b62f2d2721658819a468",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a38f"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6172d2721658819a393",
+    "name": "معلم الفيزياء - إعدادي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "thu",
+        "offLectures": [
+          0,
+          1,
+          2
+        ],
+        "_id": "6621b6172d2721658819a394"
+      },
+      {
+        "day": "mon",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b6172d2721658819a395"
+      }
+    ],
+    "workDays": 4,
+    "subjects": [
+      {
+        "_id": "6621b62d2d2721658819a45c",
+        "name": "فيزياء",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6172d2721658819a393"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6182d2721658819a398",
+    "name": "معلم القرآن - إعدادي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "wed",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b6182d2721658819a399"
+      }
+    ],
+    "workDays": 2,
+    "subjects": [
+      {
+        "_id": "6621b62c2d2721658819a450",
+        "name": "قرآن كريم",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6182d2721658819a398"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6182d2721658819a39c",
+    "name": "معلم التربية الإسلامية - إعدادي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "tue",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b6182d2721658819a39d"
+      }
+    ],
+    "workDays": 4,
+    "subjects": [
+      {
+        "_id": "6621b62a2d2721658819a43e",
+        "name": "تربية إسلامية",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6182d2721658819a39c"
+      },
+      {
+        "_id": "6621b62f2d2721658819a46b",
+        "name": "تربية إسلامية",
+        "weeklyLectures": 5,
+        "level": "6621b62f2d2721658819a468",
+        "__v": 0,
+        "teacher": "6621b6182d2721658819a39c"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6182d2721658819a3a0",
+    "name": "معلم اللغة العربية - إعدادي",
+    "school": "6621b20d3382dedae1149f32",
+    "workDays": 5,
+    "subjects": [
+      {
+        "_id": "6621b62b2d2721658819a44a",
+        "name": "لغة عربية",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6182d2721658819a3a0"
+      }
+    ],
+    "offDaysAndLectures": [],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6192d2721658819a3a3",
+    "name": "معلم الكيمياء - إعدادي",
+    "school": "6621b20d3382dedae1149f32",
+    "workDays": 4,
+    "subjects": [
+      {
+        "_id": "6621b62d2d2721658819a456",
+        "name": "كيمياء",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3a3"
+      }
+    ],
+    "offDaysAndLectures": [],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6192d2721658819a3a6",
+    "name": "معلم الأحياء - إعدادي",
+    "school": "6621b20d3382dedae1149f32",
+    "workDays": 3,
+    "subjects": [
+      {
+        "_id": "6621b62e2d2721658819a462",
+        "name": "أحياء",
+        "weeklyLectures": 5,
+        "level": "6621b6292d2721658819a43b",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3a6"
+      },
+      {
+        "_id": "6621b65b2d2721658819a5c7",
+        "name": "أحياء",
+        "weeklyLectures": 5,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3bc"
+      }
+    ],
+    "offDaysAndLectures": [],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6192d2721658819a3a9",
+    "name": "معلم الجبر - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "thu",
+        "offLectures": [
+          3,
+          4
+        ],
+        "_id": "6621b6192d2721658819a3aa"
+      },
+      {
+        "day": "tue",
+        "offLectures": [
+          0,
+          1,
+          2
+        ],
+        "_id": "6621b6192d2721658819a3ab"
+      }
+    ],
+    "workDays": 6,
+    "subjects": [
+      {
+        "_id": "6621b6562d2721658819a5a3",
+        "name": "جبر",
+        "weeklyLectures": 6,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3a9"
+      },
+      {
+        "_id": "6621b64e2d2721658819a564",
+        "name": "جبر",
+        "weeklyLectures": 6,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3a9"
+      },
+      {
+        "_id": "6621b6462d2721658819a525",
+        "name": "جبر",
+        "weeklyLectures": 6,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3a9"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b6192d2721658819a3ae",
+    "name": "معلم السيرة - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "thu",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "_id": "6621b6192d2721658819a3af"
+      },
+      {
+        "day": "mon",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b6192d2721658819a3b0"
+      }
+    ],
+    "workDays": 3,
+    "subjects": [
+      {
+        "_id": "6621b6552d2721658819a597",
+        "name": "سيرة نبوية",
+        "weeklyLectures": 4,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3ae"
+      },
+      {
+        "_id": "6621b64d2d2721658819a55e",
+        "name": "سيرة نبوية",
+        "weeklyLectures": 5,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3ae"
+      },
+      {
+        "_id": "6621b6462d2721658819a51f",
+        "name": "سيرة نبوية",
+        "weeklyLectures": 4,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b6192d2721658819a3ae"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b61a2d2721658819a3b3",
+    "name": "معلم الكيمياء - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "thu",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "_id": "6621b61a2d2721658819a3b4"
+      }
+    ],
+    "workDays": 5,
+    "subjects": [
+      {
+        "_id": "6621b6582d2721658819a5b5",
+        "name": "كيمياء",
+        "weeklyLectures": 4,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3b3"
+      },
+      {
+        "_id": "6621b6502d2721658819a576",
+        "name": "كيمياء",
+        "weeklyLectures": 5,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3b3"
+      },
+      {
+        "_id": "6621b6492d2721658819a537",
+        "name": "كيمياء",
+        "weeklyLectures": 4,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3b3"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b61a2d2721658819a3b7",
+    "name": "معلم الفيزياء - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "thu",
+        "offLectures": [
+          2,
+          3,
+          4
+        ],
+        "_id": "6621b61a2d2721658819a3b8"
+      },
+      {
+        "day": "mon",
+        "offLectures": [
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b61a2d2721658819a3b9"
+      }
+    ],
+    "workDays": 4,
+    "subjects": [
+      {
+        "_id": "6621b65a2d2721658819a5c1",
+        "name": "فيزياء",
+        "weeklyLectures": 5,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3b7"
+      },
+      {
+        "_id": "6621b6532d2721658819a588",
+        "name": "فيزياء",
+        "weeklyLectures": 5,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3b7"
+      },
+      {
+        "_id": "6621b64b2d2721658819a549",
+        "name": "فيزياء",
+        "weeklyLectures": 4,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3b7"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b61a2d2721658819a3bc",
+    "name": "معلم الأحياء - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "mon",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b61a2d2721658819a3bd"
+      }
+    ],
+    "workDays": 4,
+    "subjects": [
+      {
+        "_id": "6621b6532d2721658819a58e",
+        "name": "أحياء",
+        "weeklyLectures": 4,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3bc"
+      },
+      {
+        "_id": "6621b64c2d2721658819a54f",
+        "name": "أحياء",
+        "weeklyLectures": 5,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3bc"
+      },
+      {
+        "_id": "6621b65b2d2721658819a5c7",
+        "name": "أحياء",
+        "weeklyLectures": 5,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b61a2d2721658819a3bc"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b61b2d2721658819a3c0",
+    "name": "معلم النحو - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "sat",
+        "offLectures": [
+          3,
+          4
+        ],
+        "_id": "6621b61b2d2721658819a3c1"
+      },
+      {
+        "day": "mon",
+        "offLectures": [
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b61b2d2721658819a3c2"
+      }
+    ],
+    "workDays": 6,
+    "subjects": [
+      {
+        "_id": "6621b6592d2721658819a5bb",
+        "name": "نحو",
+        "weeklyLectures": 6,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c0"
+      },
+      {
+        "_id": "6621b6512d2721658819a57c",
+        "name": "نحو",
+        "weeklyLectures": 6,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c0"
+      },
+      {
+        "_id": "6621b64a2d2721658819a543",
+        "name": "نحو",
+        "weeklyLectures": 4,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c0"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b61b2d2721658819a3c5",
+    "name": "معلم الصرف - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "offDaysAndLectures": [
+      {
+        "day": "wed",
+        "offLectures": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "_id": "6621b61b2d2721658819a3c6"
+      }
+    ],
+    "workDays": 5,
+    "subjects": [
+      {
+        "_id": "6621b6572d2721658819a5a9",
+        "name": "صرف",
+        "weeklyLectures": 5,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c5"
+      },
+      {
+        "_id": "6621b64f2d2721658819a56a",
+        "name": "صرف",
+        "weeklyLectures": 5,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c5"
+      },
+      {
+        "_id": "6621b6472d2721658819a52b",
+        "name": "صرف",
+        "weeklyLectures": 5,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c5"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "_id": "6621b61b2d2721658819a3c9",
+    "name": "معلم القرآن - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "workDays": 4,
+    "subjects": [
+      {
+        "_id": "6621b6582d2721658819a5af",
+        "name": "قرآن كريم",
+        "weeklyLectures": 5,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c9"
+      },
+      {
+        "_id": "6621b6502d2721658819a570",
+        "name": "قرآن كريم",
+        "weeklyLectures": 4,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c9"
+      },
+      {
+        "_id": "6621b6482d2721658819a531",
+        "name": "قرآن كريم",
+        "weeklyLectures": 4,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b61b2d2721658819a3c9"
+      }
+    ],
+    "offDaysAndLectures": [],
+    "__v": 0
+  },
+  {
+    "_id": "6621b61c2d2721658819a3cc",
+    "name": "معلم التأريخ - ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "workDays": 2,
+    "subjects": [
+      {
+        "_id": "6621b64c2d2721658819a555",
+        "name": "تأريخ",
+        "weeklyLectures": 4,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621b61c2d2721658819a3cc"
+      }
+    ],
+    "offDaysAndLectures": [],
+    "__v": 0
+  },
+  {
+    "_id": "6621cd5e337b4950b3acfd11",
+    "name": "معلم الرياضة -ثانوي",
+    "school": "6621b20d3382dedae1149f32",
+    "workDays": 2,
+    "subjects": [
+      {
+        "_id": "6621b6552d2721658819a59d",
+        "name": "رياضة",
+        "weeklyLectures": 2,
+        "level": "6621b6542d2721658819a594",
+        "__v": 0,
+        "teacher": "6621cd5e337b4950b3acfd11"
+      },
+      {
+        "_id": "6621b6522d2721658819a582",
+        "name": "رياضة",
+        "weeklyLectures": 2,
+        "level": "6621b64d2d2721658819a55b",
+        "__v": 0,
+        "teacher": "6621cd5e337b4950b3acfd11"
+      },
+      {
+        "_id": "6621b6492d2721658819a53d",
+        "name": "رياضة",
+        "weeklyLectures": 2,
+        "level": "6621b6452d2721658819a51c",
+        "__v": 0,
+        "teacher": "6621cd5e337b4950b3acfd11"
+      }
+    ],
+    "offDaysAndLectures": [],
+    "__v": 0,
+    "schedule": "6621cd5e337b4950b3acfd15"
+  }
+]
+
+
+function getAllCombinations(arrays, levels) {
+  const stack = [];
+  const results = [];
+  stack.push({ index: 0, currentSelection: [], usedIndexes: [] });
+
+  while (stack.length > 0) {
+      const { index, currentSelection, usedIndexes } = stack.pop();
+
+      if (index === arrays.length) {
+              results.push(currentSelection.slice());
+          
+      } else {
+          for (let i = 0; i < arrays[index].length; i++) {
+              if (!usedIndexes.includes(i)) {
+                  const newCurrentSelection = currentSelection.slice();
+                  newCurrentSelection.push(arrays[index][i]);
+                  const newUsedIndexes = usedIndexes.slice();
+                  newUsedIndexes.push(i);
+                  stack.push({
+                      index: index + 1,
+                      currentSelection: newCurrentSelection,
+                      usedIndexes: newUsedIndexes,
+                  });
+                  
+              }
+          }
+          stack.push({
+              index: index + 1,
+              currentSelection: currentSelection.slice(),
+              usedIndexes: usedIndexes.slice(),
+          }); // Include empty selection
+      }
+  }
+
+  return results;
+}
+
+function getAllCombinationsMemoized(arrays) {
+  const cache = new Map();
+
+  function iterate(currentIndex, currentSelection) {
+    if (currentIndex === arrays.length) {
+      return currentSelection.slice();
+    }
+
+    const key = JSON.stringify([currentIndex, currentSelection]);
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+
+    const result = [];
+    for (let i = 0; i < arrays[currentIndex].length; i++) {
+      const newSelection = currentSelection.concat(arrays[currentIndex][i]);
+      result.push(iterate(currentIndex + 1, newSelection));
+    }
+
+    result.push(iterate(currentIndex + 1, currentSelection.slice())); // Include empty selection
+    cache.set(key, result);
+    return result;
+  }
+
+  return iterate(0, []);
+}
+
+
+
+const l=[
+  [
+    '6621b6162d2721658819a380_Day_1',
+    '6621b6162d2721658819a380_Day_2',
+    '6621b6162d2721658819a380_Day_3',
+    '6621b6162d2721658819a380_Day_4',
+    '6621b6162d2721658819a380_Day_5',
+    '6621b6162d2721658819a380_Day_6'
+  ],
+  [
+    '6621b6162d2721658819a384_Day_1',
+    '6621b6162d2721658819a384_Day_2',
+    '6621b6162d2721658819a384_Day_3'
+  ],
+  [
+    '6621b6162d2721658819a388_Day_1',
+    '6621b6162d2721658819a388_Day_2',
+    '6621b6162d2721658819a388_Day_3',
+    '6621b6162d2721658819a388_Day_4',
+    '6621b6162d2721658819a388_Day_5'
+  ],
+  [
+    '6621b6172d2721658819a38c_Day_1',
+    '6621b6172d2721658819a38c_Day_2',
+    '6621b6172d2721658819a38c_Day_3',
+    '6621b6172d2721658819a38c_Day_4'
+  ],
+  [
+    '6621b6172d2721658819a38f_Day_1',
+    '6621b6172d2721658819a38f_Day_2',
+    '6621b6172d2721658819a38f_Day_3',
+    '6621b6172d2721658819a38f_Day_4',
+    '6621b6172d2721658819a38f_Day_5',
+    '6621b6172d2721658819a38f_Day_6'
+  ],
+  [
+    '6621b6172d2721658819a393_Day_1',
+    '6621b6172d2721658819a393_Day_2',
+    '6621b6172d2721658819a393_Day_3',
+    '6621b6172d2721658819a393_Day_4'
+  ],
+  [
+    '6621b6182d2721658819a398_Day_1',
+    '6621b6182d2721658819a398_Day_2'
+  ],
+  [
+    '6621b6182d2721658819a39c_Day_1',
+    '6621b6182d2721658819a39c_Day_2',
+    '6621b6182d2721658819a39c_Day_3',
+    '6621b6182d2721658819a39c_Day_4'
+  ],
+  [
+    '6621b6182d2721658819a3a0_Day_1',
+    '6621b6182d2721658819a3a0_Day_2',
+    '6621b6182d2721658819a3a0_Day_3',
+    '6621b6182d2721658819a3a0_Day_4',
+    '6621b6182d2721658819a3a0_Day_5'
+  ],
+//   [
+//     '6621b6192d2721658819a3a3_Day_1',
+//     '6621b6192d2721658819a3a3_Day_2',
+//     '6621b6192d2721658819a3a3_Day_3',
+//     '6621b6192d2721658819a3a3_Day_4'
+//   ],
+//   [
+//     '6621b6192d2721658819a3a6_Day_1',
+//     '6621b6192d2721658819a3a6_Day_2',
+//     '6621b6192d2721658819a3a6_Day_3'
+//   ],
+//   [
+//     '6621b6192d2721658819a3a9_Day_1',
+//     '6621b6192d2721658819a3a9_Day_2',
+//     '6621b6192d2721658819a3a9_Day_3',
+//     '6621b6192d2721658819a3a9_Day_4',
+//     '6621b6192d2721658819a3a9_Day_5',
+//     '6621b6192d2721658819a3a9_Day_6'
+//   ],
+//   [
+//     '6621b6192d2721658819a3ae_Day_1',
+//     '6621b6192d2721658819a3ae_Day_2',
+//     '6621b6192d2721658819a3ae_Day_3'
+//   ],
+//   [
+//     '6621b61a2d2721658819a3b3_Day_1',
+//     '6621b61a2d2721658819a3b3_Day_2',
+//     '6621b61a2d2721658819a3b3_Day_3',
+//     '6621b61a2d2721658819a3b3_Day_4',
+//     '6621b61a2d2721658819a3b3_Day_5'
+//   ],
+//   [
+//     '6621b61a2d2721658819a3b7_Day_1',
+//     '6621b61a2d2721658819a3b7_Day_2',
+//     '6621b61a2d2721658819a3b7_Day_3',
+//     '6621b61a2d2721658819a3b7_Day_4'
+//   ],
+//   [
+//     '6621b61a2d2721658819a3bc_Day_1',
+//     '6621b61a2d2721658819a3bc_Day_2',
+//     '6621b61a2d2721658819a3bc_Day_3',
+//     '6621b61a2d2721658819a3bc_Day_4'
+//   ],
+//   [
+//     '6621b61b2d2721658819a3c0_Day_1',
+//     '6621b61b2d2721658819a3c0_Day_2',
+//     '6621b61b2d2721658819a3c0_Day_3',
+//     '6621b61b2d2721658819a3c0_Day_4',
+//     '6621b61b2d2721658819a3c0_Day_5',
+//     '6621b61b2d2721658819a3c0_Day_6'
+//   ],
+//   [
+//     '6621b61b2d2721658819a3c5_Day_1',
+//     '6621b61b2d2721658819a3c5_Day_2',
+//     '6621b61b2d2721658819a3c5_Day_3',
+//     '6621b61b2d2721658819a3c5_Day_4',
+//     '6621b61b2d2721658819a3c5_Day_5'
+//   ],
+//   [
+//     '6621b61b2d2721658819a3c9_Day_1',
+//     '6621b61b2d2721658819a3c9_Day_2',
+//     '6621b61b2d2721658819a3c9_Day_3',
+//     '6621b61b2d2721658819a3c9_Day_4'
+//   ],
+//   [
+//     '6621b61c2d2721658819a3cc_Day_1',
+//     '6621b61c2d2721658819a3cc_Day_2'
+//   ],
+//   [
+//     '6621cd5e337b4950b3acfd11_Day_1',
+//     '6621cd5e337b4950b3acfd11_Day_2'
+//   ]
+]
+
+const arrays = [[1, 2], [3, 4], [5, 6]];
+
+
+const j=getAllCombinationsMemoized(arrays)
+
+let temp=[]
+for(const o of j)
+console.log(o)
+
+console.log(temp.length)
+// function* generateCombinations(arrays) {
+//   const stack = [];
+//   const usedElements = new Set();
+
+//   stack.push({ index: 0, indexes: new Array(arrays.length).fill(0) });
+
+//   while (stack.length > 0) {
+//     const { index, indexes } = stack.pop();
+
+//     if (index === arrays.length) {
+//       let result = [];
+//       for (let i = 0; i < arrays.length; i++) {
+//         result.push(arrays[i][indexes[i]]);
+//       }
+//       yield result;
+//     } else {
+//       for (let i = 0; i < arrays[index].length; i++) {
+//         const object = arrays[index][i];
+//         const key = JSON.stringify(object); // Unique key for object comparison
+//         if (!usedElements.has(key)) {
+//           const newIndexes = indexes.slice();
+//           newIndexes[index] = i;
+//           stack.push({ index: index + 1, indexes: newIndexes });
+//           usedElements.add(key);
+//         }
+//       }
+//       stack.push({ index: index + 1, indexes: indexes.slice() }); // Include empty selection
+//     }
+//   }
+// }
+
+
+
+function getAllCombinations(arrays, levelsPerDay, levels) {
+  const stack = [];
+  const results = [];
+  stack.push({ index: 0, currentSelection: [], usedElements: [] });
+
+  while (stack.length > 0) {
+    const { index, currentSelection, usedElements } = stack.pop();
+
+    if (index === arrays.length) {
+     results.push(currentSelection.slice())
+    } else {
+      for (let i = 0; i < arrays[index].length; i++) {
+        const object = arrays[index][i
+        ];
+        const key = JSON.stringify(object); // Unique key for object comparison
+        if (!usedElements.includes(key)) {
+          const newCurrentSelection = currentSelection.slice();
+          const newUsedElements = usedElements.slice();
+          newCurrentSelection.push(object);
+          newUsedElements.push(key);
+          stack.push({
+            index: index + 1,
+            currentSelection: newCurrentSelection,
+            usedElements: newUsedElements,
+          });
+        }
+      }
+      stack.push({
+        index: index + 1,
+        currentSelection: currentSelection.slice(),
+        usedElements: usedElements.slice(),
+      }); // Include empty selection
+    }
+  }
+
+  return results;
+}
+// Example usage:
+
+function* generateCombinations(arrays) {
+  const stack = [];
+  const usedIndexes = new Set();
+  const combination = new Array(arrays.length).fill(null);
+
+  stack.push({ depth: 0 });
+
+  while (stack.length > 0) {
+    const { depth } = stack.pop();
+
+    if (depth === arrays.length) {
+      yield combination.slice();
+    } else {
+      for (let i = 0; i < arrays[depth].length; i++) {
+        if (!usedIndexes.has(i)) {
+          combination[depth] = arrays[depth][i];
+          usedIndexes.add(i);
+          stack.push({ depth: depth + 1 });
+          break; // Move to the next depth
+        }
+      }
+
+      if (stack[stack.length - 1]?.depth === depth) {
+        // If no element was added at this depth, backtrack
+        combination[depth] = null;
+        usedIndexes.clear();
+        stack.pop();
+        if (depth > 0) {
+          // Release the last used index to try a different one
+          usedIndexes.delete(combination[depth - 1]);
+        }
+      }
+    }
+  }
+}
+
+// Example usage:
+const arrays = [[1, 2], [3, 4], [5, 6]];
+const generator = generateCombinations(arrays);
+for (const combination of generator) {
+  console.log(combination);
+}
+
+// Example usage:
+
