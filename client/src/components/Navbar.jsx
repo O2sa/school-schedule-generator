@@ -8,12 +8,12 @@ import ThemeToggle from './ThemeToggle';
 
 
 const Navbar = () => {
-  // const { toggleSidebar } = useDashboardContext();
+  const { toggleSidebar } = useDashboardContext();
   return (
     <Wrapper>
       <div className='nav-center'>
         <button type='button' className='toggle-btn' 
-        // onClick={toggleSidebar}
+        onClick={toggleSidebar}
         >
           <FaAlignLeft />
         </button>
@@ -23,7 +23,7 @@ const Navbar = () => {
         </div>
         <div className='btn-container'>
           {/* <ThemeToggle /> */}
-          {/* <LogoutContainer /> */}
+          <LogoutContainer />
         </div>
       </div>
     </Wrapper>

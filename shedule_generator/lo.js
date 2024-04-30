@@ -216,8 +216,6 @@ function getDaysWithFullLectures(teachersLecturesPerDays, levels) {
   // console.log("teachersKeys", teachersKeys);
   console.log("teachersLectures_all", teachersLectures_all);
   const daysKeys=new Set(Object.keys(levelsPerDay))
-
-  
   let combinations = getAllCombinations(
     // shuffle(teachersLectures),
     shuffle(teachersKeys),

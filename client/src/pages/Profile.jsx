@@ -28,17 +28,10 @@ const Profile = () => {
   return (
     <Wrapper>
       <Form method='post' className='form' encType='multipart/form-data'>
-        <h4 className='form-title'>profile</h4>
+        <h4 className='form-title'>الملف الشخصي</h4>
         <div className='form-center'>
-          <FormRow type='text' name='name' defaultValue={name} />
-          <FormRow
-            type='text'
-            name='lastName'
-            labelText='last name'
-            defaultValue={lastName}
-          />
-          <FormRow type='email' name='email' defaultValue={email} />
-          <FormRow type='text' name='location' defaultValue={location} />
+          <FormRow type='text' name='الاسم' defaultValue={name} />
+          <FormRow type='email' name='الايميل' defaultValue={email} />
           <SubmitBtn formBtn />
         </div>
       </Form>

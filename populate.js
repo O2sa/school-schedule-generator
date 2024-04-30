@@ -87,24 +87,31 @@ try {
   //   }
   // }
 
-  // for (let ele = 0; ele < teachers.length; ele++) {
-  //   const createdLevel = await Teacher.create({
-  //     ...teachers[ele],
-  //     school: school,
-  //   });
-  //   console.log(createdLevel);
+  for (let ele = 0; ele < teachers.length; ele++) {
+    const createdLevel = await Teacher.create({
+      ...teachers[ele],
+      school: school,
+      role: 'teacher'
+    });
+    console.log(createdLevel);
 
-  //   const schedule = await Schedule.create({
-  //     name: createdLevel.name,
-  //     ownerType: "teacher",
-  //     ownerId: createdLevel._id,
-  //   });
-  //   createdLevel.schedule = schedule._id;
-  //   createdLevel.save();
-  // }
+    
+    const schedule = await Schedule.create({
+      name: createdLevel.name,
+      ownerType: "teacher",
+      ownerId: createdLevel._id,
+    });
+    createdLevel.schedule = schedule._id;
+    createdLevel.save();
+  }
 
-  const subjects = await Subject.find();
-  for (const s of subjects) s.save();
+
+
+
+
+
+  // const subjects = await Subject.find();
+  // for (const s of subjects) s.save();
   console.log("Success!!!");
   process.exit(0);
 } catch (error) {
