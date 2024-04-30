@@ -25,7 +25,6 @@ function* getAllCombinationsGenerator(arrays) {
     yield* iterate(0);
   }
   
-
 const l=[
     [
       '6621b6162d2721658819a380_Day_1',
@@ -158,18 +157,15 @@ const l=[
     ]
   ]
   
-  // const arrays = [[1, 2], [3, 4], [5, 6]];
   
   
-
   async function saveCombinationsToFile(generator, filename) {
     try {
       const combinations = [];
-  
       for await (const combination of generator) {
         await jsonfile.writeFile(filename, combination, { spaces: 2 }); // Write array of combinations to JSON file with indentation
       }
-  
+
       console.log(`Combinations saved to JSON file: ${filename}`);
     } catch (error) {
       console.error(`Error saving combinations to file: ${error}`);

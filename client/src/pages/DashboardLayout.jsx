@@ -82,7 +82,7 @@ const DashboardLayout = ({ queryClient }) => {
     >
       <Wrapper>
         <main className="dashboard">
-          {/* <SmallSidebar /> */}
+          <SmallSidebar />
           <BigSidebar />
           <div>
             <Navbar />
