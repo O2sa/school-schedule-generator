@@ -49,7 +49,7 @@ const links = [
   //   icon: <IoBarChartSharp />,
   // },
   {
-    text: "profile",
+    text: "الحساب",
     path: "profile",
     icon: <ImProfile />,
   },
