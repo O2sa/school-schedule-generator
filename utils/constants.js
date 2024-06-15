@@ -1,22 +1,3 @@
-export const JOB_STATUS = {
-  PENDING: "pending",
-  INTERVIEW: "interview",
-  DECLINED: "declined",
-};
-
-export const JOB_TYPE = {
-  FULL_TIME: "full-time",
-  PART_TIME: "part-time",
-  INTERNSHIP: "internship",
-};
-
-export const JOB_SORT_BY = {
-  NEWEST_FIRST: "newest",
-  OLDEST_FIRST: "oldest",
-  ASCENDING: "a-z",
-  DESCENDING: "z-a",
-};
-
 export const DAYS_OF_WEEK_AR = [
   "السبت",
   "الأحد",
@@ -25,6 +6,7 @@ export const DAYS_OF_WEEK_AR = [
   "الأربعاء",
   "الخميس",
   "الجمعة",
+
 ];
 
 export const DAYS_OF_WEEK_EN = [
@@ -35,6 +17,22 @@ export const DAYS_OF_WEEK_EN = [
   "wed",
   "thu",
   "fri",
+];
+
+export const DAYS_OF_WEEK_TEMP = [
+  "sat",
+  "sun",
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+  "sun",
+  "mon",
+  "tue",
+  "wed",
+  "thu",
 ];
 export const WEEK_DAYS = {
   sat: "السبت",
@@ -48,6 +46,7 @@ export const WEEK_DAYS = {
 
 export const STAGES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export const WORK_DAYS = [1, 2, 3, 4, 5, 6, 7];
+
 export const OFF_LECTURES = [
   { value: 0, label: "الأولى" },
   { value: 1, label: "الثانية" },
@@ -61,7 +60,39 @@ export const OFF_LECTURES = [
   { value: 9, label: "العاشرة" },
 ];
 
+export const ALFA_NUMS = [
+  { value: 1, label: "الأولى" },
+  { value: 2, label: "الثانية" },
+  { value: 3, label: "الثالثة" },
+  { value: 4, label: "الرابعة" },
+  { value: 5, label: "الخامسة" },
+  { value: 6, label: "السادسة" },
+  { value: 7, label: "السابعة" },
+  { value: 8, label: "الثامنة" },
+  { value: 9, label: "التاسعة" },
+  { value: 10, label: "العاشرة" },
+];
 
-export const NUMS_ST=['one', 'two', 'three', 'four', 'five', 'seven', 'eight', 'nine', 'ten']
+export const NUMS_ST = [
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+];
 
+// if (
+//  true ||
+//   false
+// ) {
+//   console.log(false && false);
 
+// }
+
+console.log(
+
+);

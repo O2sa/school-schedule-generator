@@ -14,7 +14,6 @@ import { data, schoolData, teachers } from "./utils/mockData.js";
 // import { data } from "./utils/mockData.js";
 
 try {
-
   await mongoose.connect(process.env.MONGO_URL);
   // let schedules = await Schedule.updateMany({}, { schedule: schedule });
   // // console.log(schedules)
@@ -62,53 +61,53 @@ try {
   const school = "662f231e95a62059e02914fd";
   console.log(school);
 
-  // for (let ele = 0; ele < data.length; ele++) {
-  //   const createdLevel = await Level.create({
-  //     ...data[ele].level,
+  for (let ele = 0; ele < data.length; ele++) {
+    const createdLevel = await Level.create({
+      ...data[ele].level,
+      school: school,
+    });
+    console.log(createdLevel);
+
+    const schedule = await Schedule.create({
+      name: createdLevel.name,
+      ownerType: "level",
+      ownerId: createdLevel._id,
+    });
+    createdLevel.schedule = schedule._id;
+    createdLevel.save();
+
+    const subjects = data[ele].subjects;
+    for (const su in subjects) {
+      const createdSubject = await Subject.create({
+        ...subjects[su],
+        level: createdLevel._id,
+      });
+
+      const teacher = await Teacher.findById(subjects[su].teacher);
+
+      createdLevel.subjects.push(createdSubject._id);
+      teacher.subjects.push(createdSubject._id);
+      createdLevel.save();
+      teacher.save();
+    }
+  }
+
+  // for (let ele = 0; ele < teachers.length; ele++) {
+  //   const createdLevel = await Teacher.create({
+  //     ...teachers[ele],
   //     school: school,
+  //     role: 'teacher'
   //   });
   //   console.log(createdLevel);
 
   //   const schedule = await Schedule.create({
   //     name: createdLevel.name,
-  //     ownerType: "level",
+  //     ownerType: "teacher",
   //     ownerId: createdLevel._id,
   //   });
   //   createdLevel.schedule = schedule._id;
   //   createdLevel.save();
-
-  //   const subjects = data[ele].subjects;
-  //   for (const su in subjects) {
-  //     const createdSubject = await Subject.create({
-  //       ...subjects[su],
-  //       level: createdLevel._id,
-  //     });
-  //     console.log(createdSubject);
-  //   }
   // }
-
-  for (let ele = 0; ele < teachers.length; ele++) {
-    const createdLevel = await Teacher.create({
-      ...teachers[ele],
-      school: school,
-      role: 'teacher'
-    });
-    console.log(createdLevel);
-
-    
-    const schedule = await Schedule.create({
-      name: createdLevel.name,
-      ownerType: "teacher",
-      ownerId: createdLevel._id,
-    });
-    createdLevel.schedule = schedule._id;
-    createdLevel.save();
-  }
-
-
-
-
-
 
   // const subjects = await Subject.find();
   // for (const s of subjects) s.save();

@@ -1,4 +1,6 @@
-const getSubectsNum = (subjects, smallest = true) => {
+import { getObjSmallestProperty } from "./utils.js";
+
+export const getTeacherDayByLength = (subjects, smallest = true) => {
   if (subjects == null || subjects == {}) return;
   // function smallest
   // Initialize the smallest array as null
@@ -58,24 +60,85 @@ export function getTeacherOffLectures(teachers, teacherName, day) {
 
   return unavailableDay.offLectures || []; // Handle missing offLectures
 }
-function checkNumOfEmptySlots(matrix, levelsCounts, day, reqSlots) {
+// export function checkNumOfEmptySlots(matrix, levelsCounts, day, reqSlots) {
+//   let levels = Object.keys(levelsCounts);
+//   if (levels.length == 1) return false;
+
+//   for (let i = 0; i < levels.length; i++) {
+//     // console.log('i', i)
+
+//     let tempArr = [];
+//     let currentDay = matrix[levels[i]][day];
+//     for (let h = 0; h < currentDay.length; h++) {
+//       // console.log('h', h)
+
+//       if (currentDay[h] == "empty") tempArr.push(h);
+//     }
+//     if (tempArr.length < reqSlots) return false;
+//   }
+
+//   return true;
+// }
+
+export function checkNumOfEmptySlots(
+  matrix,
+  levelsCounts,
+  day,
+  allEmpty = false
+) {
   let levels = Object.keys(levelsCounts);
   if (levels.length == 1) return false;
 
   for (let i = 0; i < levels.length; i++) {
     // console.log('i', i)
 
-    let tempArr = [];
     let currentDay = matrix[levels[i]][day];
+    let total = currentDay.length;
+    let freeSlots = 0;
+
     for (let h = 0; h < currentDay.length; h++) {
       // console.log('h', h)
-
-      if (currentDay[h] == "empty") tempArr.push(h);
+      if (currentDay[h] == null) freeSlots++;
     }
-    if (tempArr.length < reqSlots) return false;
+
+    if (allEmpty) {
+      if (freeSlots != total)  return false;
+    }
+
+    if (Math.floor(total / 2) > freeSlots - levelsCounts[levels[i]])
+      return false;
   }
 
   return true;
+}
+export function getLargestEmptyDay(schoolInfo, levelsSchedule, levelsCounts) {
+  let levels = Object.keys(levelsCounts);
+  // if (levels.length == 0) return false;
+
+  const daysEmptySlots = {};
+
+  for (let d = 0; d < schoolInfo.workDays; d++) {
+    daysEmptySlots[d] = 0;
+
+    for (let i = 0; i < levels.length; i++) {
+      const currentDay = levelsSchedule[levels[i]][d];
+      let freeSlots = 0;
+
+      for (let h = 0; h < currentDay.length; h++) {
+        if (currentDay[h] == null) freeSlots++;
+      }
+
+      daysEmptySlots[d] += freeSlots + levelsCounts[levels[i]];
+    }
+
+    daysEmptySlots[d] = Math.floor(daysEmptySlots[d] / levels.length);
+  }
+
+  // console.log("daysEmptySlots", daysEmptySlots);
+  const smallestDay = getObjSmallestProperty(daysEmptySlots);
+  // console.log("smallestDay", smallestDay);
+
+  return Number(smallestDay);
 }
 
 export function groupTeachersByUnavailableDays(teachers) {
@@ -173,7 +236,7 @@ function checkAddingBalance(matrix, levelsCounts, day, reqSlots) {
     for (let h = 0; h < currentDay.length; h++) {
       // console.log('h', h)
 
-      if (currentDay[h] !== "empty") tempArr.push(h);
+      if (currentDay[h] !== null) tempArr.push(h);
     }
     levelsCounts[levels[i]] += tempArr.length;
   }
@@ -226,14 +289,13 @@ export function countEveryLevel(arr, levelCounts = {}) {
   return levelCounts;
 }
 
-export function countLevelLecturesForAllTeachers(
-  teachersLectures,
-  levelsTotalLectures
-) {
+export function validateLevelsLectures(teachersLectures, levelsTotalLectures) {
   // let acuur = {};
   let levelCounts = {};
-  console.log("teachersLectures before", teachersLectures);
+  // console.log("teachersLectures before", teachersLectures);
   const keys = Object.keys(teachersLectures);
+
+
   for (let i = 0; i < keys.length; i++) {
     const currTe = teachersLectures[keys[i]];
 
@@ -250,8 +312,12 @@ export function countLevelLecturesForAllTeachers(
     }
   }
 
+
+  console.log("levels counts", levelCounts);
+
   for (const level in levelCounts) {
-    if (levelCounts[level] !== levelsTotalLectures[level]) {
+    if (levelCounts[level] != Number(levelsTotalLectures[level])) {
+      console.log("delete", level);
       delete levelCounts[level];
     }
   }
@@ -263,15 +329,168 @@ export function countLevelLecturesForAllTeachers(
 
     for (const day in currTe) {
       currTe[day].forEach((obj, idx) => {
-        if (!validLevels.includes(obj.level)) {
+        if (!validLevels.includes(obj.level.toString())) {
+          console.log("delete", teachersLectures[keys[i]][day][idx]);
           teachersLectures[keys[i]][day].splice(idx, 1);
         }
       });
     }
   }
-  console.log("teachersLectures after", teachersLectures);
+
   console.log("levels counts", levelCounts);
+
+  // console.log("teachersLectures after", teachersLectures);
 
   // console.log(acuur);
   return teachersLectures;
 }
+
+export function generateGroupsDays(teachers, groupedTeachers) {
+  let teachersLectures = {};
+  // for (const group in groupedTeachers) {
+  // const keys = Object.keys(groupedTeachers);
+  // const currGroup = groupedTeachers[keys[3]];
+  // console.log(`group ${count}`);
+  // const currentGroup=
+  for (const teacher in groupedTeachers) {
+    // const currTeacher=currGroup[teacher]
+
+    const currTeacher = teachers.find(
+      (object) => object._id == groupedTeachers[teacher]
+    );
+
+    // console.log(currTeacher.name)
+    teachersLectures[currTeacher._id] = distributeTeacherLectures(
+      currTeacher,
+      currTeacher.subjects
+    );
+  }
+  // }
+
+  return teachersLectures;
+}
+
+export function clearCombinations(combinations) {
+  let clearedCombinations = [];
+  for (let comb of combinations) {
+    // console.log(comb)
+    let tempObj = {};
+    for (const day in comb) {
+      //   console.log(comb[day]);
+      const firstChar = day.split("_")[0];
+      tempObj[firstChar] = comb[day];
+    }
+    clearedCombinations.push(tempObj);
+  }
+
+  return clearedCombinations;
+}
+
+export function getLevelsTotalLecturs(levels, school) {
+  let levelsTotalLectures = {};
+  for (let i = 0; i < levels.length; i++) {
+    // const subs = levels[i].subjects;
+
+    const totalLevelLectures = school.workDays * levels[i].dailyLectures;
+    // let totalCurrentLectures = 0;
+    // for (let h = 0; h < subs.length; h++) {
+    //   totalCurrentLectures += subs[h].weeklyLectures;
+    // }
+    // console.log("level:", levels[i].name);
+
+    levelsTotalLectures[levels[i]._id] = totalLevelLectures;
+  }
+
+  // const schoolDoc = await School.findById(levelDoc.school);
+
+  return levelsTotalLectures;
+}
+
+export function getTeachersLevels(teachers) {
+  let teachersLevels = {};
+  for (const teacher of teachers) {
+    let set = new Set();
+
+    const subs = teacher.subjects;
+    if (subs.length == 0) break;
+    for (const sub of subs) {
+      set.add(sub.level.toString());
+    }
+
+    teachersLevels[teacher._id] = [...set];
+  }
+  return teachersLevels;
+}
+function includesAny(array1, array2) {
+  return array2.some((item) => array1.includes(item));
+}
+export function groupTeachersByLevels(teachers) {
+  let groups = [];
+  let ignoreIndexes = [];
+
+  for (const ts in teachers) {
+    const teacher = { teacher: ts, levels: teachers[ts] };
+
+    // console.log(teacher)
+
+    if (groups.length == 0) {
+      groups.push({
+        levels: new Set(teacher.levels),
+        teachers: [teacher.teacher],
+      });
+      continue;
+    }
+    // let tempGroups = groups;
+    let find = false;
+    let mergeIndex;
+
+    for (const group in groups) {
+      if (ignoreIndexes.includes(group)) continue;
+
+      if (!find && includesAny(teacher.levels, [...groups[group].levels])) {
+        groups[group].levels = new Set([
+          ...groups[group].levels,
+          ...teacher.levels,
+        ]);
+        groups[group].teachers = [...groups[group].teachers, teacher.teacher];
+        find = true;
+        // temp = mergeIndex;
+        mergeIndex = group;
+        // ignoreIndexes.push(group);
+        continue;
+      }
+
+      if (find && includesAny(teacher.levels, [...groups[group].levels])) {
+        groups[group].levels = new Set([
+          ...groups[group].levels,
+          ...teacher.levels,
+        ]);
+        groups[mergeIndex].teachers = [
+          ...groups[mergeIndex].teachers,
+          teacher.teacher,
+        ];
+        // groups.splice(group, 1);
+        ignoreIndexes.push(group);
+        continue;
+      }
+    }
+    if (!find) {
+      groups.push({
+        levels: new Set(teacher.levels),
+        teachers: [teacher.teacher],
+      });
+    }
+  }
+  return groups;
+}
+
+export function getTeacherAverageLectures(teacher) {
+  return Math.ceil(
+    teacher.subjects.reduce(
+      (sum, obj) => sum + (obj["weeklyLectures"] || 0),
+      0
+    ) / teacher.workDays
+  );
+}
+
+

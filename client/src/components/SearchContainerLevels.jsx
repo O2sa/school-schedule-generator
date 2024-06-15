@@ -1,7 +1,6 @@
 import { FormRow, FormRowSelect, SubmitBtn } from '.';
 import Wrapper from '../assets/wrappers/DashboardFormPage';
 import { Form, useSubmit, Link } from 'react-router-dom';
-import { JOB_TYPE, JOB_STATUS, JOB_SORT_BY } from '../../../utils/constants';
 import { useLevelsContext } from '../pages/Levels';
 
 const SearchContainerLevels = () => {
@@ -21,7 +20,7 @@ const SearchContainerLevels = () => {
   };
   return (
     <Wrapper>
-      <Form className='form'>
+      {/* <Form className='form'>
         <h5 className='form-title'>لوحة البحث</h5>
         <div className='form-center'>
           <FormRow
@@ -62,7 +61,7 @@ const SearchContainerLevels = () => {
             إعادة تعيين كل القيم
           </Link>
         </div>
-      </Form>
+      </Form> */}
     </Wrapper>
   );
 };

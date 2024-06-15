@@ -60,21 +60,21 @@ SubjectSchema.pre("save", async function (next) {
   }
 });
 
-// SubjectSchema.pre("deleteOne", async function (next) {
-//   try {
-//     // Find all teachers that reference this subject and remove the reference
-//     await Teacher.updateOne(
-//       { _id: this.teacher },
-//       { $pull: { subjects: this._id } }
-//     );
-//     await Level.updateOne(
-//       { _id: this.level },
-//       { $pull: { subjects: this._id } }
-//     );
-//     next();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+SubjectSchema.pre("deleteOne", async function (next) {
+  try {
+    // Find all teachers that reference this subject and remove the reference
+    await Teacher.updateOne(
+      { _id: this.teacher },
+      { $pull: { subjects: this._id } }
+    );
+    await Level.updateOne(
+      { _id: this.level },
+      { $pull: { subjects: this._id } }
+    );
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default mongoose.model("Subject", SubjectSchema);

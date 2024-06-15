@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { LevelsContainer, SearchContainerLevels } from '../components';
+import { LevelsContainer } from '../components';
 import customFetch from '../utils/customFetch';
 import { useLoaderData } from 'react-router-dom';
 import { useContext, createContext } from 'react';

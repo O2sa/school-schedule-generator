@@ -6,12 +6,13 @@ const app = express();
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-import cloudinary from "cloudinary";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 
+
+
+
 // routers
-import jobRouter from "./routes/jobRouter.js";
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
 import scheduleRouter from "./routes/scheduleRouter.js";
@@ -32,11 +33,11 @@ import {
   authorizePermissions,
 } from "./middleware/authMiddleware.js";
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.CLOUD_API_KEY,
+//   api_secret: process.env.CLOUD_API_SECRET,
+// });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 if (process.env.NODE_ENV === "development") {
@@ -78,7 +79,7 @@ app.use("*", (req, res) => {
 
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 6666;
 
 try {
   await mongoose.connect(process.env.MONGO_URL);

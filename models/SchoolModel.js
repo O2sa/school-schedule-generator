@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 import {
   DAYS_OF_WEEK_AR,
-  JOB_STATUS,
-  JOB_TYPE,
-  STAGES,
+
   WORK_DAYS,
 } from "../utils/constants.js";
 import Subject from "./SubjectModel.js";

@@ -3,7 +3,7 @@ import NavLinks from "./NavLinks";
 import Logo from "./Logo";
 import { useDashboardContext } from "../pages/DashboardLayout";
 const BigSidebar = () => {
-  // const { showSidebar } = useDashboardContext();
+  const { showSidebar } = useDashboardContext();
   const d = useDashboardContext();
 
   console.log("d", d);
@@ -11,9 +11,9 @@ const BigSidebar = () => {
     <Wrapper>
       <div
         className={
-          // showSidebar
-          //   ? "sidebar-container "
-          //   :
+          showSidebar
+            ? "sidebar-container "
+            :
              "sidebar-container show-sidebar"
         }
       >

@@ -5,12 +5,13 @@ import Level from "../models/LevelModel.js";
 import { StatusCodes } from "http-status-codes";
 import day from "dayjs";
 
-
 export const getAllTeachers = async (req, res) => {
-  const teachers = await Teacher.find({ school: req.user.schoolId }).populate(
-    "subjects"
-  );
-  res.status(StatusCodes.OK).json({ teachers });
+  const teachers = await Teacher.find({ school: req.user.schoolId }).populate({
+    path: "subjects",
+    populate: { path: "level" },
+  });
+  // console.log(teachers)
+  res.status(StatusCodes.OK).json( teachers );
 };
 
 export const createTeacher = async (req, res) => {
@@ -21,7 +22,7 @@ export const createTeacher = async (req, res) => {
   });
   const schedule = await Schedule.create({
     name: teacher.name,
-    ownerType: "teacher",
+    ownerType: "Teacher",
     ownerId: teacher._id,
   });
   res.status(StatusCodes.CREATED).json({ teacher });
@@ -32,9 +33,9 @@ export const getTeacher = async (req, res) => {
   res.status(StatusCodes.OK).json({ teacher });
 };
 export const getStageTeachers = async (req, res) => {
-const level=await Level.findById(req.params.id)
+  const level = await Level.findById(req.params.id);
 
-  const teachers = await Teacher.find({stage: level.stage})
+  const teachers = await Teacher.find({ stage: level.stage });
   // console.log('teachers',teachers)
   res.status(StatusCodes.OK).json({ teachers });
 };

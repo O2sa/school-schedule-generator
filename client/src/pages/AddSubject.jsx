@@ -39,7 +39,6 @@ export const action =
     try {
       await customFetch.post("/subjects", data);
       queryClient.invalidateQueries(["add-subject"]);
-
       toast.success("Job added successfully ");
       return redirect("..");
     } catch (error) {

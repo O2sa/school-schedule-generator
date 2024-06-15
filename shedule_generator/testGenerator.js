@@ -8,13 +8,11 @@
 //   initialData,
 // } from "./setupData.js";
 import distributeTeacherLectures from "./teacherLectures.js";
-import _, { includes } from "lodash-es";
+import _ from "lodash-es";
 import {
-  allElementsDifferent,
   countLevelLectures,
   getAllArrayCombinations,
   getAllCombinations,
-  getElementById,
   getElementsByIds,
   getElementsByKeys,
   getLargestPropertyValue,
@@ -28,13 +26,10 @@ import {
   shuffle,
   shuffleObject,
   sortByLengthRef,
-  getAllCombinationsGenerator,
-  cleanTheDay,
-  getWeekDays,
 } from "./utils.js";
 
 // import { checkAvaliableOrderAndAllocat } from "./generator.js";
-import { daysOfWeek, subjects, teachers } from "./mockData.js";
+import { daysOfWeek, teachers } from "./mockData.js";
 import {
   checkNumOfEmptySlots,
   clearCombinations,
@@ -61,13 +56,15 @@ import School from "../models/SchoolModel.js";
 import getDaysWithFullLectures from "./daysFuller.js";
 
 import { getAllLevels, getSchoolInfo } from "./setupData.js";
+import { fullDays, fullDays_1 } from "./daysWithFullLectures.js";
 import { DAYS_OF_WEEK_EN, WEEK_DAYS } from "../utils/constants.js";
+import { time } from "console";
+import { exit } from "process";
+dotenv.config();
 
-// dotenv.config();
-
-// await mongoose.connect(
-//   "mongodb+srv://osama:2xhUSV7GXYU40pwn@expressnodejsprojects.e9u9qiv.mongodb.net/school_scheduler?retryWrites=true&w=majority"
-// );
+await mongoose.connect(
+  "mongodb+srv://osama:2xhUSV7GXYU40pwn@expressnodejsprojects.e9u9qiv.mongodb.net/school_scheduler?retryWrites=true&w=majority"
+);
 
 function getUnavailableDays(teachers, daysOfWeek) {
   let sharedOffLectures = {};
@@ -141,35 +138,35 @@ export const checkAvaliableOrderAndAllocat = (
       // console.log("teacher", dayCombination[currentOrder[h]][0].name);
       // console.log("day", daysOfWeek[dayIndex]);
       let matrix = copyLevelsDay(tempSchedule, daySlots, dayIndex);
-      try {
-        const result = checkAbilityToInsert(
-          matrix,
+      // try {
+      const result = checkAbilityToInsert(
+        matrix,
+        daySlots,
+        dayCombination[currentOrder[h]],
+        0,
+        false,
+        blockedLectures[currentOrder[h]]
+      );
+
+      if (result.valid) {
+        tempSchedule = replaceLevelsDay(
+          tempSchedule,
+          result.matrix,
           daySlots,
-          dayCombination[currentOrder[h]],
-          0,
-          false,
-          blockedLectures[currentOrder[h]]
+          dayIndex
         );
 
-        if (result.valid) {
-          tempSchedule = replaceLevelsDay(
-            tempSchedule,
-            result.matrix,
-            daySlots,
-            dayIndex
-          );
-
-          counter++;
-        } else break;
-      } catch (error) {
-        console.log("Task failed:", error.message);
-        console.error("Task failed:", error.message);
-        break;
-      }
+        counter++;
+      } else break;
+      // } catch (error) {
+      //   console.log("Task failed:", error.message);
+      //   console.error("Task failed:", error.message);
+      //   break;
+      // }
     }
 
     if (counter == dayKeys.length) {
-      // console.log(`done !`);
+      console.log(`done !`);
       return { valid: true, schedule: tempSchedule };
 
       break;
@@ -236,7 +233,7 @@ function insertIntoMatrix(matrix, selectedInsertIndxes, lectures) {
   let index = 0;
   for (let i = 0; i < selectedInsertIndxes.length; i++) {
     for (let h = 0; h < selectedInsertIndxes[i].length; h++) {
-      matrix[i][selectedInsertIndxes[i][h]] = lectures[index]._id;
+      matrix[i][selectedInsertIndxes[i][h]] = lectures[index].name;
       index++;
     }
   }
@@ -270,7 +267,7 @@ function checkEmptySlots(matrix, startIndex = 0, endIndex, blockedLectures) {
     endIndex = endIndex == null ? matrix[i].length : endIndex;
     let tempArr = [];
     for (let h = startIndex; h < endIndex; h++) {
-      if (matrix[i][h] == null && !blockedLectures?.includes(h)) {
+      if (matrix[i][h] == "empty" && !blockedLectures?.includes(h)) {
         tempArr.push(h);
       }
     }
@@ -282,6 +279,27 @@ function checkEmptySlots(matrix, startIndex = 0, endIndex, blockedLectures) {
   return levelsFreeIndexes;
 }
 
+function* getAllCombinationsGenerator(arrays) {
+  const stack = [];
+  const currentSelection = [];
+
+  function* iterate(currentIndex) {
+    if (currentIndex === arrays.length) {
+      yield currentSelection.slice();
+      return;
+    }
+
+    for (let i = 0; i < arrays[currentIndex].length; i++) {
+      currentSelection.push(arrays[currentIndex][i]);
+      yield* iterate(currentIndex + 1);
+      currentSelection.pop();
+    }
+
+    yield* iterate(currentIndex + 1); // Include empty selection for the current array
+  }
+
+  yield* iterate(0);
+}
 function setupTeachersLectures(teachLecs) {
   const teachers = Object.keys(teachLecs);
   let levelsPerDay = {};
@@ -369,15 +387,15 @@ function setupGoldenDays(
     const currentTeacher = teachersLectures[teacher];
 
     const smallestDay = getTeacherDayByLength(currentTeacher, true);
-    const daySlots = countEveryLevel(currentTeacher[smallestDay.day]);
-
     let done = false;
     for (let i = 0; i < schoolInfo.workDays; i++) {
+      const daySlots = countEveryLevel(currentTeacher[smallestDay.day]);
+
       if (
         !isBlockedTeacherDay(
           teachers[teacher],
           currentTeacher[smallestDay.day],
-          schoolInfo.schoolWeekDays[i],
+          DAYS_OF_WEEK_EN[i],
           numOfDailyLectures
         )
       ) {
@@ -391,7 +409,7 @@ function setupGoldenDays(
 
         const offLectures = getTeacherBlockDay(
           teachers[teacher],
-          schoolInfo.schoolWeekDays[i]
+          DAYS_OF_WEEK_EN[i]
         );
 
         let matrix = copyLevelsDay(levelsSchedule, daySlots, i);
@@ -412,12 +430,11 @@ function setupGoldenDays(
             i
           );
 
-          usedDays[schoolInfo.schoolWeekDays[i]].add(teacher);
-          daysLectures[schoolInfo.schoolWeekDays[i]].push(
+          usedDays[DAYS_OF_WEEK_EN[i]].add(teacher);
+          daysLectures[DAYS_OF_WEEK_EN[i]].push(
             `${teacher}_${smallestDay.day}`
           );
 
-          // console.log(teachersKeys[teacher])
           teachersKeys[teacher].splice(
             teachersKeys[teacher].indexOf(`${teacher}_${smallestDay.day}`),
             1
@@ -431,6 +448,7 @@ function setupGoldenDays(
     }
 
     if (done) continue;
+    const daySlots = countEveryLevel(currentTeacher[smallestDay.day]);
     const smallestDayIdx = getLargestEmptyDay(
       schoolInfo,
       levelsSchedule,
@@ -441,13 +459,13 @@ function setupGoldenDays(
       !isBlockedTeacherDay(
         teachers[teacher],
         currentTeacher[smallestDay.day],
-        schoolInfo.schoolWeekDays[smallestDayIdx],
+        DAYS_OF_WEEK_EN[smallestDayIdx],
         numOfDailyLectures
       )
     ) {
       const offLectures = getTeacherBlockDay(
         teachers[teacher],
-        schoolInfo.schoolWeekDays[smallestDayIdx]
+        DAYS_OF_WEEK_EN[smallestDayIdx]
       );
 
       let matrix = copyLevelsDay(levelsSchedule, daySlots, smallestDayIdx);
@@ -468,8 +486,8 @@ function setupGoldenDays(
           smallestDayIdx
         );
 
-        usedDays[schoolInfo.schoolWeekDays[smallestDayIdx]].add(teacher);
-        daysLectures[schoolInfo.schoolWeekDays[smallestDayIdx]].push(
+        usedDays[DAYS_OF_WEEK_EN[smallestDayIdx]].add(teacher);
+        daysLectures[DAYS_OF_WEEK_EN[smallestDayIdx]].push(
           `${teacher}_${smallestDay.day}`
         );
 
@@ -499,10 +517,9 @@ function testAllOrders(data, schoolInfo, teachers) {
   let tempDaysLect;
   let solveCombinations = {};
   let failedDays;
-  let counter;
-  for (let sh = 0; sh < 1; sh++) {
+  for (let sh = 0; sh < 10; sh++) {
     let orderDays = 0;
-    counter = 0;
+    let counter = 0;
     // console.log(perm);
 
     // let currentOrder = {};
@@ -513,15 +530,15 @@ function testAllOrders(data, schoolInfo, teachers) {
     tempLevelsSchedule = JSON.parse(JSON.stringify(levelsSchedule));
     failedDays = [];
 
-    // console.log("new try");
+    console.log("new try");
     for (let i = 0; i < schoolInfo.workDays; i++) {
       const filterdOrder = [];
 
       // console.log("before filter", Object.keys(tempTeachersKeys).length);
 
       for (const val of Object.keys(tempTeachersKeys)) {
-        if (data.teachersOffDays[val][schoolInfo.schoolWeekDays[i]]) continue;
-        if (data.usedDays[schoolInfo.schoolWeekDays[i]].has(val)) continue;
+        if (data.teachersOffDays[val][DAYS_OF_WEEK_EN[i]]) continue;
+        if (data.usedDays[DAYS_OF_WEEK_EN[i]].has(val)) continue;
 
         filterdOrder.push(tempTeachersKeys[val]);
       }
@@ -530,6 +547,7 @@ function testAllOrders(data, schoolInfo, teachers) {
       const combinations = getAllCombinationsGenerator(filterdOrder);
 
       let done = false;
+
       for (const com of combinations) {
         if (com.length == 0) continue;
 
@@ -538,19 +556,8 @@ function testAllOrders(data, schoolInfo, teachers) {
           (da) => (currCom[da.split("_")[0]] = data.teachersLectures_all[da])
         );
 
-        for (const teacher of data.teachersWithFullWorkDays) {
-          if (
-            ![
-              ...Object.keys(currCom),
-              ...data.usedDays[schoolInfo.schoolWeekDays[i]],
-            ].includes(teacher)
-          ) {
-            continue;
-          }
-        }
-
         const res = getLevelsCounts(
-          [...com, ...tempDaysLect[schoolInfo.schoolWeekDays[i]]],
+          [...com, ...tempDaysLect[DAYS_OF_WEEK_EN[i]]],
           data.levelsPerDay,
           data.levelsDailyLectures
         );
@@ -558,18 +565,17 @@ function testAllOrders(data, schoolInfo, teachers) {
         if (res.valid) {
           // console.log("res", res);
           // console.log(
-          //   `${[
-          //     ...com,
-          //     ...tempDaysLect[schoolInfo.schoolWeekDays[i]],
-          //   ]} not allcote or block  ${schoolInfo.schoolWeekDays[i]}`
+          //   `${Object.keys(currCom)} not allcote or block  ${
+          //     DAYS_OF_WEEK_EN[i]
+          //   }`
           // );
 
-          // if (schoolInfo.schoolWeekDays[i] == "sun") console.log("mon's lects:", currCom);
+          // if (DAYS_OF_WEEK_EN[i] == "sun") console.log("mon's lects:", currCom);
 
           const isBlocked = isTeachersBlocked(
             Object.values(teachers),
             currCom,
-            schoolInfo.schoolWeekDays[i],
+            DAYS_OF_WEEK_EN[i],
             data.averageOfDailyLectures
           );
 
@@ -577,8 +583,8 @@ function testAllOrders(data, schoolInfo, teachers) {
             continue;
           }
 
-          tempDaysLect[schoolInfo.schoolWeekDays[i]] = [
-            ...tempDaysLect[schoolInfo.schoolWeekDays[i]],
+          tempDaysLect[DAYS_OF_WEEK_EN[i]] = [
+            ...tempDaysLect[DAYS_OF_WEEK_EN[i]],
             ...com,
           ];
 
@@ -588,7 +594,7 @@ function testAllOrders(data, schoolInfo, teachers) {
             );
             const blockedLectures = getTeachersBlockedLectures(
               combTeachers,
-              schoolInfo.schoolWeekDays[i]
+              DAYS_OF_WEEK_EN[i]
             );
             // console.log("blockedLectures", blockedLectures);
 
@@ -607,22 +613,40 @@ function testAllOrders(data, schoolInfo, teachers) {
               failedDays.push(i);
             }
 
-            for (const c of com) {
-              const key = c.split("_")[0];
-              const deletedItem = tempTeachersKeys[key].splice(
-                tempTeachersKeys[key].indexOf(c),
-                1
-              );
-              if (tempTeachersKeys[key].length == 0)
-                delete tempTeachersKeys[key];
-            }
-            delete tempDaysLect[schoolInfo.schoolWeekDays[i]];
+            //  else {
 
-            done = true;
-            break;
+            //   tempDaysLect[DAYS_OF_WEEK_EN[i]].map(
+            //     (da) => (currCom[da] = data.teachersLectures_all[da])
+            //   );
+
+            //   cleanTheDay(tempLevelsSchedule, i);
+
+            //   const version_2_res = checkAvaliableOrderAndAllocat(
+            //     tempLevelsSchedule,
+            //     currCom,
+            //     i,
+            //     blockedLectures
+            //   );
+
+            //   if (version_2_res.valid) {
+            //     tempLevelsSchedule = version_2_res.schedule;
+            //     counter++;
+            //   }
+
+            //   // else continue;
+            // }
           } catch (err) {
             console.log(err);
           }
+
+          for (const c of com) {
+            const key = c.split("_")[0];
+            tempTeachersKeys[key].splice(com.indexOf(c), 1);
+            if (tempTeachersKeys[key].length == 0) delete tempTeachersKeys[key];
+          }
+
+          done = true;
+          break;
         } else continue;
       }
 
@@ -631,107 +655,42 @@ function testAllOrders(data, schoolInfo, teachers) {
 
     if (counter == schoolInfo.workDays) {
       // levelsSchedule = tempLevelsSchedule;
-      // console.log("tempLevelsSchedule", tempLevelsSchedule);
+      console.log("tempLevelsSchedule", tempLevelsSchedule);
 
-      return {
-        valid: true,
-        schedules: tempLevelsSchedule,
-        counter: counter,
-        teachersKeys: tempDaysLect,
+      return { valid: true, schedules: tempLevelsSchedule };
+
+      break;
+    }
+
+    if (!solveCombinations.schedule) {
+      solveCombinations = {
+        failedDays: failedDays,
+        daysLectures: tempDaysLect,
+        schedule: _.cloneDeep(tempLevelsSchedule),
+      };
+    } 
+    else if (solveCombinations.failedDays.length > failedDays.length) {
+      solveCombinations = {
+        failedDays: failedDays,
+        daysLectures: tempDaysLect,
+        schedule: _.cloneDeep(tempLevelsSchedule),
       };
     }
-    if (counter == schoolInfo.workDays - 1) {
-      const tempDaysLectKeys = Object.keys(tempDaysLect);
-      let restKeys = [];
-      for (const key in tempTeachersKeys) {
-        restKeys = [...restKeys, ...tempTeachersKeys[key]];
-      }
-      restKeys = [...restKeys, ...tempDaysLect[tempDaysLectKeys[0]]];
 
-      let teachersLects = {};
-      let teachersKeys = [];
-
-      let blockedLectures = {};
-      for (const te of restKeys) {
-        const theKey = te.split("_")[0];
-
-        blockedLectures[te] = getElementById(
-          Object.values(teachers),
-          tempDaysLectKeys[0]
-        );
-        teachersLects[te] = data.teachersLectures_all[te];
-      }
-
-      // if (!allElementsDifferent(Object.keys(teachersLects))) continue;
-
-      // console.log("restKeys", restKeys);
-      // console.log("Object.keys(teachersLects)", Object.keys(teachersLects));
-      const res = getLevelsCounts(
-        restKeys,
-        data.levelsPerDay,
-        data.levelsDailyLectures
-      );
-
-      console.log(res);
-
-      // if (!res.valid) continue;
-
-      const dayIndex = schoolInfo.schoolWeekDays.indexOf(tempDaysLectKeys[0]);
-      cleanTheDay(tempLevelsSchedule, dayIndex);
-      // console.log(tempLevelsSchedule);
-
-      const combTeachers = Object.values(
-        getElementsByKeys(teachers, Object.keys(teachersLects))
-      );
-
-      const version_2_res = checkAvaliableOrderAndAllocat(
-        tempLevelsSchedule,
-        teachersLects,
-        dayIndex,
-        blockedLectures
-      );
-
-      // console.log("blockedLectures", blockedLectures);
-      // console.log("version_2_res", version_2_res.schedule);
-      // console.log("dayIndex", dayIndex);
-      if (version_2_res.valid) {
-        tempLevelsSchedule = version_2_res.schedule;
-        return {
-          valid: true,
-          schedules: tempLevelsSchedule,
-          counter: counter,
-          teachersKeys: tempDaysLect,
-        };
-      }
-    }
-
-    // if (!solveCombinations.schedule) {
-    //   solveCombinations = {
-    //     failedDays: failedDays,
-    //     daysLectures: tempDaysLect,
-
-    //     schedules: _.cloneDeep(tempLevelsSchedule),
-    //   };
-    // } else if (solveCombinations.failedDays.length > failedDays.length) {
-    //   solveCombinations = {
-    //     failedDays: failedDays,
-    //     daysLectures: tempDaysLect,
-    //     schedules: _.cloneDeep(tempLevelsSchedule),
-    //   };
-    // }
   }
 
-  // console.log(solveCombinations);
-  return {
-    valid: false,
-    schedules: tempLevelsSchedule,
-    counter: counter,
-    teachersKeys: tempDaysLect,
-    // solveCombination: solveCombinations,
-  };
+  return { valid: false, schedules: tempLevelsSchedule };
 }
 
-async function generateGroupSchedules(schoolInfo, teachers, levels, subjects) {
+function cleanTheDay(schedules, day) {
+  for (const schedule in schedules) {
+    schedules[schedule][day] = Array(schedules[schedule][day].length).fill(
+      "empty"
+    );
+  }
+}
+
+function generateGroupSchedules(schoolInfo, teachers, levels) {
   const {
     averageOfDailyLectures,
     levelsDailyLectures,
@@ -753,29 +712,19 @@ async function generateGroupSchedules(schoolInfo, teachers, levels, subjects) {
   let daysLectures = {};
 
   for (let i = 0; i < schoolInfo.workDays; i++) {
-    usedDays[schoolInfo.schoolWeekDays[i]] = new Set();
-    daysLectures[schoolInfo.schoolWeekDays[i]] = [];
+    usedDays[DAYS_OF_WEEK_EN[i]] = new Set();
+    daysLectures[DAYS_OF_WEEK_EN[i]] = [];
   }
 
-  const teachersWithFullWorkDays = [];
-  for (const te in teachersKeys) {
-    if (teachersKeys[te].length == schoolInfo.workDays)
-      teachersWithFullWorkDays.push(te);
-  }
-  console.log("teachersWithFullWorkDays", teachersWithFullWorkDays);
+  for (let i = 0; i < 20; i++) {
+    // let currentTeachersLectures = {};
 
-  let bestRes = { counter: 0 };
-
-  // for (let i = 0; i < 100; i++) {
-  for (const perm of permutationsGenerator(Object.keys(teachersLectures))) {
-    let currentTeachersLectures = {};
-
-    perm.forEach(
-      (val) =>
-        (currentTeachersLectures[val] = JSON.parse(
-          JSON.stringify(teachersLectures[val])
-        ))
-    );
+    // teacherLectures.forEach(
+    //   (val) =>
+    //     (currentTeachersLectures[val] = JSON.parse(
+    //       JSON.stringify(teachersLectures[val])
+    //     ))
+    // );
 
     // const tempTeachersLectures={...currentTeachersLectures}
     const tempTeachersKeys = _.cloneDeep(teachersKeys);
@@ -784,8 +733,7 @@ async function generateGroupSchedules(schoolInfo, teachers, levels, subjects) {
     const tempLevelsSchedule = _.cloneDeep(levelsSchedule);
 
     setupGoldenDays(
-      // _.cloneDeep(shuffleObject(teachersLectures)),
-      currentTeachersLectures,
+      _.cloneDeep(shuffleObject(teachersLectures)),
       tempTeachersKeys,
       tempLevelsSchedule,
       schoolInfo,
@@ -795,7 +743,8 @@ async function generateGroupSchedules(schoolInfo, teachers, levels, subjects) {
       averageOfDailyLectures
     );
 
-    // console.log('tempTeachersKeys',tempLevelsSchedule)
+    console.log("tempLevelsSchedule", tempLevelsSchedule);
+    // console.log('tempTeachersKeys',tempTeachersKeys)
 
     const result = testAllOrders(
       {
@@ -808,46 +757,15 @@ async function generateGroupSchedules(schoolInfo, teachers, levels, subjects) {
         levelsDailyLectures: levelsDailyLectures,
         teachersKeys: tempTeachersKeys,
         levelsSchedule: tempLevelsSchedule,
-        teachersWithFullWorkDays: teachersWithFullWorkDays,
       },
       schoolInfo,
       teachers
     );
 
-    // // console.log(result);
-    if (result.valid) {
-      bestRes = result;
-      break;
-    }
-    // if (result.counter > bestRes.counter) bestRes = result;
+    console.log(result);
+    if (result.valid) break;
+    // console.log(result);
   }
-
-  console.log("best result", bestRes);
-  console.log("best result", bestRes.schedules);
-
-  if (bestRes.valid) {
-    generateTeachersSchedules(teachersSchedule, bestRes.schedules, subjects);
-    await saveSchedules(bestRes.schedules, teachersSchedule);
-  }
-
-
-  // console.log("soleve", bestRes.solveCombination);
-  // console.log("soleve", bestRes.solveCombination.schedules);
-  // let j = [];
-  // for (const key in bestRes.teachersKeys) {
-  //   j = [...j, ...bestRes.teachersKeys[key]];
-  // }
-  // let lastDay = {};
-  // for (const day in teachersLectures_all) {
-  //   if (!j.includes(day)) lastDay[day] = teachersLectures_all[day];
-  // }
-  // console.log("f", j);
-  // const teke = getLevelsCounts(
-  //   Object.keys(lastDay),
-  //   levelsPerDay,
-  //   levelsDailyLectures
-  // );
-  // console.log(teke);
 }
 
 function setupStageData(schoolInfo, levels, teachers) {
@@ -858,16 +776,11 @@ function setupStageData(schoolInfo, levels, teachers) {
   );
   const levelsTotalLectures = getLevelsTotalLecturs(levels, schoolInfo);
 
-  // console.log(levels);
   let teachersLectures = {};
   let teachersOffDays = {};
-
   for (const teacher in teachers) {
     // console.log(currTeacher.name)
-    if (teachers[teacher].subjects.length == 0) {
-      delete teachers[teacher];
-      continue;
-    }
+    if (teachers[teacher].subjects.length == 0) continue;
     teachersLectures[teachers[teacher]._id] = distributeTeacherLectures(
       teachers[teacher],
       teachers[teacher].subjects
@@ -878,23 +791,21 @@ function setupStageData(schoolInfo, levels, teachers) {
       const isTheDayBlocked = isBlockedTeacherDay(
         teachers[teacher],
         average,
-        schoolInfo.schoolWeekDays[i],
+        DAYS_OF_WEEK_EN[i],
         averageOfDailyLectures
       );
-      temp[ schoolInfo.schoolWeekDays[i]] = isTheDayBlocked ? true : false;
+      temp[DAYS_OF_WEEK_EN[i]] = isTheDayBlocked ? true : false;
     }
 
     teachersOffDays[teacher] = temp;
   }
 
-  console.log("levelsTotalLectures", levelsTotalLectures);
-
   teachersLectures = validateLevelsLectures(
     teachersLectures,
     levelsTotalLectures
   );
-
   teachersLectures = sortByLengthRef(teachersLectures, true).sort();
+  // console.log("teachersLectures", teachersLectures);
 
   return {
     teachersLectures: teachersLectures,
@@ -905,37 +816,88 @@ function setupStageData(schoolInfo, levels, teachers) {
   };
 }
 
-function generateStageSchedules(schoolInfo, data) {
-  // if (data == "invalid") return "invalid data";
-
+async function generateStageSchedules(data) {
   const teachers = data.teachers;
   const levels = data.levels;
-  generateGroupSchedules(schoolInfo, teachers, levels, data.subjects);
+  const schoolInfo = data.schoolInfo;
 
-  // const teachersLevels = getTeachersLevels(Object.values(teachers));
+  const teachersLevels = getTeachersLevels(Object.values(teachers));
 
-  // const groupedTeachers = groupTeachersByLevels(teachersLevels);
+  const groupedTeachers = groupTeachersByLevels(teachersLevels);
 
-  // for (const group of groupedTeachers) {
-  //   const groupLevels = getElementsByIds(levels, [...group.levels]);
-  //   const groupedTeachers = getElementsByKeys(teachers, [...group.teachers]);
+  for (const group of groupedTeachers) {
+    const groupLevels = getElementsByIds(levels, [...group.levels]);
+    const groupedTeachers = getElementsByKeys(teachers, [...group.teachers]);
 
-  //   generateGroupSchedules(schoolInfo, groupedTeachers, groupLevels);
+    generateGroupSchedules(schoolInfo, groupedTeachers, groupLevels);
+  }
+
+  // const data = setupTeachersLectures(teachersLectures);
+
+  // console.log("daysLectures", daysLectures);
+
+  // for (const day in tempDaysLect) {
+  //   const levelCounts = getLevelsCounts(
+  //     tempDaysLect[day],
+  //     levelsPerDay,
+  //     levelsDailyLectures
+  //   );
+
+  //   if (!levelCounts.valid) {
+  //     console.log(`teachers on ${day} not  valid`);
+  //     console.log(`levelCounts`, levelCounts);
+  //     continue;
+  //   }
+
+  //   let currCom = {};
+  //   tempDaysLect[day].map(
+  //     (da) => (currCom[da.split("_")[0]] = teachersLectures_all[da])
+  //   );
+  //   const isBlocked = isTeachersBlocked(
+  //     Object.values(teachers),
+  //     currCom,
+  //     day,
+  //     numOfDailyLectures
+  //   );
+  //   if (isBlocked) {
+  //     console.log(`teachers on ${day} blocked`);
+
+  //     continue;
+  //   }
+
+  //   console.log(`teachers on ${day} not blocked and valid`);
+  //   console.log(`levelCounts`, levelCounts);
+  //   const combTeachers = getTeachersByIds(
+  //     Object.values(teachers),
+  //     Object.keys(currCom)
+  //   );
+  //   const blockedLectures = getTeachersBlockedLectures(combTeachers, day);
+
+  //   console.log("blockedLectures", blockedLectures);
+  //   const result = checkAvaliableOrderAndAllocat(
+  //     tempSchedule,
+  //     currCom,
+  //     DAYS_OF_WEEK_EN.indexOf(day),
+  //     blockedLectures
+  //   );
+  //   if (result.valid) tempSchedule = result.schedule;
+
+  //   console.log("result", result);
   // }
+
+  // console.log(tempSchedule);
+  // console.log(levelsSchedule);
 }
 
-export async  function generator(schoolId, stages = [1, 2, 3, 4]) {
+async function generator(schoolId) {
+  const stages = [1, 2, 3, 4];
   const schoolInfo = await School.findById(schoolId);
 
-  const schoolWeekDays=getWeekDays(schoolInfo.startDay, schoolInfo.workDays)
-  for (const stage of stages) {
-    const data = await initialData(schoolInfo, stage);
-    // console.log(data);
-
-    if (data.teachers.length == 0 || data.levels.length == 0) continue;
-    schoolInfo.schoolWeekDays=schoolWeekDays
-    generateStageSchedules(schoolInfo, data);
-  }
+  // for (const stage of stages) {
+  const stageData = await initialData(schoolInfo, 3);
+  stageData.schoolInfo = schoolInfo;
+  await generateStageSchedules(stageData);
+  // }
 
   console.log("Success!!!");
   process.exit(0);
@@ -1049,10 +1011,10 @@ function getLevelsDailyLectures(levels) {
 
 const initialData = async (schoolInfo, stage) => {
   //intialize the levels schedules
+
   const tempTeachers = await Teacher.find({
     school: schoolInfo._id,
     stage: stage,
-    subjects: { $ne: [] },
   }).populate("subjects");
 
   const teachers = {};
@@ -1061,18 +1023,9 @@ const initialData = async (schoolInfo, stage) => {
 
   const levels = await Level.find({
     school: schoolInfo._id,
-    stage: stage,
-    subjects: { $ne: [] },
+    stage: 3,
   }).populate("subjects");
 
-  if (!levels || !teachers) return "invalid";
-
-  // if (levels.length == 0) return "invalid";
-
-  let subjects = [];
-  for (const level of levels) {
-    subjects = subjects.concat(level.subjects);
-  }
   // get teachers lectures
   // let teachersLectures = {};
   // let teachersScheduleInfo = {};
@@ -1087,7 +1040,6 @@ const initialData = async (schoolInfo, stage) => {
   return {
     teachers,
     levels,
-    subjects,
   };
 };
 
@@ -1100,7 +1052,7 @@ function initialSchedules(schoolInfo, levels, teachers) {
   const largestLevel = getLargestPropertyValue(levels, "dailyLectures");
   for (let key in levels) {
     let tempArr = Array.from({ length: schoolInfo.workDays }, () =>
-      Array(levels[key].dailyLectures).fill(null)
+      Array(levels[key].dailyLectures).fill("empty")
     );
 
     // console.log("level", levels[key]);
@@ -1110,7 +1062,7 @@ function initialSchedules(schoolInfo, levels, teachers) {
 
   for (let key in teachers) {
     let tempArr = Array.from({ length: schoolInfo.workDays }, () =>
-      Array(largestLevel).fill(null)
+      Array(largestLevel).fill("empty")
     );
     teachersSchedule[teachers[key]._id] = tempArr;
   }
@@ -1120,7 +1072,7 @@ function initialSchedules(schoolInfo, levels, teachers) {
     teachersSchedule,
   };
 }
-function generateTeachersSchedules(teachersSchedule, levelsSchedule, subjects) {
+function generateTeachersSchedules(teacherSchedule, levelsSchedule, subjects) {
   for (const levelSchedule in levelsSchedule) {
     for (const day in levelsSchedule[levelSchedule]) {
       for (const lecture in levelsSchedule[levelSchedule][day]) {
@@ -1131,9 +1083,6 @@ function generateTeachersSchedules(teachersSchedule, levelsSchedule, subjects) {
     }
   }
 }
-
-
-
 async function saveSchedules(levelsSchedule, teachersSchedule) {
   for (const levelSchedule in levelsSchedule) {
     const schedule = await Schedule.findOneAndUpdate(
@@ -1142,7 +1091,6 @@ async function saveSchedules(levelsSchedule, teachersSchedule) {
     );
   }
 
-
   for (const teacherSchedule in teachersSchedule) {
     const schedule = await Schedule.findOneAndUpdate(
       { ownerId: teacherSchedule },
@@ -1150,8 +1098,6 @@ async function saveSchedules(levelsSchedule, teachersSchedule) {
     );
   }
 }
-
-
 function generatorVersionOne() {
   // console.log("levelsTotalLectures", levelsTotalLectures);
   //  const ts = countLevelLecturesForAllTeachers(
@@ -1200,4 +1146,4 @@ function generatorVersionOne() {
   // console.log(teachersSchedule);
 }
 
-// generator("662f231e95a62059e02914fd");
+generator("662f231e95a62059e02914fd");

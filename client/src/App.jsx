@@ -2,7 +2,14 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Table, useMantineTheme, ColorSchemeProvider } from "@mantine/core";
+import {
+  Table,
+  useMantineTheme,
+  ColorSchemeProvider,
+  createEmotionCache,
+} from "@mantine/core";
+import rtlPlugin from "stylis-plugin-rtl";
+
 import {
   HomeLayout,
   Landing,
@@ -27,7 +34,7 @@ import {
   NewAdmin,
   AddTeacher,
   TeacherDetail,
-  AddSubject
+  AddSubject,
 } from "./pages";
 
 import { action as registerAction } from "./pages/Register";
@@ -139,7 +146,8 @@ const router = createBrowserRouter([
                     element: <SubjectsContainer />,
                     loader: SubjectsContainerLoader(queryClient),
                     // action: subjectsAction,
-                  },      {
+                  },
+                  {
                     path: "add-subject",
                     element: <AddSubject />,
                     loader: AddSubjectLoader(queryClient),
@@ -155,7 +163,7 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <Teachers />,
+                element: <Teachers queryClient={queryClient}/>,
                 // loader: levelsLoader(queryClient),
               },
               {
@@ -167,13 +175,13 @@ const router = createBrowserRouter([
                 path: "teacher-details/:id",
                 element: <TeacherDetail />,
                 // action: TeacherDetailsAction(queryClient),
-                loader: TeacherDetailsLoader(queryClient)
+                loader: TeacherDetailsLoader(queryClient),
               },
             ],
           },
           {
             path: "school",
-            element: <School />,
+            element: <School queryClient={queryClient}/>,
             loader: SchoolLoader(queryClient),
             action: SchoolAction(queryClient),
           },
@@ -191,45 +199,23 @@ const router = createBrowserRouter([
               },
             ],
           },
-          // {
-          //   index: "add-job",
-          //   element: <AddJob />,
-          //   action: addJobAction(queryClient),
-          // },
-          // {
-          //   path: "stats",
-          //   element: <Stats />,
-          //   loader: statsLoader(queryClient),
-          //   errorElement: <ErrorElement />,
-          // },
-          // {
-          //   path: "all-jobs",
-          //   element: <AllJobs />,
-          //   loader: allJobsLoader(queryClient),
-          //   errorElement: <ErrorElement />,
-          // },
+    
           {
             path: "profile",
             element: <Profile />,
             action: profileAction(queryClient),
           },
-          // {
-          //   path: "admin",
-          //   element: <Admin />,
-          //   loader: adminLoader,
-          // },
-          // {
-          //   path: "edit-job/:id",
-          //   element: <EditJob />,
-          //   loader: editJobLoader(queryClient),
-          //   action: editJobAction(queryClient),
-          // },
-          // { path: "delete-job/:id", action: deleteJobAction(queryClient) },
+      
         ],
       },
     ],
   },
 ]);
+
+const rtlCache = createEmotionCache({
+  key: "mantine-rtl",
+  stylisPlugins: [rtlPlugin],
+});
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -241,7 +227,32 @@ const App = () => {
         value={isDarkMode ? "dark" : "light"}
         onChange={() => setIsDarkMode((prevMode) => !prevMode)}
       >
-        <MantineProvider theme={{ fontFamily: "Cairo, sans-serif;" }} dir="rtl">
+        <MantineProvider
+          // withGlobalStyles
+          // withNormalizeCSS
+          emotionCache={rtlCache}
+          theme={{
+            dir: "rtl",
+            fontFamily: "Cairo, sans-serif;",
+            colors: {
+              brand: [
+                "#f2eaff",
+                "#d4c4f0",
+                "#b69fe2",
+                "#9979d4",
+                "#7b52c6",
+                "#6239ad",
+                "#4c2c87",
+                "#361e62",
+                "#21123d",
+                "#0d041a",
+              ],
+            },
+            primaryColor: "brand",
+            primaryShade: 4,
+          }}
+        >
+          {" "}
           <RouterProvider router={router} />
         </MantineProvider>
       </ColorSchemeProvider>
@@ -250,4 +261,5 @@ const App = () => {
     </QueryClientProvider>
   );
 };
+
 export default App;

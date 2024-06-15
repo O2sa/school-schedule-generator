@@ -6,6 +6,7 @@ import customFetch from "../utils/customFetch";
 import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
 import { checkDefaultTheme } from "../App";
+import { Box, Container } from "@mantine/core";
 const userQuery = {
   queryKey: ["user"],
   queryFn: async () => {
@@ -25,7 +26,7 @@ export const loader = (queryClient) => async () => {
 const DashboardContext = createContext();
 
 const DashboardLayout = ({ queryClient }) => {
-  const { user } = useQuery(userQuery).data;
+  const { data, isLoading } = useQuery(userQuery);
   // console.log(user);
   const navigate = useNavigate();
   const navigation = useNavigation();
@@ -72,7 +73,7 @@ const DashboardLayout = ({ queryClient }) => {
   return (
     <DashboardContext.Provider
       value={{
-        user,
+        user: data?.user,
         showSidebar,
         isDarkTheme,
         toggleDarkTheme,
@@ -87,10 +88,12 @@ const DashboardLayout = ({ queryClient }) => {
           <div>
             <Navbar />
             <div className="dashboard-page">
-              {isPageLoading  ? (
+              {isPageLoading || isLoading ? (
                 <Loading />
               ) : (
-                <Outlet context={{ user }} />
+                <Container fluid>
+                  <Outlet />
+                </Container>
               )}
             </div>
           </div>

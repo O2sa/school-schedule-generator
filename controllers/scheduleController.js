@@ -7,71 +7,21 @@ import mongoose from "mongoose";
 import day from "dayjs";
 import Level from "../models/LevelModel.js";
 import { DAYS_OF_WEEK_EN, WEEK_DAYS } from "../utils/constants.js";
+import { generator } from "../shedule_generator/generator.js";
 
 export const getAllSchedules = async (req, res) => {
-  const { search, cls, sort } = req.query;
+  const schedules = await Schedule.find({ ownerType: "level" }).populate({
+    path: "schedule",
+    model: "Subject",
 
-  const queryObject = {
-    // createdBy: req.user.userId,
-  };
+    // populate: {
+    //   path: "$*",
+    //   model: "Subject",
+    // },
+  });
+  const levels = await Level.find().populate("subjects");
 
-  if (search) {
-    queryObject.$or = [
-      { position: { $regex: search, $options: "i" } },
-      { company: { $regex: search, $options: "i" } },
-    ];
-  }
-
-  // if (cls && cls !== "all") {
-  //   queryObject.cls = cls;
-  // }
-
-  const sortOptions = {
-    newest: "-createdAt",
-    oldest: "createdAt",
-    "a-z": "position",
-    "z-a": "-position",
-  };
-
-  const sortKey = sortOptions[sort] || sortOptions.newest;
-
-  // setup pagination
-
-  const page = Number(req.query.page) || 1;
-  const limit = Number(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
-
-  const schedules = await Schedule.find({ ownerType: "level" })
-    .sort(sortKey)
-    .skip(skip)
-    .limit(limit);
-  let levels = [];
-
-  // let realSchedules=
-  for (const sch of schedules) {
-    const lev = await Level.findById(sch.ownerId);
-    const subjects = await Subject.find({ level: lev._id }).populate('teacher')
-    lev.subjects = subjects;
-    levels.push(lev);
-
-    // let currSch = {};
-    // for (let day in sch.schedule) {
-    //   let temp = [];
-    //   for (let lec of sch.schedule[day]) {
-    //     const subject = await Subject.findById(lec);
-    //     temp.push(subject);
-    //   }
-    //   currSch[DAYS_OF_WEEK_EN[day]] = temp;
-    // }
-    // sch.schedule = currSch;
-    // console.log(currSch);
-  }
-  const totalSchedules = await Schedule.countDocuments(queryObject);
-  const numOfPages = Math.ceil(totalSchedules / limit);
-
-  res
-    .status(StatusCodes.OK)
-    .json({ totalSchedules, numOfPages, currentPage: page, schedules, levels });
+  res.status(StatusCodes.OK).json({ schedules, levels });
 };
 
 export const getSchedule = async (req, res) => {
@@ -94,10 +44,14 @@ export const updateTeacherSchedle = async (req, res) => {
 };
 
 export const generateSchedule = async (req, res) => {
-  const schedules = await Schedule.find({});
-  res
-    .status(StatusCodes.OK)
-    .json({ msg: "schedule genrated", schedules: schedules });
+  console.log(req.body.stages);
+  // const schedules = await Schedule.find({});
+
+  // console.log(req.body);
+  // console.log(req.user);
+  await generator(req.user.schoolId, req.body.stages);
+
+  res.status(StatusCodes.OK).json({ msg: "schedule genrated" });
 };
 
 export const editScheduleLecture = async (req, res) => {

@@ -1,3 +1,6 @@
+import fs from "fs";
+import { DAYS_OF_WEEK_TEMP, WEEK_DAYS } from "../utils/constants.js";
+
 export function getRandomInt(min, max) {
   min = Math.ceil(min); // Round up minimum value (inclusive)
   max = Math.floor(max); // Round down maximum value (exclusive)
@@ -216,7 +219,6 @@ export function compareSets(setA, setB) {
   return combinedDifference;
 }
 
-
 export function dayLevelsCount(arr) {
   // console.log(arr);
   for (let i = 0; i < arr.length; i++) {
@@ -274,7 +276,6 @@ export function getTeachersByUnavailableDay(day, teachers) {
     );
   });
 
-
   // Step 2: Find shared offLectures among matching teachers (New)
   if (matchingTeachers.length > 1) {
     const firstUnavailableDays = matchingTeachers[0].offDaysAndLectures.filter(
@@ -292,26 +293,24 @@ export function getTeachersByUnavailableDay(day, teachers) {
         })
     );
 
-  //   // Step 3: Filter teachers based on shared offLectures (New)
-  //   return matchingTeachers.filter((teacher) => {
-  //     const matchingDay = teacher.offDaysAndLectures.find(
-  //       (dayEntry) => dayEntry.day === day
-  //     );
-  //     return (
-  //       matchingDay &&
-  //       matchingDay.offLectures.some((offLecture) =>
-  //         sharedOffLectures.includes(offLecture)
-  //       )
-  //     );
-  //   });
+    //   // Step 3: Filter teachers based on shared offLectures (New)
+    //   return matchingTeachers.filter((teacher) => {
+    //     const matchingDay = teacher.offDaysAndLectures.find(
+    //       (dayEntry) => dayEntry.day === day
+    //     );
+    //     return (
+    //       matchingDay &&
+    //       matchingDay.offLectures.some((offLecture) =>
+    //         sharedOffLectures.includes(offLecture)
+    //       )
+    //     );
+    //   });
   }
 
   // Step 4: Return original matching teachers (Unmodified)
 
-
   return matchingTeachers;
 }
-
 
 export function getPermutations(array) {
   if (array.length === 1) {
@@ -331,8 +330,6 @@ export function getPermutations(array) {
   return permutations;
 }
 
-
-
 export function saveDataToFile(data, fileName = "data.json") {
   const d = JSON.stringify(data, null, 2); // Convert object to JSON string with indentation
 
@@ -343,3 +340,155 @@ export function saveDataToFile(data, fileName = "data.json") {
     console.error("Error writing object to file:", error);
   }
 }
+
+export function getLargestPropertyValue(array, propertyName) {
+  let largestValue = -Infinity; // Initialize with a negative infinity
+
+  for (const obj of array) {
+    const value = obj[propertyName];
+    if (value > largestValue) {
+      largestValue = value;
+    }
+  }
+  return largestValue;
+}
+
+export function getSmallestPropertyValue(arr, property) {
+  let smallestValue = Infinity; // Initialize with positive infinity
+  for (const obj of arr) {
+    if (property in obj && obj[property] < smallestValue) {
+      smallestValue = obj[property];
+    }
+  }
+  return smallestValue === Infinity ? null : smallestValue; // Handle case where property doesn't exist
+}
+
+export function getObjSmallestProperty(obj) {
+  let smallestProp = null;
+  let smallestValue = -Infinity;
+
+  for (const property in obj) {
+    if (obj[property] > smallestValue) {
+      smallestProp = property;
+      smallestValue = obj[property];
+    }
+  }
+  return smallestProp; // Handle case where property doesn't exist
+}
+
+export function* permutationsGenerator(arr) {
+  if (arr.length === 1) {
+    yield arr;
+    return;
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+    const firstElement = arr[i];
+    const remaining = arr.slice(0, i).concat(arr.slice(i + 1));
+    for (const perm of permutationsGenerator(remaining)) {
+      yield [firstElement, ...perm];
+    }
+  }
+}
+
+function cycleArray(array, positions) {
+  // Calculate the number of positions to cycle
+  const offset = positions % array.length;
+
+  // If offset is negative, adjust it to cycle in the opposite direction
+  const adjustedOffset = offset >= 0 ? offset : offset + array.length;
+
+  // Slice the array into two parts and concatenate them in the desired order
+  return array.slice(adjustedOffset).concat(array.slice(0, adjustedOffset));
+}
+
+export function getElementsByIds(elements, elementsIds) {
+  const filteredElements = [];
+
+  for (const element of elements) {
+    // console.log(teacher._id.toString())
+    // console.log(teacherIds)
+
+    if (elementsIds.includes(element._id.toString())) {
+      filteredElements.push(element);
+    }
+  }
+
+  return filteredElements;
+}
+
+export function getElementById(elements, elementId) {
+  return elements.find((val) => val._id == elementId);
+}
+
+export function getElementsByKeys(elements, elementsIds) {
+  const filteredElements = [];
+
+  for (const element in elements) {
+    // console.log(teacher._id.toString())
+    // console.log(teacherIds)
+
+    if (elementsIds.includes(element.toString())) {
+      filteredElements[element] = elements[element];
+    }
+  }
+
+  return filteredElements;
+}
+export function allElementsDifferent(arr) {
+  /*
+  This function checks if all elements in an array are distinct (different).
+
+  Args:
+      arr: The input array.
+
+  Returns:
+      True if all elements are different, False otherwise.
+  */
+  return new Set(arr).size === arr.length;
+}
+
+export function* getAllCombinationsGenerator(arrays) {
+  const stack = [];
+  const currentSelection = [];
+
+  function* iterate(currentIndex) {
+    if (currentIndex === arrays.length) {
+      yield currentSelection.slice();
+      return;
+    }
+
+    for (let i = 0; i < arrays[currentIndex].length; i++) {
+      currentSelection.push(arrays[currentIndex][i]);
+      yield* iterate(currentIndex + 1);
+      currentSelection.pop();
+    }
+
+    yield* iterate(currentIndex + 1); // Include empty selection for the current array
+  }
+
+  yield* iterate(0);
+}
+
+export function cleanTheDay(schedules, day) {
+  for (const schedule in schedules) {
+    schedules[schedule][day] = Array(schedules[schedule][day].length).fill(
+      null
+    );
+  }
+}
+
+export function getWeekDays(startDay, workDays) {
+  let weekDays = [];
+  const startDayEn = Object.keys(WEEK_DAYS).find(
+    (val) => WEEK_DAYS[val] === startDay
+  );
+  weekDays = DAYS_OF_WEEK_TEMP.slice(
+    DAYS_OF_WEEK_TEMP.indexOf(startDayEn),
+    DAYS_OF_WEEK_TEMP.indexOf(startDayEn) + workDays
+  );
+
+  return weekDays;
+}
+
+// console.log(getWeekDays("الإثنين", 7));
