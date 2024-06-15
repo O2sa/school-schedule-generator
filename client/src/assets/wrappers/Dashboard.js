@@ -15,8 +15,7 @@ const Wrapper = styled.section`
       grid-template-columns: auto 1fr;
     }
     .dashboard-page {
-      width: 90%;
-    }
+      width: calc(-250px + 90vw);    }
   }
 `;
 export default Wrapper;

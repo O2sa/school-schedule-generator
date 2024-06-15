@@ -17,8 +17,9 @@ export const loader = async () => {
 
 const SchedulesContext = createContext();
 
-export default function Schedules({}) {
+export default function Schedules() {
   const data = useLoaderData();
+  console.log(data.schedules)
   // const transformedData = [];
   // const schedule = d.schedules[0].schedule;
   return (

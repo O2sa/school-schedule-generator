@@ -4,7 +4,6 @@ import Level from "../models/LevelModel.js";
 import { StatusCodes } from "http-status-codes";
 import day from "dayjs";
 import { InputLogicError } from "../errors/customErrors.js";
-import { validateLectures } from "../middleware/validationMiddleware.js";
 
 export const getAllSubjects = async (req, res) => {
   const subjects = await Subject.find();

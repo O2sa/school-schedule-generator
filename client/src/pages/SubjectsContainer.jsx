@@ -48,10 +48,9 @@ function useGetSubjects(id) {
     queryKey: ["subjects", id],
     queryFn: async () => {
       //send api request here
-      const { data } = await customFetch.get(`/subjects/level-subjects/${id}`); // Adjust this URL as per your API route
-
+      const { data } = await customFetch.get(`/subjects/level-subjects/${id}`);
       console.log("data", data);
-      return data.subjects; 
+      return data.subjects;
     },
     refetchOnWindowFocus: false,
   });
@@ -64,7 +63,10 @@ function useUpdateSubject(id) {
     mutationFn: async (subject) => {
       //send api update request here
       console.log(subject);
-      await customFetch.patch(`/subjects/${subject._id}`, subject); // Adjust this URL as per your API route
+      await customFetch.patch(`/subjects/${subject._id}`, {
+        ...subject,
+        teacher: subject.teacher._id,
+      });
     },
     //client side optimistic update
     onMutate: (newSubjectInfo) => {
@@ -75,7 +77,7 @@ function useUpdateSubject(id) {
       );
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["subjects", id] }), //refetch subjects after mutation, disabled for demo
+      queryClient.invalidateQueries({ queryKey: ["subjects", id] }),
   });
 }
 

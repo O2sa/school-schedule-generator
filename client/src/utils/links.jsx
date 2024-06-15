@@ -1,8 +1,8 @@
 import React from "react";
 
-import { IoBarChartSharp } from "react-icons/io5";
-import { MdQueryStats } from "react-icons/md";
-import { FaWpforms } from "react-icons/fa";
+import { IoBarChartSharp, IoSettings } from "react-icons/io5";
+import { MdAccountBox, MdGrade, MdQueryStats, MdSchedule } from "react-icons/md";
+import { FaChalkboardTeacher, FaRegUserCircle, FaUsers, FaWpforms } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
 import { MdAdminPanelSettings } from "react-icons/md";
 
@@ -10,27 +10,27 @@ const links = [
   {
     text: "الجداول",
     path: ".",
-    icon: <MdQueryStats />,
+    icon: <MdSchedule />,
   },
   {
     text: "المستويات",
     path: "levels",
-    icon: <IoBarChartSharp />,
+    icon: <MdGrade />,
   },
   {
     text: "المعلمون",
     path: "teachers",
-    icon: <ImProfile />,
+    icon: <FaChalkboardTeacher />,
   },
   {
     text: "الإعدادت",
     path: "school",
-    icon: <ImProfile />,
+    icon: <IoSettings />,
   },
   {
     text: "إدارة المستخدمين",
     path: "admins",
-    icon: <ImProfile />,
+    icon: <FaUsers />,
   },
 
   // {
@@ -51,7 +51,7 @@ const links = [
   {
     text: "الحساب",
     path: "profile",
-    icon: <ImProfile />,
+    icon: <FaRegUserCircle />,
   },
   // {
   //   text: "admin",

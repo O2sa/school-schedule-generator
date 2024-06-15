@@ -22,7 +22,7 @@ const FormRowSelect = ({
       >
         {list.map((itemValue) => {
           return (
-            <option key={itemValue}  value={itemValue}>
+            <option key={itemValue}   value={itemValue}>
               {itemValue}
             </option>
           );

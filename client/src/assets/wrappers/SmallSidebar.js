@@ -60,7 +60,7 @@ const Wrapper = styled.aside`
   }
   .icon {
     font-size: 1.5rem;
-    margin-right: 1rem;
+    margin-left: 1rem;
     display: grid;
     place-items: center;
   }

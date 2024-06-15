@@ -18,6 +18,7 @@ import {
   Title,
   Box,
   Menu,
+  Badge,
   MantineProvider,
   Anchor,
 } from "@mantine/core";
@@ -33,116 +34,29 @@ import {
 import customFetch from "../utils/customFetch";
 
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-// import MyTable from "./TeacherDetail";
+import { WEEK_DAYS } from "../../../utils/constants";
+import { useCreateElement, useDeleteElement, useGetElements, useUpdateElement } from "../utils/crud";
 
-//CREATE hook (post new teacher to api)
-function useCreateTeacher() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (teacher) => {
-      //send api update request here
 
-      console.log(teacher);
-      try {
-        await customFetch.post("/teachers", {
-          name: teacher.name,
-          workDays: teacher.workDays,
-        }); // Adjust this URL as per your API route
-        toast.success("Job edited successfully");
-      } catch (error) {
-        toast.error(error?.response?.data?.msg);
-        return error;
-      }
-    },
-    //client side optimistic update
-    onMutate: (newTeacherInfo) => {
-      queryClient.setQueryData(["teachers"], (prevTeachers) => [
-        ...prevTeachers,
-        {
-          ...newTeacherInfo,
-        },
-      ]);
-    },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["teachers"] }), //refetch teachers after mutation, disabled for demo
-  });
-}
 
-//READ hook (get teachers from api)
-function useGetTeachers() {
-  return useQuery({
-    queryKey: ["teachers"],
-    queryFn: async () => {
-      //send api request here
-      const { data } = await customFetch.get(`/teachers`); // Adjust this URL as per your API route
-      console.log("data", data);
-      return data.teachers; // Assuming your API response cont
-    },
-    refetchOnWindowFocus: false,
-  });
-}
-
-//UPDATE hook (put teacher in api)
-function useUpdateTeacher() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (teacher) => {
-      //send api update request here
-      console.log(teacher);
-      await customFetch.patch(`/teachers/${teacher._id}`, {
-        name: teacher.name,
-        workDays: teacher.workDays,
-      }); // Adjust this URL as per your API route
-    },
-    //client side optimistic update
-    onMutate: (newTeacherInfo) => {
-      queryClient.setQueryData(["teachers"], (prevTeachers) =>
-        prevTeachers?.map((prevTeacher) =>
-          prevTeacher._id === newTeacherInfo._id ? newTeacherInfo : prevTeacher
-        )
-      );
-    },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["teachers"] }), //refetch teachers after mutation, disabled for demo
-  });
-}
-
-//DELETE hook (delete teacher in api)
-function useDeleteTeacher() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (teachersId) => {
-      //send api update request here
-      await customFetch.delete(`/teachers/${teachersId}`); // Adjust this URL as per your API route
-    },
-    //client side optimistic update
-    onMutate: (teachersId) => {
-      queryClient.setQueryData(["teachers"], (prevTeachers) =>
-        prevTeachers?.filter((teacher) => teacher._id !== teachersId)
-      );
-    },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["teachers"] }), //refetch teachers after mutation, disabled for demo
-  });
-}
-
-const queryClient = new QueryClient();
-
-const Teachers = () => {
+const Teachers = ({queryClient}) => {
   //call CREATE hook
 
   const { mutateAsync: createTeacher, isLoading: isCreatingTeacher } =
-    useCreateTeacher();
+    useCreateElement(queryClient, ['teachers']);
   const {
     data: teachers = [],
     isError: isLoadingTeachersError,
     isFetching: isFetchingTeachers,
     isLoading: isLoadingTeachers,
-  } = useGetTeachers(); //call READ hook
+  } =useQuery(useGetElements(['teachers'])); //call READ hook
 
   //call UPDATE hook
   const { mutateAsync: updateTeacher, isLoading: isUpdatingTeacher } =
-    useUpdateTeacher();
+  useUpdateElement(queryClient, ['teachers']);
   //call DELETE hook
   const { mutateAsync: deleteTeacher, isLoading: isDeletingTeacher } =
-    useDeleteTeacher();
+    useDeleteElement(queryClient, ['/teachers']);
 
   //CREATE action
   const handleCreateTeacher = async ({
@@ -157,13 +71,9 @@ const Teachers = () => {
 
   //UPDATE action
   const handleSaveTeacher = async ({ values, row, table }) => {
-   
-
     await updateTeacher({ ...values, _id: row.id });
     table.setEditingRow(null); //exit editing mode
   };
-
-
 
   //DELETE action
   const openDeleteConfirmModal = (row) => deleteTeacher(row.id);
@@ -209,28 +119,36 @@ const Teachers = () => {
         accessorKey: "workDays", //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
         enableClickToCopy: true,
         header: "أيام العمل",
-      },      {
+      },
+      {
         accessorKey: "stage", //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
         enableClickToCopy: false,
         header: "المرحلة ",
       },
       {
         id: "subjects",
-        accessorFn: (row) => row.subjects?.length || 0,
+        accessorFn: (row) =>
+          row.subjects?.map((sub) => (
+            <Badge>{`${sub.name} - ${sub.level.name} - ${sub.weeklyLectures}`}</Badge>
+          )) || 0,
         enableEditing: false,
         header: "المواد",
       },
       {
         id: "offDaysAndLectures",
         enableEditing: false,
-
         accessorFn: (row) =>
-          row.offDaysAndLectures
-            ? Object.keys(row.offDaysAndLectures).join(" ")
-            : "لم يحدد",
-        //hey a simple column for once
+          row.offDaysAndLectures?.map((day) =>
+            day.offLectures.length > 0 ? (
+              <Badge>
+                {WEEK_DAYS[day.day]}:{" "}
+                {day?.offLectures.map((lec) => `${lec + 1} `)}
+              </Badge>
+            ) : (
+              ""
+            )
+          ),
         header: "أيام الحظر",
-        // Edit: ()=>MultiChoiceCell(),
       },
       {
         id: "details",
@@ -247,9 +165,9 @@ const Teachers = () => {
           >
             <Link to={"teacher-details/" + row.original._id}>
               <Anchor
-                // href="https://mantine.dev/"
-                // target="_blank"
-                // underline="always"
+              // href="https://mantine.dev/"
+              // target="_blank"
+              // underline="always"
               >
                 استعراض التفاصيل
               </Anchor>

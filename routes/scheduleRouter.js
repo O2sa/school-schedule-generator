@@ -9,7 +9,7 @@ import {
 
 router.route("/").get(getAllSchedules);
 
-router.route("/generateSchedule").get(generateSchedule);
+router.route("/generate").post(generateSchedule);
 
 router.route("/:id").get(getSchedule).patch(updateSchedule);
 

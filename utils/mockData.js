@@ -5,335 +5,345 @@ export const schoolData = {
 };
 
 export const data = [
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 4,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 6,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 3,
-      },
-    ],
-    level: {
-      name: "أول إبتدائي",
-      dailyLectures: 3,
-      stage: 1,
-    },
-  },
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 6,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 6,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 4,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 5,
-      },
-    ],
-    level: {
-      name: "ثاني إبتدائي",
-      dailyLectures: 4,
-      stage: 1,
-    },
-  },
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 4,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 6,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 3,
-      },
-    ],
-    level: {
-      name: "ثالث إبتدائي",
-      dailyLectures: 4,
-      stage: 1,
-    },
-  },
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 4,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 6,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 4,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 5,
-      },
-    ],
-    level: {
-      name: "رابع إبتدائي",
-      dailyLectures: 4,
-      stage: 1,
-    },
-  },
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 5,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 5,
-      },
-      {
-        name: "كيمياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "فيزياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "أحياء",
-        weeklyLectures: 5,
-      },
-    ],
-    level: {
-      name: "خامس إعدادي",
-      dailyLectures: 6,
-      stage: 2,
-    },
-  },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 4,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 6,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 3,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "أول إبتدائي",
+  //     dailyLectures: 3,
+  //     stage: 1,
+  //   },
+  // },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 6,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 6,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 4,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 5,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "ثاني إبتدائي",
+  //     dailyLectures: 4,
+  //     stage: 1,
+  //   },
+  // },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 4,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 6,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 3,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "ثالث إبتدائي",
+  //     dailyLectures: 4,
+  //     stage: 1,
+  //   },
+  // },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 4,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 6,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 4,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 5,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "رابع إبتدائي",
+  //     dailyLectures: 4,
+  //     stage: 1,
+  //   },
+  // },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "كيمياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "فيزياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "أحياء",
+  //       weeklyLectures: 5,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "خامس إعدادي",
+  //     dailyLectures: 6,
+  //     stage: 2,
+  //   },
+  // },
 
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 5,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 5,
-      },
-      {
-        name: "كيمياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "فيزياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "أحياء",
-        weeklyLectures: 5,
-      },
-    ],
-    level: {
-      name: "سادس إعدادي",
-      dailyLectures: 6,
-      stage: 2,
-    },
-  },
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 5,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 5,
-      },
-      {
-        name: "كيمياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "فيزياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "أحياء",
-        weeklyLectures: 5,
-      },
-    ],
-    level: {
-      name: "سابع إعدادي",
-      dailyLectures: 6,
-      stage: 2,
-    },
-  },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "كيمياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "فيزياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "أحياء",
+  //       weeklyLectures: 5,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "سادس إعدادي",
+  //     dailyLectures: 6,
+  //     stage: 2,
+  //   },
+  // },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "كيمياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "فيزياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "أحياء",
+  //       weeklyLectures: 5,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "سابع إعدادي",
+  //     dailyLectures: 6,
+  //     stage: 2,
+  //   },
+  // },
 
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 5,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 5,
-      },
-      {
-        name: "كيمياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "فيزياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "أحياء",
-        weeklyLectures: 5,
-      },
-    ],
-    level: {
-      name: "ثامن إعدادي",
-      dailyLectures: 6,
-      stage: 2,
-    },
-  },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "كيمياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "فيزياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "أحياء",
+  //       weeklyLectures: 5,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "ثامن إعدادي",
+  //     dailyLectures: 6,
+  //     stage: 2,
+  //   },
+  // },
 
-  {
-    subjects: [
-      {
-        name: "تربية إسلامية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "رياضيات",
-        weeklyLectures: 5,
-      },
-      {
-        name: "لغة عربية",
-        weeklyLectures: 5,
-      },
-      {
-        name: "قرآن كريم",
-        weeklyLectures: 5,
-      },
-      {
-        name: "كيمياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "فيزياء",
-        weeklyLectures: 5,
-      },
-      {
-        name: "أحياء",
-        weeklyLectures: 5,
-      },
-    ],
-    level: {
-      name: "تاسع إعدادي",
-      dailyLectures: 6,
-      stage: 2,
-    },
-  },
+  // {
+  //   subjects: [
+  //     {
+  //       name: "تربية إسلامية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "رياضيات",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "لغة عربية",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "قرآن كريم",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "كيمياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "فيزياء",
+  //       weeklyLectures: 5,
+  //     },
+  //     {
+  //       name: "أحياء",
+  //       weeklyLectures: 5,
+  //     },
+  //   ],
+  //   level: {
+  //     name: "تاسع إعدادي",
+  //     dailyLectures: 6,
+  //     stage: 2,
+  //   },
+  // },
 
   {
     subjects: [
       {
         name: "سيرة نبوية",
+        teacher: "66315fa5bc9110d26c47e1be",
         weeklyLectures: 4,
       },
       {
         name: "جبر",
+        teacher: "66315fa4bc9110d26c47e1b4",
         weeklyLectures: 6,
       },
       {
         name: "صرف",
+        teacher: "66315fa7bc9110d26c47e1ec",
         weeklyLectures: 5,
       },
       {
         name: "قرآن كريم",
+        teacher: "66315fa7bc9110d26c47e1f4",
+
         weeklyLectures: 4,
       },
       {
         name: "كيمياء",
+        teacher: "66315fa5bc9110d26c47e1c8",
         weeklyLectures: 4,
       },
-      {
-        name: "رياضة",
-        weeklyLectures: 2,
-      },
+      // {
+      //   name: "رياضة",
+      //   weeklyLectures: 2,
+      // },
       {
         name: "نحو",
+        teacher: "66315fa6bc9110d26c47e1e2",
         weeklyLectures: 4,
       },
       {
         name: "فيزياء",
+        teacher: "66315fa5bc9110d26c47e1d0",
         weeklyLectures: 4,
       },
       {
         name: "أحياء",
+        teacher: "66315fa6bc9110d26c47e1da",
         weeklyLectures: 5,
       },
       {
         name: "تأريخ",
+        teacher: "66315fa8bc9110d26c47e208",
         weeklyLectures: 4,
       },
     ],
@@ -347,38 +357,46 @@ export const data = [
     subjects: [
       {
         name: "سيرة نبوية",
+        teacher: "66315fa5bc9110d26c47e1be",
         weeklyLectures: 4,
       },
       {
         name: "جبر",
+        teacher: "66315fa4bc9110d26c47e1b4",
         weeklyLectures: 6,
       },
       {
         name: "صرف",
+        teacher: "66315fa7bc9110d26c47e1ec",
         weeklyLectures: 5,
       },
       {
         name: "قرآن كريم",
+        teacher: "66315fa7bc9110d26c47e1f4",
         weeklyLectures: 4,
       },
       {
         name: "كيمياء",
+        teacher: "66315fa5bc9110d26c47e1c8",
         weeklyLectures: 5,
       },
       {
         name: "نحو",
+        teacher: "66315fa6bc9110d26c47e1e2",
         weeklyLectures: 6,
       },
-      {
-        name: "رياضة",
-        weeklyLectures: 2,
-      },
+      // {
+      //   name: "رياضة",
+      //   weeklyLectures: 2,
+      // },
       {
         name: "فيزياء",
+        teacher: "66315fa5bc9110d26c47e1d0",
         weeklyLectures: 5,
       },
       {
         name: "أحياء",
+        teacher: "66315fa6bc9110d26c47e1da",
         weeklyLectures: 4,
       },
     ],
@@ -392,38 +410,46 @@ export const data = [
     subjects: [
       {
         name: "سيرة نبوية",
+        teacher: "66315fa5bc9110d26c47e1be",
         weeklyLectures: 4,
       },
-      {
-        name: "رياضة",
-        weeklyLectures: 2,
-      },
+      // {
+      //   name: "رياضة",
+      //   weeklyLectures: 2,
+      // },
       {
         name: "جبر",
+        teacher: "66315fa4bc9110d26c47e1b4",
         weeklyLectures: 6,
       },
       {
         name: "صرف",
+        teacher: "66315fa7bc9110d26c47e1ec",
         weeklyLectures: 5,
       },
       {
         name: "قرآن كريم",
+        teacher: "66315fa7bc9110d26c47e1f4",
         weeklyLectures: 5,
       },
       {
         name: "كيمياء",
+        teacher: "66315fa5bc9110d26c47e1c8",
         weeklyLectures: 4,
       },
       {
         name: "نحو",
+        teacher: "66315fa6bc9110d26c47e1e2",
         weeklyLectures: 6,
       },
       {
         name: "فيزياء",
+        teacher: "66315fa5bc9110d26c47e1d0",
         weeklyLectures: 5,
       },
       {
         name: "أحياء",
+        teacher: "66315fa6bc9110d26c47e1da",
         weeklyLectures: 5,
       },
     ],
@@ -434,10 +460,6 @@ export const data = [
     },
   },
 ];
-
-
-
-
 
 export const teachers = [
   {
@@ -523,7 +545,6 @@ export const teachers = [
   {
     name: "معلم التربية الإسلامية - إعدادي",
     stage: 2,
-
     workDays: 4,
     offDaysAndLectures: [
       {
@@ -535,19 +556,16 @@ export const teachers = [
   {
     name: "معلم اللغة العربية - إعدادي",
     stage: 2,
-
     workDays: 5,
   },
   {
     name: "معلم الكيمياء - إعدادي",
     stage: 2,
-
     workDays: 4,
   },
   {
     name: "معلم الأحياء - إعدادي",
     stage: 2,
-
     workDays: 3,
   },
 
@@ -642,7 +660,6 @@ export const teachers = [
   {
     name: "معلم الصرف - ثانوي",
     stage: 3,
-
     workDays: 5,
     offDaysAndLectures: [
       {
@@ -654,13 +671,11 @@ export const teachers = [
   {
     name: "معلم القرآن - ثانوي",
     stage: 3,
-
     workDays: 4,
   },
   {
     name: "معلم التأريخ - ثانوي",
     stage: 3,
-
     workDays: 2,
   },
 ];

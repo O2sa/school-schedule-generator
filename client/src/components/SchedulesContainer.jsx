@@ -25,7 +25,7 @@ const examData = {
 const SchedulesContainer = () => {
   const { data } = useSchedulesContext();
 
-  const { schedules, totalSchedules, levels } = data;
+  const { schedules, levels } = data;
   // console.log("levels", levels);
   if (schedules.length === 0) {
     return (
@@ -69,8 +69,8 @@ const SchedulesContainer = () => {
           Cell: ({ cell }) => {
             return (
               <Box>
-                <Text>{cell.getValue()?.split(",")[0] ?? ""}</Text>
-                <Text>{cell.getValue()?.split(",")[1] ?? ""}</Text>
+                <Text>{cell.getValue()?.name ?? ""}</Text>
+                {/* <Text>{cell.getValue()?.split(",")[1] ?? ""}</Text> */}
                 {/* <Text>{cell.getValue()?.split(",")[2] ?? ""}</Text> */}
               </Box>
             );
@@ -108,20 +108,17 @@ const SchedulesContainer = () => {
       const getKeys = (arr) => {
         let temp = {};
         for (let key = 0; key < arr.length; key++) {
-          const subject = subjects.find((sub) => sub._id === arr[key]);
-          temp[`${key}`] = Object.values({
-            name: subject.name,
-            teacher: subject?.teacher?.name ?? "unknown",
-            _id: subject._id,
-          }).join();
+          temp[`${key}`] = arr[key]
         }
 
         return temp;
       };
-      rows = Object.keys(schedule.schedule).map((val, idx) => {
+
+      
+      rows = schedule.schedule.map((val, idx) => {
         return {
           day: DAYS_OF_WEEK_EN[idx],
-          ...getKeys(schedule.schedule[val]),
+          ...getKeys(val),
           id: idx,
         };
       });
@@ -140,21 +137,23 @@ const SchedulesContainer = () => {
   return (
     <Wrapper>
       <h4>
-        {totalSchedules} جدول {schedules.length > 1}
+        {/* {totalSchedules} جدول {schedules.length > 1} */}
       </h4>
       <div className="schedules">
-        {schedules.map((schedule) => (
-          <div
-            key={schedule.schedule._id}
-            style={{ marginBottom: "50px", marginTop: "50px" }}
-          >
-            <h5 style={{ margin: "30px" }}>{schedule.name}</h5>
-            <Schedule
+        {schedules.map((schedule) =>
+          schedule.schedule.length > 0 ? (
+            <div
               key={schedule.schedule._id}
-              data={setupScheduleData(schedule)}
-            />
-          </div>
-        ))}
+              style={{ marginBottom: "50px", marginTop: "50px" }}
+            >
+              <h5 style={{ margin: "30px" }}>{schedule.name}</h5>
+              <Schedule
+                key={schedule.schedule._id}
+                data={setupScheduleData(schedule)}
+              />
+            </div>
+          ) : null
+        )}
       </div>
       {/* {numOfPages > 1 && <PageBtnContainer />} */}
     </Wrapper>

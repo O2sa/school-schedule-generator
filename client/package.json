@@ -27,7 +27,9 @@
     "react-router-dom": "^6.10.0",
     "react-toastify": "^9.1.2",
     "recharts": "^2.5.0",
-    "styled-components": "^5.3.10"
+    "styled-components": "^5.3.10",
+    "stylis": "^4.3.2",
+    "stylis-plugin-rtl": "^2.1.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",

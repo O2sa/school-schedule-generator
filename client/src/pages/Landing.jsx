@@ -16,7 +16,6 @@ const Landing = () => {
             موقع  <span>المجدول</span> المدرسي 
           </h1>
           <p>
-    
           </p>
           <Link to='/register' className='btn register-link'>
             إنشاء حساب

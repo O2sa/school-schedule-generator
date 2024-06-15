@@ -4,6 +4,7 @@ import { useOutletContext, redirect } from 'react-router-dom';
 import { Form } from 'react-router-dom';
 import customFetch from '../utils/customFetch';
 import { toast } from 'react-toastify';
+import { useDashboardContext } from './DashboardLayout';
 
 export const action =
   (queryClient) =>
@@ -21,7 +22,7 @@ export const action =
   };
 
 const Profile = () => {
-  const { user } = useOutletContext();
+  const { user } = useDashboardContext();
 
   const { name, lastName, email, location } = user;
 

@@ -3,7 +3,7 @@ import { FaAlignLeft } from 'react-icons/fa';
 import Logo from './Logo';
 import { useDashboardContext } from '../pages/DashboardLayout';
 import LogoutContainer from './LogoutContainer';
-import ThemeToggle from './ThemeToggle';
+// import ThemeToggle from './ThemeToggle';
 
 
 

@@ -63,7 +63,7 @@ const LevelsContainer = () => {
 
       <div className="levels">
         {levels.map((level) => {
-          return <Level key={level._id} {...level} />;
+          return <Level key={level._id} level={level} />;
         })}
       </div>
       {numOfPages > 1 && <PageBtnContainer />}

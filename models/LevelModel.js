@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { JOB_STATUS, JOB_TYPE, STAGES } from "../utils/constants.js";
+import {  STAGES } from "../utils/constants.js";
 import School from "./SchoolModel.js";
 import Subject from "./SubjectModel.js";
 

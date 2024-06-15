@@ -4,6 +4,7 @@ import School from "../models/SchoolModel.js";
 import { StatusCodes } from "http-status-codes";
 import day from "dayjs";
 import Schedule from "../models/ScheduleModel.js";
+import Teacher from "../models/TeacherModel.js";
 
 export const getAllLevels = async (req, res) => {
   const levels = await Level.find({ school: req.user.schoolId });
@@ -19,9 +20,12 @@ export const createLevel = async (req, res) => {
     stage: Number(lev.stage),
     school: req.user.schoolId,
   });
+
+
+
   const schedule = await Schedule.create({
     name: level.name,
-    ownerType: "level",
+    ownerType: "Level",
     ownerId: level._id,
   });
   res.status(StatusCodes.CREATED).json({ level });
@@ -42,10 +46,16 @@ export const updateLevel = async (req, res) => {
 
 export const deleteLevel = async (req, res) => {
   const removedLevel = await Level.findByIdAndDelete(req.params.id);
-  const deletedSubjects = await Subject.deleteMany({
-    level: req.params.id,
-  });
-  const deletedSchedule = await Schedule.deleteMany({
+
+  await Subject.deleteMany({ level: req.params.id });
+   await Teacher({ level: req.params.id });
+
+   await Teacher.updateMany(
+    { subjects: { $in: subjectsToDelete } },
+    { $pull: { subjects: { $in: subjectsToDelete } } }
+  );
+
+  const deletedSchedule = await Schedule.findOneAndDelete({
     ownerId: req.params.id,
   });
 
