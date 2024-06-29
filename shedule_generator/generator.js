@@ -126,17 +126,19 @@ async function generateGroupSchedules(schoolInfo, teachers, levels, subjects) {
     const tempdaysLectures = _.cloneDeep(daysLectures);
     const tempLevelsSchedule = _.cloneDeep(levelsSchedule);
 
-    // setupGoldenDays(
-    //   // _.cloneDeep(shuffleObject(teachersLectures)),
-    //   currentTeachersLectures,
-    //   tempTeachersKeys,
-    //   tempLevelsSchedule,
-    //   schoolInfo,
-    //   teachers,
-    //   tempUsedDays,
-    //   tempdaysLectures,
-    //   averageOfDailyLectures
-    // );
+
+    
+    setupGoldenDays(
+      // _.cloneDeep(shuffleObject(teachersLectures)),
+      currentTeachersLectures,
+      tempTeachersKeys,
+      tempLevelsSchedule,
+      schoolInfo,
+      teachers,
+      tempUsedDays,
+      tempdaysLectures,
+      averageOfDailyLectures
+    );
 
     // console.log('tempLevelsSchedule',tempLevelsSchedule)
     // console.log('tempdaysLectures',tempdaysLectures)
@@ -163,8 +165,6 @@ async function generateGroupSchedules(schoolInfo, teachers, levels, subjects) {
       bestRes = result;
       break;
     }
-    console.log("best result", result);
-
     // if (result.counter > bestRes.counter) bestRes = result;
   }
 
