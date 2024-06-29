@@ -47,7 +47,7 @@ export const action =
     }
   };
 
-const LevelInfo = () => {
+const LevelInfo = ({queryClient}) => {
   const id = useLoaderData();
   const {
     data: { level, teachers },
@@ -81,7 +81,7 @@ const LevelInfo = () => {
         </div>
       </Form>
       <div style={{ marginTop: "8em" }}>
-        <SubjectsContainer teachers={teachers} levelId={id} />
+        <SubjectsContainer queryClient={queryClient} teachers={teachers} levelId={id} />
       </div>
       {/* <MantineReactTable table={table} />; */}
     </Wrapper>

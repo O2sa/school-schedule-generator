@@ -4,9 +4,9 @@ import Logo from "./Logo";
 import { useDashboardContext } from "../pages/DashboardLayout";
 const BigSidebar = () => {
   const { showSidebar } = useDashboardContext();
-  const d = useDashboardContext();
+  // const d = useDashboardContext();
 
-  console.log("d", d);
+  // console.log("d", d);
   return (
     <Wrapper>
       <div

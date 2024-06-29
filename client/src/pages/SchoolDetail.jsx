@@ -57,7 +57,7 @@ export const action =
 
 const SchoolDetail = ({ queryClient }) => {
   const { mutateAsync: create, isLoading: isCreateingSchs } =
-    useCreateOneElement(queryClient, ["/schedules/generate"]);
+    useCreateOneElement(["/schedules/generate"]);
 
   const [selectedStages, setSelected] = useState([]);
   const [error, setError] = useState(null);
@@ -72,7 +72,6 @@ const SchoolDetail = ({ queryClient }) => {
     data: { school },
   } = useQuery(singleJobQuery(id));
 
-  
   return (
     <Box>
       <Wrapper>

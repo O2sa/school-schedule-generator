@@ -11,19 +11,11 @@ export const getAllSubjects = async (req, res) => {
   res.status(StatusCodes.OK).json({ subjects });
 };
 export const getLevelInfo = async (req, res) => {
-  const level = await Level.findById(req.params.id);
 
-  const subjects = await Subject.find({ level: level._id }).populate("teacher");
+  const subjects = await Subject.find({ level: req.params.id}).populate("teacher");
 
-  const tshs = await Teacher.find({ stage: level.stage });
-  const teachers = tshs.map((val, idx) => ({
-    value: val._id,
-    label: val.name,
-  }));
-  // const teachers = await Teacher.find();
 
-  // console.log(teachers)
-  res.status(StatusCodes.OK).json({ subjects });
+  res.status(StatusCodes.OK).json(subjects );
 };
 
 export const createSubject = async (req, res) => {
@@ -70,10 +62,13 @@ export const deleteSubject = async (req, res) => {
     { _id: removedSubject.teacher },
     { $pull: { subjects: removedSubject._id } }
   );
+
   await Level.updateOne(
     { _id: removedSubject.level },
     { $pull: { subjects: removedSubject._id } }
   );
+
+
   res
     .status(StatusCodes.OK)
     .json({ msg: "Subject deleted", subject: removedSubject });

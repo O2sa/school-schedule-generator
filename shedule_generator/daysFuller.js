@@ -260,8 +260,8 @@ export default function getDaysWithFullLectures(
       }
       return newCombinations;
     }
-    if (newComs.length > 3)
-    console.log(newComs);
+    // if (newComs.length > 3)
+    // console.log(newComs);
   }
 }
 

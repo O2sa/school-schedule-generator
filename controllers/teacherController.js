@@ -4,6 +4,7 @@ import School from "../models/SchoolModel.js";
 import Level from "../models/LevelModel.js";
 import { StatusCodes } from "http-status-codes";
 import day from "dayjs";
+import Subject from "../models/SubjectModel.js";
 
 export const getAllTeachers = async (req, res) => {
   const teachers = await Teacher.find({ school: req.user.schoolId }).populate({
@@ -11,7 +12,7 @@ export const getAllTeachers = async (req, res) => {
     populate: { path: "level" },
   });
   // console.log(teachers)
-  res.status(StatusCodes.OK).json( teachers );
+  res.status(StatusCodes.OK).json(teachers);
 };
 
 export const createTeacher = async (req, res) => {
@@ -41,7 +42,7 @@ export const getStageTeachers = async (req, res) => {
 };
 
 export const updateTeacher = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   // const {name, workDays,}=req.body
   const updatedTeacher = await Teacher.findByIdAndUpdate(
     req.params.id,
@@ -61,6 +62,7 @@ export const deleteTeacher = async (req, res) => {
   const deletedSchedule = await Schedule.deleteMany({
     ownerId: req.params.id,
   });
+  await Subject.updateMany({ teacher: req.params.id }, { teacher: null });
   res
     .status(StatusCodes.OK)
     .json({ msg: "Teacher deleted", teacher: removedTeacher });

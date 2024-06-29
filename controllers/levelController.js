@@ -48,14 +48,13 @@ export const deleteLevel = async (req, res) => {
   const removedLevel = await Level.findByIdAndDelete(req.params.id);
 
   await Subject.deleteMany({ level: req.params.id });
-   await Teacher({ level: req.params.id });
 
    await Teacher.updateMany(
     { subjects: { $in: subjectsToDelete } },
     { $pull: { subjects: { $in: subjectsToDelete } } }
   );
 
-  const deletedSchedule = await Schedule.findOneAndDelete({
+   await Schedule.findOneAndDelete({
     ownerId: req.params.id,
   });
 

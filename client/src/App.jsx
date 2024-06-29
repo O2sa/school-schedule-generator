@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   Table,
@@ -77,7 +77,7 @@ export const checkDefaultTheme = () => {
 
 checkDefaultTheme();
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5,
@@ -137,16 +137,16 @@ const router = createBrowserRouter([
                 children: [
                   {
                     index: true,
-                    element: <LevelInfo />,
+                    element: <LevelInfo queryClient={queryClient} />,
                     loader: levelInfoLoader(queryClient),
                     action: levelInfoAction(queryClient),
                   },
-                  {
-                    path: "subjects",
-                    element: <SubjectsContainer />,
-                    loader: SubjectsContainerLoader(queryClient),
-                    // action: subjectsAction,
-                  },
+                  // {
+                  //   path: "subjects",
+                  //   element: <SubjectsContainer />,
+                  //   loader: SubjectsContainerLoader(queryClient),
+                  //   // action: subjectsAction,
+                  // },
                   {
                     path: "add-subject",
                     element: <AddSubject />,
@@ -163,7 +163,7 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <Teachers queryClient={queryClient}/>,
+                element: <Teachers queryClient={queryClient} />,
                 // loader: levelsLoader(queryClient),
               },
               {
@@ -181,7 +181,7 @@ const router = createBrowserRouter([
           },
           {
             path: "school",
-            element: <School queryClient={queryClient}/>,
+            element: <School queryClient={queryClient} />,
             loader: SchoolLoader(queryClient),
             action: SchoolAction(queryClient),
           },
@@ -199,13 +199,12 @@ const router = createBrowserRouter([
               },
             ],
           },
-    
+
           {
             path: "profile",
             element: <Profile />,
             action: profileAction(queryClient),
           },
-      
         ],
       },
     ],
@@ -216,6 +215,7 @@ const rtlCache = createEmotionCache({
   key: "mantine-rtl",
   stylisPlugins: [rtlPlugin],
 });
+const AppContext = createContext()
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -252,8 +252,13 @@ const App = () => {
             primaryShade: 4,
           }}
         >
-          {" "}
-          <RouterProvider router={router} />
+          <AppContext.Provider
+            value={{
+              queryClient,
+            }}
+          >
+            <RouterProvider router={router} />
+          </AppContext.Provider>
         </MantineProvider>
       </ColorSchemeProvider>
 
@@ -261,5 +266,5 @@ const App = () => {
     </QueryClientProvider>
   );
 };
-
 export default App;
+export const useAppContext = () => useContext(AppContext)

@@ -35,28 +35,32 @@ import customFetch from "../utils/customFetch";
 
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { WEEK_DAYS } from "../../../utils/constants";
-import { useCreateElement, useDeleteElement, useGetElements, useUpdateElement } from "../utils/crud";
+import {
+  useCreateElement,
+  useDeleteElement,
+  useGetElements,
+  useUpdateElement,
+} from "../utils/crud";
 
-
-
-const Teachers = ({queryClient}) => {
+const Teachers = ({ queryClient }) => {
   //call CREATE hook
 
-  const { mutateAsync: createTeacher, isLoading: isCreatingTeacher } =
-    useCreateElement(queryClient, ['teachers']);
+  // const { mutateAsync: createTeacher, isLoading: isCreatingTeacher } =
+  //   useCreateElement(["teachers"]);
+
   const {
     data: teachers = [],
     isError: isLoadingTeachersError,
     isFetching: isFetchingTeachers,
     isLoading: isLoadingTeachers,
-  } =useQuery(useGetElements(['teachers'])); //call READ hook
+  } = useQuery(useGetElements(["teachers"])); //call READ hook
 
   //call UPDATE hook
   const { mutateAsync: updateTeacher, isLoading: isUpdatingTeacher } =
-  useUpdateElement(queryClient, ['teachers']);
+    useUpdateElement(["teachers"]);
   //call DELETE hook
   const { mutateAsync: deleteTeacher, isLoading: isDeletingTeacher } =
-    useDeleteElement(queryClient, ['/teachers']);
+    useDeleteElement(["teachers"]);
 
   //CREATE action
   const handleCreateTeacher = async ({
@@ -71,7 +75,14 @@ const Teachers = ({queryClient}) => {
 
   //UPDATE action
   const handleSaveTeacher = async ({ values, row, table }) => {
-    await updateTeacher({ ...values, _id: row.id });
+    console.log("values", values);
+    await updateTeacher({
+      name: values.name,
+      email: values.email,
+      workDays: Number(values.workDays),
+      _id: row.id,
+    });
+
     table.setEditingRow(null); //exit editing mode
   };
 
@@ -110,21 +121,22 @@ const Teachers = ({queryClient}) => {
         // ),
       },
       {
-        accessorKey: "email", //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
-        enableClickToCopy: true,
-        header: "الأيميل",
-        enableEditing: false,
-      },
-      {
-        accessorKey: "workDays", //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
-        enableClickToCopy: true,
-        header: "أيام العمل",
-      },
-      {
-        accessorKey: "stage", //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+        accessorKey: "stage",
         enableClickToCopy: false,
         header: "المرحلة ",
       },
+      // {
+      //   accessorKey: "email",
+      //   enableClickToCopy: true,
+      //   header: "الأيميل",
+      //   enableEditing: false,
+      // },
+      {
+        accessorKey: "workDays",
+        enableClickToCopy: true,
+        header: "أيام العمل",
+      },
+
       {
         id: "subjects",
         accessorFn: (row) =>
@@ -139,7 +151,7 @@ const Teachers = ({queryClient}) => {
         enableEditing: false,
         accessorFn: (row) =>
           row.offDaysAndLectures?.map((day) =>
-            day.offLectures.length > 0 ? (
+            day?.offLectures?.length > 0 ? (
               <Badge>
                 {WEEK_DAYS[day.day]}:{" "}
                 {day?.offLectures.map((lec) => `${lec + 1} `)}
@@ -178,7 +190,7 @@ const Teachers = ({queryClient}) => {
     ],
     []
   );
-
+  const [sorting, setSorting] = useState([{ id: "stage", desc: true }]);
   const table = useMantineReactTable({
     columns: columns,
     data: teachers, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
@@ -191,26 +203,27 @@ const Teachers = ({queryClient}) => {
     editDisplayMode: "row",
     enableRowActions: true,
     getRowId: (row) => row._id,
+    initialState: {
+      columnVisibility: { description: false },
+      density: "xs",
+      showGlobalFilter: true,
+      sorting: [{ id: "stage", desc: true }],
+    },
     paginationDisplayMode: "pages",
     positionToolbarAlertBanner: "bottom",
-    mantinePaginationProps: {
-      radius: "xl",
-      size: "lg",
-    },
+    // mantinePaginationProps: {
+    //   radius: "xl",
+    //   size: "lg",
+    // },
     mantineToolbarAlertBannerProps: isLoadingTeachersError
       ? {
           color: "red",
           children: "خطأ في تحميل البيانات",
         }
       : undefined,
-    mantineTableContainerProps: {
-      sx: {
-        minHeight: "500px",
-      },
-    },
 
     // onCreatingRowCancel: () => setValidationErrors({}),
-    onCreatingRowSave: handleCreateTeacher,
+    // onCreatingRowSave: handleCreateTeacher,
     // onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveTeacher,
     renderRowActions: ({ row, table }) => (
@@ -250,7 +263,7 @@ const Teachers = ({queryClient}) => {
     ),
     state: {
       isLoading: isLoadingTeachers,
-      isSaving: isCreatingTeacher || isUpdatingTeacher || isDeletingTeacher,
+      isSaving: isUpdatingTeacher || isDeletingTeacher,
       showAlertBanner: isLoadingTeachersError,
       showProgressBars: isFetchingTeachers,
     },
@@ -259,7 +272,8 @@ const Teachers = ({queryClient}) => {
   return (
     <QueryClientProvider client={queryClient}>
       {/* <ModalsProvider> */}
-      <MantineReactTable table={table} />;{/* </ModalsProvider> */}
+      <MantineReactTable table={table} />
+      {/* </ModalsProvider> */}
     </QueryClientProvider>
   );
 };

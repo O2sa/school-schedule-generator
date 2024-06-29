@@ -1,4 +1,4 @@
-import { getObjSmallestProperty } from "./utils.js";
+import { getElementsByIds, getObjSmallestProperty, getTeachersByUnavailableDay } from "./utils.js";
 
 export const getTeacherDayByLength = (subjects, smallest = true) => {
   if (subjects == null || subjects == {}) return;
@@ -102,7 +102,7 @@ export function checkNumOfEmptySlots(
     }
 
     if (allEmpty) {
-      if (freeSlots != total)  return false;
+      if (freeSlots != total) return false;
     }
 
     if (Math.floor(total / 2) > freeSlots - levelsCounts[levels[i]])
@@ -295,7 +295,6 @@ export function validateLevelsLectures(teachersLectures, levelsTotalLectures) {
   // console.log("teachersLectures before", teachersLectures);
   const keys = Object.keys(teachersLectures);
 
-
   for (let i = 0; i < keys.length; i++) {
     const currTe = teachersLectures[keys[i]];
 
@@ -311,7 +310,6 @@ export function validateLevelsLectures(teachersLectures, levelsTotalLectures) {
       });
     }
   }
-
 
   console.log("levels counts", levelCounts);
 
@@ -493,4 +491,194 @@ export function getTeacherAverageLectures(teacher) {
   );
 }
 
+export function copyLevelsDay(levels, levelsKeys, dayIndex) {
+  const keys = Object.keys(levelsKeys);
+  let matrix = [];
+  // console.log(levels, levelsKeys, dayIndex);
+  for (let h = 0; h < keys.length; h++) {
+    // matrix.push(levels[keys[h]][dayIndex]);
+    matrix.push(JSON.parse(JSON.stringify(levels[keys[h]][dayIndex])));
+  }
+  return matrix;
+}
 
+export const getTeacherBlockDay = (teacher, day) =>
+  teacher.offDaysAndLectures.find((ele) => ele.day == day);
+
+export function isTeachersBlocked(
+  teachers,
+  combinations,
+  day,
+  numOfDailyLectures
+) {
+  const combinationTeachers = getTeachersByUnavailableDay(
+    day,
+    getElementsByIds(teachers, Object.keys(combinations))
+  );
+
+  for (const teacher of combinationTeachers) {
+    if (
+      isBlockedTeacherDay(
+        teacher,
+        combinations[teacher._id].length,
+        day,
+        numOfDailyLectures
+      )
+    )
+      return true;
+  }
+
+  if (canTeachersBeTogather(combinationTeachers, day)) return true;
+  return false;
+}
+
+export function canTeachersBeTogather(teachers, day) {
+  for (let i = 0; i < 7; i++) {
+    const blockedForSlot = new Set(); // Track blocked lectures for this slot
+    let times = 0;
+
+    for (const teacher of teachers) {
+      const offDay = getTeacherBlockDay(teacher, day);
+      if (offDay?.offLectures.includes(i)) {
+        blockedForSlot.add(i);
+        times++;
+      }
+    }
+    if (times >= teachers.length) {
+      return true; // Overlap in blocked lectures for this slot
+    }
+  }
+  return false;
+}
+
+export function isBlockedTeacherDay(
+  teacher,
+  averageLectures,
+  day,
+  totalLectures
+) {
+  const offDay = getTeacherBlockDay(teacher, day);
+
+  if (!offDay) return false;
+
+  if (totalLectures - offDay?.offLectures?.length < averageLectures) {
+    // console.log(`${teacher.name} can't be in ${day}`);
+    return true;
+  }
+
+  return false;
+}
+
+export function getLevelsDailyLectures(levels) {
+  let levelsDialyLectures = {};
+  for (const level of levels) {
+    levelsDialyLectures[level._id] = level.dailyLectures;
+  }
+  return levelsDialyLectures;
+}
+export function getUnavailableDays(teachers, daysOfWeek) {
+  let sharedOffLectures = {};
+
+  for (let dayIndex = 0; dayIndex < daysOfWeek.length; dayIndex++) {
+    // console.log(daysOfWeek[dayIndex])
+    const unavailableday = getTeachersByUnavailableDay(
+      daysOfWeek[dayIndex],
+      teachers
+    );
+
+    console.log(unavailableday);
+    let tempArr = [];
+    if (unavailableday.length > 1) {
+      for (let i = 0; i < unavailableday.length; i++) {
+        tempArr.push(unavailableday[i].id);
+      }
+    }
+
+    sharedOffLectures[daysOfWeek[dayIndex]] = tempArr;
+  }
+  return sharedOffLectures;
+}
+
+export function getTeachersBlockedLectures(teachers, day) {
+  let teachersBolckedLectures = {};
+  for (const teacher of teachers) {
+    const offDay = teacher.offDaysAndLectures.find((ele) => ele.day == day);
+    teachersBolckedLectures[teacher._id] = offDay ? offDay.offLectures : [];
+  }
+
+  return teachersBolckedLectures;
+}
+
+
+export function setupTeachersLectures(teachLecs) {
+  const teachers = Object.keys(teachLecs);
+  let levelsPerDay = {};
+  let lecturesCompinations_all = {};
+  let teachersKeys = {};
+
+  for (let i = 0; i < teachers.length; i++) {
+    let days = Object.keys(teachLecs[teachers[i]]);
+    let temp = [];
+
+    for (let h = 0; h < days.length; h++) {
+      if (teachLecs[teachers[i]][days[h]].length == 0) continue;
+      lecturesCompinations_all[`${teachers[i]}_${days[h]}`] =
+        teachLecs[teachers[i]][days[h]];
+      temp.push(`${teachers[i]}_${days[h]}`);
+      levelsPerDay[`${teachers[i]}_${days[h]}`] = getLevelsPerDay(
+        teachLecs[teachers[i]][days[h]]
+      );
+    }
+    if (temp.length !== 0) teachersKeys[teachers[i]] = temp;
+  }
+
+  return {
+    teachersLectures_all: lecturesCompinations_all,
+    levelsPerDay: levelsPerDay,
+    teachersKeys: teachersKeys,
+  };
+}
+
+export function getLevelsPerDay(day) {
+  let levelCounts = {};
+
+  day.forEach((obj) => {
+    const { level: levelType } = obj;
+    // console.log('obj',obj)
+    if (levelCounts[levelType]) {
+      levelCounts[levelType]++;
+    } else {
+      levelCounts[levelType] = 1;
+    }
+  });
+
+  return levelCounts;
+}
+export function getLevelsCounts(keys, levelsPerDay, levels) {
+  let levelCounts = {};
+  // console.log('keys',keys)
+  // console.log('arr',arr)
+  // console.log(keys);
+
+  for (let i = 0; i < keys.length; i++) {
+    const currTeacherDay = levelsPerDay[keys[i]];
+    for (const level in currTeacherDay) {
+      if (levelCounts[level]) {
+        levelCounts[level] += currTeacherDay[level];
+      } else {
+        levelCounts[level] = currTeacherDay[level];
+      }
+    }
+  }
+
+  for (const level in levelCounts) {
+    if (
+      levelCounts[level] !== levels[level] ||
+      Object.keys(levelCounts).length != Object.keys(levels).length
+    ) {
+      return { valid: false, levelCounts: levelCounts };
+    }
+  }
+
+  return { valid: true, levelCounts: levelCounts };
+}

@@ -15,7 +15,8 @@ export const action =
       await customFetch.post("/teachers", data);
       queryClient.invalidateQueries(["teachers"]);
       toast.success("Job added successfully ");
-      return redirect("..");
+      // return redirect("..");
+      return null
     } catch (error) {
       toast.error(error?.response?.data?.msg);
       return error;

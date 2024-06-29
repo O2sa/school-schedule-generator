@@ -13,7 +13,11 @@ import Teacher from "../models/TeacherModel.js";
 import Schedule from "../models/ScheduleModel.js";
 import School from "../models/SchoolModel.js";
 import User from "../models/UserModel.js";
-import { getLargestPropertyValue } from "../shedule_generator/utils.js";
+import {
+  getLargestPropertyValue,
+  getWeekDays,
+  groupBy,
+} from "../shedule_generator/utils.js";
 
 const withValidationErrors = (validateValues) => {
   return [
@@ -35,9 +39,11 @@ const withValidationErrors = (validateValues) => {
         //   throw new UnauthorizedError("wrong input");
         // }
 
-        // if (errorMessages[0].startsWith("teacher")) {
-        //   throw new InputLogicError("wrong input");
-        // }
+        if (errorMessages[0].startsWith("lectures-bigger-than-workdays")) {
+          throw new InputLogicError(
+            "لا بعد لأيام العمل أن تكون كافية لعدد المحاضرات"
+          );
+        }
 
         throw new BadRequestError(errorMessages);
       }
@@ -46,174 +52,118 @@ const withValidationErrors = (validateValues) => {
   ];
 };
 
-
-
 export const validateTeacherInput = withValidationErrors([
   body("workDays").custom(async (workDays, { req }) => {
     //setup data
 
-    const teacher = await Teacher.findById(req.params.id);
+    // try {
+    const teacher = await Teacher.findById(req.params.id).populate("subjects");
+
     if (!teacher)
       throw new NotFoundError(`no teacher with id ${req.params.id}`);
 
-    const subjects = await Subject.find({ teacher: teacher._id }).populate(
-      "level"
-    );
     const school = await School.findById(teacher.school);
     const levels = await Level.find({
       stage: teacher.stage,
       school: teacher.school,
     });
-    // console.log(subjects);
+
+    let largestLevel = 0;
     teacher.workDays = Number(workDays);
-    validateTeacher(teacher, subjects, levels, school);
+
+    if (teacher.subjects.length > 0) {
+      largestLevel = getLargestPropertyValue(levels, "dailyLectures");
+      validateTeacher(teacher, teacher.subjects, largestLevel, school);
+    }
+
+    const subjectsGroups=groupBy(teacher.subjects,'level')
+    for(const group in subjectsGroups){
+      validateLevelTeacherSubjects(teacher, subjectsGroups[group]);
+
+    }
+    // } catch (err) {
+    //   console.error(err);
+    // }
   }),
+]);
 
-  // body("offDaysAndLectures").custom(async (offDaysAndLectures, { req }) => {
-  //   //setup data
+export const validateTeacherOffLectures = withValidationErrors([
+  body("offDaysAndLectures").custom(async (offDaysAndLectures, { req }) => {
+    //setup data
 
-  //   try{
-  //   const teacher = await Teacher.findById(req.params.id);
-  //   if (!teacher)
-  //     throw new NotFoundError(`no teacher with id ${req.params.id}`);
+    // try {
+    const teacher = await Teacher.findById(req.params.id).populate("subjects");
 
-  //   const subjects = await Subject.find({ teacher: teacher._id }).populate(
-  //     "level"
-  //   );
+    if (!teacher)
+      throw new NotFoundError(`no teacher with id ${req.params.id}`);
 
-  //   const school = await School.findById(teacher.school);
+    const school = await School.findById(teacher.school);
+    const levels = await Level.find({
+      stage: teacher.stage,
+      school: teacher.school,
+    });
 
-  //   // get all subjects levels
-  //   let levels = [];
-  //   for (let i = 0; i < subjects.length; i++) levels.push(subjects[i].level);
-  //   // console.log(levels);
+    let largestLevel = 0;
 
-  //   let largestLevel = 0;
-  //   if (subjects.length == 0) return;
-  //   if (subjects.length == 1) {
-  //     largestLevel = levels[0].dailyLectures;
-  //   } else {
-  //     largestLevel = levels.reduce((acc, curr) => {
-  //       console.log(curr, acc);
-  //       return curr.dailyLectures > acc.dailyLectures
-  //         ? curr.dailyLectures
-  //         : acc.dailyLectures;
-  //     }, levels[0]);
-  //   }
+    teacher.offDaysAndLectures = offDaysAndLectures;
+    if (teacher.subjects.length > 0) {
+      largestLevel = getLargestPropertyValue(levels, "dailyLectures");
+      validateTeacher(teacher, teacher.subjects, largestLevel, school);
+    }
 
-  //   let totalAvaiableLectures = teacher.workDays * largestLevel;
 
-  //   const teacherAverageLectures = Math.ceil(
-  //     totalAvaiableLectures / teacher.workDays
-  //   );
 
-  //   let offDays = 0;
-  //   const allowedBlockDays = school.workDays - teacher.workDays;
-  //   let teacherBlockedDays = 0;
-  //   for (let i = 0; i < offDaysAndLectures; i++) {
-  //     const dayBlockedLects = offDaysAndLectures[i].offLectures.length;
-  //     offDays += dayBlockedLects;
+    const subjectsGroups=groupBy(teacher.subjects,'level')
+    for(const group in subjectsGroups){
+      validateLevelTeacherSubjects(teacher, subjectsGroups[group]);
 
-  //     if (
-  //       largestLevel.dailyLectures - dayBlockedLects >
-  //       teacherAverageLectures
-  //     ) {
-  //       teacherBlockedDays++;
-  //     }
-  //   }
+    }
 
-  //   let totalFreeLectures = largestLevel * school.workDays - offDays;
-
-  //   if (teacherBlockedDays > allowedBlockDays)
-  //     throw new BadRequestError("wrong offDaysAndLectures wrong");
-
-  //   let totalNeededLectures = 0;
-  //   for (let i = 0; i < subjects.length; i++) {
-  //     totalNeededLectures += subjects[i].weeklyLectures;
-  //   }
-
-  //   console.log("largestLevel", largestLevel);
-  //   console.log("offDays", offDays);
-  //   console.log("school.workDays", school.workDays);
-
-  //   console.log("totalFreeLectures", totalFreeLectures);
-  //   console.log("totalAvaiableLectures", totalAvaiableLectures);
-  //   console.log("totalNeededLectures", totalNeededLectures);
-
-  //   if (
-  //     totalFreeLectures < totalNeededLectures ||
-  //     totalAvaiableLectures < totalNeededLectures
-  //   ) {
-  //     throw new BadRequestError("work days wrong");
-  //   }
-  //   }
-  //   catch(err){
-  //     console.error(err)
-  //   }
-  // }),
+    // } catch (err) {
+    //   console.error(err);
+    // }
+  }),
 ]);
 
 export const validateSubjectInput = withValidationErrors([
   body("weeklyLectures").custom(async (weeklyLectures, { req }) => {
     let newSub = req.body;
-    const levelDoc = await Level.findById(newSub.level).populate("subjects");
-    const school = await School.findById(levelDoc.school);
-    const teacher = await Teacher.findById(newSub.teacher);
-
     newSub.weeklyLectures = Number(weeklyLectures);
-    let isNew = true;
-    let subjects = levelDoc.subjects.map((sub) => {
-      if (sub._id == req.params.id) {
-        isNew = false;
-        return sub;
-      }
-      return sub;
+    const levelDoc = await Level.findById(newSub.level).populate({
+      path: "subjects",
+      match: { _id: { $ne: newSub._id } },
     });
 
-    if (isNew) subjects = [...subjects, newSub];
-
-    validateLevelLectures(levelDoc, subjects, school);
-    const teacherSubjects = subjects.filter(
-      (sub) => sub.teacher == newSub.teacher
-    );
-
-    let totalTeacherLevelLectures = 0;
-    for (const sub of teacherSubjects)
-      totalTeacherLevelLectures += sub.weeklyLectures;
-
-    // console.log("totalTeacherLevelLectures", totalTeacherLevelLectures);
-    // console.log("teacherSubjects", teacherSubjects);
-    // console.log("subjects", subjects);
-    // console.log("newSub", newSub);
-
-    if (2 < Math.ceil(totalTeacherLevelLectures / teacher.workDays))
-      throw new InputLogicError(
-        "teacher lectures for level day can't be more then 2 "
-      );
-
-    let subjectsTs = await Subject.find({ teacher: teacher._id }).populate(
-      "level"
-    );
-
-    // console.log(req.params.id);
-
-    subjectsTs = subjectsTs.map((sub) => {
-      if (sub._id.toString() == req.params.id) {
-        isNew = false;
-        return sub;
-      }
-      return sub;
+    const school = await School.findById(levelDoc.school);
+    const teacher = await Teacher.findById(newSub.teacher).populate({
+      path: "subjects",
+      match: { _id: { $ne: newSub._id } },
     });
-    if (isNew) subjectsTs = [...subjectsTs, newSub];
-    console.log(subjectsTs);
     const levels = await Level.find({
       stage: teacher.stage,
       school: teacher.school,
     });
-    validateTeacher(teacher, subjectsTs, levels, school);
+
+    const teacherLevelSubjects = await Subject.find({
+      teacher: teacher._id,
+      level: levelDoc._id,
+      _id: { $ne: newSub._id },
+    });
+
+    let largestLevel = 0;
+    largestLevel = getLargestPropertyValue(levels, "dailyLectures");
+
+    validateLevelLectures(levelDoc, [...levelDoc.subjects, newSub], school);
+    validateTeacher(
+      teacher,
+      [...teacher.subjects, newSub],
+      largestLevel,
+      school
+    );
+
+    validateLevelTeacherSubjects(teacher, [...teacherLevelSubjects, newSub]);
   }),
 ]);
-
 
 export const validateLevelInput = withValidationErrors([
   body("dailyLectures").custom(async (dailyLectures, { req }) => {
@@ -224,34 +174,8 @@ export const validateLevelInput = withValidationErrors([
     // const schoolDoc = await School.findById(levelDoc.school);
     const subjects = await Subject.find({ level: levelDoc._id });
 
-    // Calculate total lectures (assuming all elements represent lectures)
-    const totalLevelLectures = school.workDays * dailyLectures;
-
-    let totalCurrentLectures = 0;
-    for (let i = 0; i < subjects.length; i++) {
-      totalCurrentLectures += subjects[i].weeklyLectures;
-    }
-    console.log("totalCurrentLectures", totalCurrentLectures);
-    console.log("totalLevelLectures", totalLevelLectures);
-
-    // Check if total lectures is less than or equal to level lectures
-    if (totalCurrentLectures > totalLevelLectures) {
-      throw new InputLogicError("wrong input");
-    }
-  }),
-]);
-
-export const validateIdParam = withValidationErrors([
-  param("id").custom(async (value, { req }) => {
-    const isValidMongoId = mongoose.Types.ObjectId.isValid(value);
-    if (!isValidMongoId) throw new BadRequestError("invalid MongoDB id");
-    const job = await Job.findById(value);
-    if (!job) throw new NotFoundError(`no job with id ${value}`);
-    const isAdmin = req.user.role === "admin";
-    const isOwner = req.user.userId === job.createdBy.toString();
-
-    if (!isAdmin && !isOwner)
-      throw new UnauthorizedError("not authorized to access this route");
+    levelDoc.dailyLectures = Number(dailyLectures);
+    validateLevelLectures(levelDoc, subjects, school);
   }),
 ]);
 
@@ -277,6 +201,8 @@ export const validateLevelIdParam = withValidationErrors([
 
 export const validateTeacherIdParam = withValidationErrors([
   param("id").custom(async (value, { req }) => {
+    console.log("validateTeacherIdParam");
+
     const isValidMongoId = mongoose.Types.ObjectId.isValid(value);
     if (!isValidMongoId) throw new BadRequestError("invalid MongoDB id");
 
@@ -295,12 +221,98 @@ export const validateTeacherIdParam = withValidationErrors([
   }),
 ]);
 
-export const validateSubjectLectures = withValidationErrors([
-  body("weeklyLectures").custom(async (value, { req }) => {
-    console.log(req.body, value);
-    if (!validateLectures(req.body.level, value)) {
-      throw new InputLogicError("wrong input");
+const validateTeacher = (teacher, subjects, largestLevel, school) => {
+  const totalNeededLectures = subjects.reduce(
+    (acc, val) => acc + val.weeklyLectures,
+    0
+  );
+  const weekDays = getWeekDays(school.startDay, school.workDays);
+  let totalAvaiableLectures = teacher.workDays * largestLevel;
+  const teacherAverageLectures = Math.ceil(
+    totalNeededLectures / teacher.workDays
+  );
+
+  const allowedBlockDays = school.workDays - teacher.workDays;
+  let teacherBlockedDays = 0;
+  const offDaysAndLectures = teacher.offDaysAndLectures.filter((v) =>
+    weekDays.includes(v.day)
+  );
+
+  let offDays = offDaysAndLectures.reduce((acc, val) => {
+    console.log("day", val.day);
+
+    const offLectures = val.offLectures.filter((v) => v < largestLevel).length;
+    console.log("offLects", offLectures);
+
+    if (largestLevel - offLectures - teacherAverageLectures < 0) {
+      teacherBlockedDays++;
     }
+    return acc + offLectures;
+  }, 0);
+
+  let totalFreeLectures = largestLevel * school.workDays - offDays;
+
+  console.log("allowedBlockDays", allowedBlockDays);
+  console.log("weekDays", weekDays);
+  console.log("offLectures", offDays);
+  console.log("teacherBlockedDays", teacherBlockedDays);
+  console.log("teacherAverageLectures", teacherAverageLectures);
+
+  console.log("totalFreeLectures", totalFreeLectures);
+  console.log("totalAvaiableLectures", totalAvaiableLectures);
+  console.log("totalNeededLectures", totalNeededLectures);
+
+  if (teacherBlockedDays > allowedBlockDays)
+    throw new BadRequestError("wrong offDaysAndLectures wrong");
+
+  if (
+    totalFreeLectures < totalNeededLectures
+    // ||
+    // totalAvaiableLectures < totalNeededLectures
+  ) {
+    throw new BadRequestError("lectures-bigger-than-workdays");
+  }
+};
+
+const validateLevelLectures = (level, subjects, school) => {
+  // Calculate total lectures (assuming all elements represent lectures)
+  const totalLevelLectures = school.workDays * level.dailyLectures;
+
+  const totalCurrentLectures = subjects.reduce(
+    (acc, val) => acc + val.weeklyLectures,
+    0
+  );
+
+  console.log("totalCurrentLectures", totalCurrentLectures);
+  console.log("totalLevelLectures", totalLevelLectures);
+
+  if (totalCurrentLectures > totalLevelLectures) {
+    throw new BadRequestError("weeklyLectures is very big");
+  }
+};
+
+const validateLevelTeacherSubjects = (teacher, subjects) => {
+  // const allowedDoubleDays=Math.floor(level.dailyLectures/2)
+  const teachertotalLectures = subjects.reduce(
+    (acc, val) => acc + val.weeklyLectures,
+    0
+  );
+
+  if (teachertotalLectures > teacher.workDays) {
+    throw new BadRequestError("weeklyLectures is very big");
+  }
+};
+export const validateIdParam = withValidationErrors([
+  param("id").custom(async (value, { req }) => {
+    const isValidMongoId = mongoose.Types.ObjectId.isValid(value);
+    if (!isValidMongoId) throw new BadRequestError("invalid MongoDB id");
+    const job = await Job.findById(value);
+    if (!job) throw new NotFoundError(`no job with id ${value}`);
+    const isAdmin = req.user.role === "admin";
+    const isOwner = req.user.userId === job.createdBy.toString();
+
+    if (!isAdmin && !isOwner)
+      throw new UnauthorizedError("not authorized to access this route");
   }),
 ]);
 
@@ -348,72 +360,74 @@ export const validateUpdateUserInput = withValidationErrors([
     }),
 ]);
 
-const validateTeacher = (teacher, subjects, levels, school) => {
-  // get all subjects levels
+// 2-2
+// 4-4
+// 3,3,3
+// 3,3,3
 
-  let largestLevel = 0;
-  if (subjects.length == 0) return;
+// 32
+// 32
+// 3
+// 3
+// 3
 
-  if (subjects.length == 1) {
-    largestLevel = levels[0].dailyLectures;
-  } else largestLevel = getLargestPropertyValue(levels, "dailyLectures");
+// s-workdays==5
 
-  let offDays = 0;
-  let offDaysAndLectures = teacher.offDaysAndLectures;
-  // console.log(offDaysAndLectures);
-  // console.log(teacher);
+// if workdays==1
+//   lecs<=2
 
-  for (const offDay of offDaysAndLectures) {
-    offDays += offDay.offLectures.length;
-  }
+// if workdays==2
+//   lecs<=4
 
-  let totalNeededLectures = 0;
-  for (let i = 0; i < subjects.length; i++) {
-    totalNeededLectures += subjects[i].weeklyLectures;
-  }
+// if workdays==3
+//   lecs<=5
 
-  // console.log("largestLevel", largestLevel);
-  // console.log("offDays", offDays);
-  // console.log("school.workDays", school.workDays);
+// if workdays==4
+//   lecs<=6
 
-  let totalFreeLectures = largestLevel * school.workDays - offDays;
-  let totalAvaiableLectures = teacher.workDays * largestLevel;
+// if workdays==5
+//   lecs<=7
 
-  console.log("totalFreeLectures", totalFreeLectures);
-  console.log("totalAvaiableLectures", totalAvaiableLectures);
-  console.log("totalNeededLectures", totalNeededLectures);
+// s-workdays==6
+// if workdays==1
+//   lecs<=2
 
-  if (
-    totalFreeLectures < totalNeededLectures ||
-    totalAvaiableLectures < totalNeededLectures
-  ) {
-    throw new BadRequestError("work days wrong");
-  }
-};
+// if workdays==2
+//   lecs<=4
 
-const validateLevelLectures = async (level, subjects, school) => {
-  try {
-    // Calculate total lectures (assuming all elements represent lectures)
-    const totalLevelLectures = school.workDays * level.dailyLectures;
+// if workdays==3
+//   lecs<=6
 
-    let totalCurrentLectures = 0;
-    for (let i = 0; i < subjects.length; i++) {
-      totalCurrentLectures += subjects[i].weeklyLectures;
-    }
-    // console.log(totalCurrentLectures)
+// if workdays==4
+//   lecs<=7
 
-    console.log("totalCurrentLectures", totalCurrentLectures);
-    console.log("totalLevelLectures", totalLevelLectures);
-    // console.log("totalNeededLectures", totalNeededLectures);
+// if workdays==5
+//   lecs<=8
 
-    // Check if total lectures is less than or equal to level lectures
-    if (totalCurrentLectures > totalLevelLectures) {
-      throw new InputLogicError("weeklyLectures is very big");
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
+// if workdays==6
+//   lecs<=9
 
+// s-workdays==8
+// if workdays==1
+//   lecs<=2
 
+// if workdays==2
+//   lecs<=4
 
+// if workdays==3
+//   lecs<=6
+
+// if workdays==4
+//   lecs<=8
+
+// if workdays==5
+//   lecs<=9
+
+// if workdays==6
+//   lecs<=10
+
+// if workdays==7
+//   lecs<=11
+
+// if workdays==8
+//   lecs<=12

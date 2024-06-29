@@ -29,6 +29,7 @@ import {
 import customFetch from "../utils/customFetch";
 import { useDisclosure } from "@mantine/hooks";
 import { FormRow, SubmitBtn } from "../components";
+import { useDeleteElement, useGetElements, useUpdateElement } from "../utils/crud";
 
 export const loader =
   (queryClient) =>
@@ -42,67 +43,8 @@ export const loader =
     }
   };
 
-//READ hook (get subjects from api)
-function useGetSubjects(id) {
-  return useQuery({
-    queryKey: ["subjects", id],
-    queryFn: async () => {
-      //send api request here
-      const { data } = await customFetch.get(`/subjects/level-subjects/${id}`);
-      console.log("data", data);
-      return data.subjects;
-    },
-    refetchOnWindowFocus: false,
-  });
-}
 
-//UPDATE hook (put subject in api)
-function useUpdateSubject(id) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (subject) => {
-      //send api update request here
-      console.log(subject);
-      await customFetch.patch(`/subjects/${subject._id}`, {
-        ...subject,
-        teacher: subject.teacher._id,
-      });
-    },
-    //client side optimistic update
-    onMutate: (newSubjectInfo) => {
-      queryClient.setQueryData(["subjects", id], (prevSubjects) =>
-        prevSubjects?.map((prevSubject) =>
-          prevSubject._id === newSubjectInfo._id ? newSubjectInfo : prevSubject
-        )
-      );
-    },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["subjects", id] }),
-  });
-}
-
-//DELETE hook (delete subject in api)
-function useDeleteSubject(id) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (subjectsId) => {
-      //send api update request here
-      await customFetch.delete(`/subjects/${subjectsId}`); // Adjust this URL as per your API route
-    },
-    //client side optimistic update
-    onMutate: (subjectsId) => {
-      queryClient.setQueryData(["subjects", id], (prevSubjects) =>
-        prevSubjects?.filter((subject) => subject._id !== subjectsId)
-      );
-    },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["subjects", id] }), //refetch subjects after mutation, disabled for demo
-  });
-}
-
-const queryClient = new QueryClient();
-
-const SubjectsContainer = () => {
+const SubjectsContainer = ({queryClient}) => {
   const [validationErrors, setValidationErrors] = useState({});
   const [teacherOptions, setTeacherOptions] = useState([]);
   const [selectedTeacher, setSelectedTeacher] = useState("");
@@ -112,20 +54,19 @@ const SubjectsContainer = () => {
   //call READ hook
   const id = useLoaderData();
 
-  console.log();
   const {
     data: subjects = [],
     isError: isLoadingSubjectsError,
     isFetching: isFetchingSubjects,
     isLoading: isLoadingSubjects,
-  } = useGetSubjects(id); //call READ hook
+  } = useQuery(useGetElements(['subjects','level-subjects', id]));
 
   //call UPDATE hook
   const { mutateAsync: updateSubject, isLoading: isUpdatingSubject } =
-    useUpdateSubject(id);
+  useUpdateElement( ['subjects','level-subjects', id]);
   //call DELETE hook
   const { mutateAsync: deleteSubject, isLoading: isDeletingSubject } =
-    useDeleteSubject(id);
+  useDeleteElement( ['subjects','level-subjects', id]);
 
   //UPDATE action
   const handleSaveSubject = async ({ values, row, table }) => {
@@ -213,11 +154,7 @@ const SubjectsContainer = () => {
           children: "خطأ في تحميل البيانات",
         }
       : undefined,
-    mantineTableContainerProps: {
-      sx: {
-        minHeight: "500px",
-      },
-    },
+ 
     // onCreatingRowCancel: () => setValidationErrors({}),
     // onCreatingRowSave: handleCreateSubject,
     onEditingRowCancel: () => setValidationErrors({}),
