@@ -10,7 +10,7 @@ import {
 } from "../controllers/subjectController.js";
 import { validateSubjectInput } from "../middleware/validationMiddleware.js";
 
-router.route("/").get(getAllSubjects).post(validateSubjectInput,createSubject);
+router.route("/").get(getLevelInfo).post(validateSubjectInput,createSubject);
 
 router.route("/:id").get(getSubject).patch(validateSubjectInput,updateSubject).delete(deleteSubject);
 

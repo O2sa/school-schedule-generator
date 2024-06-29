@@ -1,4 +1,3 @@
-
 // Function to distribute lectures of a teacher per work days
 const teacherLecturesPerWorkDays = (teacher, subjects) => {
   const teacherWorkDays = teacher.workDays;
@@ -14,7 +13,7 @@ const teacherLecturesPerWorkDays = (teacher, subjects) => {
   for (let i = 0; i < remainingSubjects; i++) {
     lecturesPerWeek[i]++;
   }
-  return lecturesPerWeek;
+  return lecturesPerWeek.filter(value => value !== 0);;
 };
 
 // Function to calculate total lectures for each teacher
@@ -35,12 +34,16 @@ export default function distributeTeacherLectures(teacher, subjects) {
   const teacherLectures = {};
 
   const lecturesPerWeek = teacherLecturesPerWorkDays(teacher, subjects);
+  console.log("teacher", teacher.name + teacher._id);
+  console.log("lecturesPerWeek", lecturesPerWeek);
 
   // console.log('lecturesPerWeek',lecturesPerWeek)
   // Distribute remaining subjects evenly among the working days
-  for (let i = 0; i < teacher.workDays; i++) {
+  for (let i = 0; i < lecturesPerWeek.length; i++) {
     teacherLectures[`Day_${i + 1}`] = [];
   }
+
+
   const keys = Object.keys(teacherLectures);
   for (let h = 0; h < subjects.length; h++) {
     let i = 0;

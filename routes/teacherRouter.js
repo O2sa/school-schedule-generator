@@ -8,7 +8,7 @@ import {
   getTeacher,
   getStageTeachers,
 } from "../controllers/teacherController.js";
-import { validateTeacherIdParam, validateTeacherInput } from "../middleware/validationMiddleware.js";
+import { validateTeacherIdParam, validateTeacherInput, validateTeacherOffLectures } from "../middleware/validationMiddleware.js";
 
 router.route("/").get(getAllTeachers).post(createTeacher);
 router.route("/stage-teachers/:id").get(getStageTeachers);
@@ -19,4 +19,8 @@ router
   .get(validateTeacherIdParam,getTeacher)
   .patch(validateTeacherIdParam,validateTeacherInput, updateTeacher)
   .delete(validateTeacherIdParam,deleteTeacher);
+
+  router
+  .route("/edit-offlectures/:id")
+  .patch(validateTeacherIdParam,validateTeacherOffLectures, updateTeacher)
 export default router;

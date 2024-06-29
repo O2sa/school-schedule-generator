@@ -97,7 +97,7 @@ const OffLectures = ({ teacher }) => {
 
     console.log('offDaysAndLectures bs',offDaysAndLectures);
     try {
-      await customFetch.patch(`/teachers/${id}`, {
+      await customFetch.patch(`/teachers/edit-offlectures/${id}`, {
         offDaysAndLectures: offDaysAndLectures,
       });
       // queryClient.invalidateQueries(["teachers"]);

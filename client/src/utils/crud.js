@@ -1,8 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import customFetch from './customFetch'
+import {  useAppContext } from '../App'
 
-export function useDeleteElement(queryClient, collection) {
+
+
+export function useDeleteElement( collection) {
+const {queryClient}=useAppContext()
+
+
   return useMutation({
     mutationFn: async (eleId) => {
       console.log('try delete')
@@ -42,7 +48,10 @@ export function useGetElements(collection) {
   }
 }
 
-export function useUpdateElement(queryClient, collection) {
+export function useUpdateElement( collection) {
+  const {queryClient}=useAppContext()
+  console.log('useUpdateElement', collection)
+
   return useMutation({
     mutationFn: async (element) => {
       const { data } = await customFetch.patch(`${collection[0]}/${element._id}`, element)
@@ -68,7 +77,9 @@ export function useUpdateElement(queryClient, collection) {
   })
 }
 
-export function useFetchOpt(queryClient, collection) {
+export function useFetchOpt( collection) {
+  const {queryClient}=useAppContext()
+
   return {
     queryKey:[ ...collection],
     queryFn: async () => {
@@ -82,7 +93,9 @@ export function useFetchOpt(queryClient, collection) {
   }
 }
 
-export function useCreateOneElement(queryClient, collection) {
+export function useCreateOneElement( collection) {
+  const {queryClient}=useAppContext()
+
   return useMutation({
     mutationFn: async (element) => {
       const { data } = await customFetch.post(`${collection[0]}`, element)
@@ -100,7 +113,9 @@ export function useCreateOneElement(queryClient, collection) {
   })
 }
 
-export function useCreateElement(queryClient, collection) {
+export function useCreateElement( collection) {
+  const {queryClient}=useAppContext()
+
   return useMutation({
     mutationFn: async (element) => {
       console.log('try create')

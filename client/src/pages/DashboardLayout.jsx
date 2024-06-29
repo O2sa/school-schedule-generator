@@ -70,13 +70,15 @@ const DashboardLayout = ({ queryClient }) => {
     logoutUser();
   }, [isAuthError]);
 
+  if (isPageLoading || isLoading) return <Loading />
+
   return (
     <DashboardContext.Provider
       value={{
         user: data?.user,
         showSidebar,
-        isDarkTheme,
-        toggleDarkTheme,
+        // isDarkTheme,
+        // toggleDarkTheme,
         toggleSidebar,
         logoutUser,
       }}

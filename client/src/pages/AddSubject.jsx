@@ -31,16 +31,19 @@ export const loader =
 
 export const action =
   (queryClient) =>
-  async ({ request }) => {
+  async ({ request,params }) => {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
     console.log('data',data);
 
     try {
       await customFetch.post("/subjects", data);
-      queryClient.invalidateQueries(["add-subject"]);
+      queryClient.invalidateQueries(["subjects",'level-subjects',params.id]);
+      queryClient.invalidateQueries(["teachers"]);
+
       toast.success("Job added successfully ");
-      return redirect("..");
+      // return redirect("..");
+      return null
     } catch (error) {
       toast.error(error?.response?.data?.msg);
       return error;
