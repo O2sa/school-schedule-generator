@@ -486,6 +486,7 @@ export function testAllOrders(data, schoolInfo, teachers) {
       for (const key in tempTeachersKeys) {
         restKeys = [...restKeys, ...tempTeachersKeys[key]];
       }
+      
       console.log('tempLevelsSchedule',tempLevelsSchedule)
       console.log('tempDaysLectKeys',tempDaysLectKeys)
       console.log('tempDaysLect',tempDaysLect)
