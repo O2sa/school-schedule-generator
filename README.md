@@ -1,4 +1,5 @@
 # School Schedules Generator
+![](school-schedule.png)
 
 Platform for generate school schedules for different classes.
 
