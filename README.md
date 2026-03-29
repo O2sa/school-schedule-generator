@@ -24,7 +24,6 @@ This is a full-stack JavaScript application:
 *   **Backend:** [Node.js](https://nodejs.org/) & [Express.js](https://expressjs.com/)
 *   **Frontend:** React, Mantine Ui.
 *   **Database:** [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/) ODM
-*   **Algorithm:** A custom-built scheduling logic (likely using constraint satisfaction or a heuristic approach located in `shedule_generator/`)
 
 ## 🚀 Key Features
 
