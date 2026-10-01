@@ -1,19 +1,16 @@
 import React from "react";
-
-import { IoBarChartSharp, IoSettings } from "react-icons/io5";
-import { MdAccountBox, MdGrade, MdQueryStats, MdSchedule } from "react-icons/md";
-import { FaChalkboardTeacher, FaRegUserCircle, FaUsers, FaWpforms } from "react-icons/fa";
-import { ImProfile } from "react-icons/im";
-import { MdAdminPanelSettings } from "react-icons/md";
+import { MdGrade, MdSchedule } from "react-icons/md";
+import { FaChalkboardTeacher, FaRegUserCircle, FaUsers } from "react-icons/fa";
+import { IoSettings } from "react-icons/io5";
 
 const links = [
   {
-    text: "الجداول",
+    text: "الجدول الدراسي",
     path: ".",
     icon: <MdSchedule />,
   },
   {
-    text: "المستويات",
+    text: "الصفوف والمراحل",
     path: "levels",
     icon: <MdGrade />,
   },
@@ -23,41 +20,20 @@ const links = [
     icon: <FaChalkboardTeacher />,
   },
   {
-    text: "الإعدادت",
+    text: "إعدادات المدرسة",
     path: "school",
     icon: <IoSettings />,
   },
   {
-    text: "إدارة المستخدمين",
+    text: "إدارة المسؤولين",
     path: "admins",
     icon: <FaUsers />,
   },
-
-  // {
-  //   text: "add job",
-  //   path: "add-job",
-  //   icon: <FaWpforms />,
-  // },
-  // {
-  //   text: "all jobs",
-  //   path: "all-jobs",
-  //   icon: <MdQueryStats />,
-  // },
-  // {
-  //   text: "stats",
-  //   path: "stats",
-  //   icon: <IoBarChartSharp />,
-  // },
   {
-    text: "الحساب",
+    text: "الملف الشخصي",
     path: "profile",
     icon: <FaRegUserCircle />,
   },
-  // {
-  //   text: "admin",
-  //   path: "admin",
-  //   icon: <MdAdminPanelSettings />,
-  // },
 ];
 
 export default links;

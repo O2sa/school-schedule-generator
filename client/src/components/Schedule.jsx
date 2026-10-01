@@ -16,7 +16,6 @@ import {
   useMantineReactTable,
   // createRow,
 } from "mantine-react-table";
-import { ConnectionStates } from "mongoose";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 
 export default function Schedule({ data }) {

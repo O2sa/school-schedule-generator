@@ -1,12 +1,12 @@
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import Wrapper from '../assets/wrappers/PageBtnContainer';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { useAllJobsContext } from '../pages/AllJobs';
+import { useLevelsContext } from '../pages/Levels';
 
 const PageBtnContainer = () => {
-  const {
-    data: { numOfPages, currentPage },
-  } = useAllJobsContext();
+  const context = useLevelsContext();
+  const numOfPages = context?.data?.numOfPages || 1;
+  const currentPage = context?.data?.currentPage || 1;
   const pages = Array.from({ length: numOfPages }, (_, index) => {
     return index + 1;
   });

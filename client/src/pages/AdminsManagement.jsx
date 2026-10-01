@@ -21,7 +21,6 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { IconUserCircle, IconSend } from "@tabler/icons-react";
-import { data } from "./makeData";
 import {
   QueryClient,
   QueryClientProvider,

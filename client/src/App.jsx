@@ -17,12 +17,7 @@ import {
   Login,
   DashboardLayout,
   Error,
-  AddJob,
-  Stats,
-  AllJobs,
   Profile,
-  Admin,
-  EditJob,
   Schedules,
   Levels,
   AddLevel,
@@ -40,14 +35,7 @@ import {
 import { action as registerAction } from "./pages/Register";
 import { action as loginAction } from "./pages/Login";
 import { loader as dashboardLoader } from "./pages/DashboardLayout";
-import { action as addJobAction } from "./pages/AddJob";
-import { loader as allJobsLoader } from "./pages/AllJobs";
-import { loader as editJobLoader } from "./pages/EditJob";
-import { action as editJobAction } from "./pages/EditJob";
-import { action as deleteJobAction } from "./pages/DeleteJob";
-import { loader as adminLoader } from "./pages/Admin";
 import { action as profileAction } from "./pages/Profile";
-import { loader as statsLoader } from "./pages/Stats";
 import ErrorElement from "./components/ErrorElement";
 
 import { loader as schedulesLoader } from "./pages/Schedules";
@@ -60,7 +48,7 @@ import { loader as SubjectsContainerLoader } from "./pages/SubjectsContainer";
 import { loader as SchoolLoader } from "./pages/SchoolDetail";
 import { action as SchoolAction } from "./pages/SchoolDetail";
 import { action as NewAdminAction } from "./pages/NewAdmin";
-import { action as AddTeacherAction } from "./pages/ِAddTeacher";
+import { action as AddTeacherAction } from "./pages/AddTeacher";
 import { loader as TeacherDetailsLoader } from "./pages/TeacherDetail";
 import { loader as AddSubjectLoader } from "./pages/AddSubject";
 import { action as AddSubjectAction } from "./pages/AddSubject";

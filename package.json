@@ -1,7 +1,7 @@
 {
-  "name": "jobify",
+  "name": "school-schedule-generator",
   "version": "1.0.0",
-  "description": "[Jobify](https://mern-jobify-v2.onrender.com/)",
+  "description": "Full-stack School Schedule Generator application",
   "main": "index.js",
   "type": "module",
   "scripts": {

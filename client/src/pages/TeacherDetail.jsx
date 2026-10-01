@@ -48,7 +48,6 @@ import {
   WEEK_DAYS,
   WORK_DAYS,
 } from "../../../utils/constants";
-import { get } from "mongoose";
 import TeacherSchedule from "./TeacherSchedule";
 
 const singleJobQuery = (id) => {
