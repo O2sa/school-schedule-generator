@@ -28,149 +28,261 @@ export const DEFAULT_SCHOOL_CONFIG: SchoolConfigRecord = {
   },
 };
 
-export function generateArabicK12DemoData(): {
+export function generateArabicK12DemoData(numRoomsPerGrade = 2): {
   config: SchoolConfigRecord;
   teachers: TeacherRecord[];
   classes: ClassRecord[];
   subjects: SubjectRecord[];
   curriculum: CurriculumRequirementRecord[];
 } {
-  // 1. Subjects
-  const subjects: SubjectRecord[] = [
-    { id: 'sub-islamic', name: 'التربية الإسلامية', code: 'ISL', category: 'core' },
-    { id: 'sub-quran', name: 'القرآن الكريم والتجويد', code: 'QUR', category: 'core' },
-    { id: 'sub-arabic', name: 'اللغة العربية', code: 'ARB', category: 'core' },
-    { id: 'sub-english', name: 'اللغة الإنجليزية', code: 'ENG', category: 'core' },
-    { id: 'sub-math', name: 'الرياضيات', code: 'MTH', category: 'core' },
-    { id: 'sub-science', name: 'العلوم العامة', code: 'SCI', category: 'science' },
-    { id: 'sub-physics', name: 'الفيزياء', code: 'PHY', category: 'science' },
-    { id: 'sub-chemistry', name: 'الكيمياء', code: 'CHM', category: 'science' },
-    { id: 'sub-biology', name: 'الأحياء', code: 'BIO', category: 'science' },
-    { id: 'sub-social', name: 'الدراسات الاجتماعية', code: 'SOC', category: 'humanities' },
-    { id: 'sub-history', name: 'التاريخ', code: 'HIS', category: 'humanities' },
-    { id: 'sub-geography', name: 'الجغرافيا', code: 'GEO', category: 'humanities' },
-    { id: 'sub-cs', name: 'الحاسب وتقنية المعلومات', code: 'COM', category: 'science' },
-    { id: 'sub-art', name: 'التربية الفنية', code: 'ART', category: 'activity' },
-    { id: 'sub-pe', name: 'التربية البدنية', code: 'PE', category: 'activity' },
-  ];
-
-  // 2. Classes: 12 Grades, 2 sections each = 24 classes
   const classes: ClassRecord[] = [];
-  for (let grade = 1; grade <= 12; grade++) {
-    const periodsPerDay = grade <= 4 ? 6 : 7;
-    classes.push({
-      id: `cls-g${grade}-1`,
-      gradeLevel: grade,
-      roomNumber: `${grade}01`,
-      sectionName: grade <= 10 ? `الصف ${grade} / 1` : grade === 11 ? `الصف 11 / علمي 1` : `الصف 12 / علمي 1`,
-      periodsPerDay,
-    });
-    classes.push({
-      id: `cls-g${grade}-2`,
-      gradeLevel: grade,
-      roomNumber: `${grade}02`,
-      sectionName: grade <= 10 ? `الصف ${grade} / 2` : grade === 11 ? `الصف 11 / أدبي` : `الصف 12 / أدبي`,
-      periodsPerDay,
-    });
+  const teachers: TeacherRecord[] = [];
+  const subjects: SubjectRecord[] = [];
+  const curriculum: CurriculumRequirementRecord[] = [];
+
+  const subjectMap = new Map<string, SubjectRecord>();
+  function getOrCreateSubject(name: string, code: string, category: 'core' | 'science' | 'humanities' | 'activity'): string {
+    let sub = subjectMap.get(name);
+    if (!sub) {
+      sub = { id: `sub_${code.toLowerCase()}_${subjectMap.size + 1}`, name, code, category };
+      subjectMap.set(name, sub);
+      subjects.push(sub);
+    }
+    return sub.id;
   }
 
-  // 3. Teachers (26 teachers spanning all disciplines)
-  const teacherDefs = [
-    { name: 'أ. محمد بن أحمد', spec: 'التربية الإسلامية', count: 2 },
-    { name: 'أ. عبدالله القحطاني', spec: 'القرآن الكريم', count: 2 },
-    { name: 'أ. خالد التميمي', spec: 'اللغة العربية', count: 4 },
-    { name: 'أ. عمر بن سلطان', spec: 'اللغة الإنجليزية', count: 3 },
-    { name: 'أ. عبدالرحمن الدوسري', spec: 'الرياضيات', count: 4 },
-    { name: 'أ. فهد الشمري', spec: 'العلوم العامة', count: 2 },
-    { name: 'أ. إبراهيم الغامدي', spec: 'الفيزياء', count: 2 },
-    { name: 'أ. طارق الشهري', spec: 'الكيمياء', count: 2 },
-    { name: 'أ. سامي المنصور', spec: 'الأحياء', count: 2 },
-    { name: 'أ. ماجد العتيبي', spec: 'الدراسات الاجتماعية', count: 2 },
-    { name: 'أ. هشام السالم', spec: 'الحاسب وتقنية المعلومات', count: 2 },
-    { name: 'أ. وليد الخالدي', spec: 'التربية البدنية', count: 2 },
-    { name: 'أ. حسام باوزير', spec: 'التربية الفنية', count: 2 },
-  ];
+  // 1. Classes: 12 Grades x numRoomsPerGrade
+  const roomLabels = ['أ', 'ب', 'ج', 'د'];
+  for (let grade = 1; grade <= 12; grade++) {
+    const isLower = grade <= 4;
+    const periodsPerDay = isLower ? 6 : 7;
 
-  const teachers: TeacherRecord[] = [];
-  let tIdx = 1;
-  for (const group of teacherDefs) {
-    for (let i = 1; i <= group.count; i++) {
-      teachers.push({
-        id: `tch-${tIdx++}`,
-        name: `${group.name} (${i})`,
-        specialization: group.spec,
-        maxDailyPeriods: 4,
-        maxWeeklyPeriods: 18,
-        unavailableSlots: i % 2 === 0 ? [{ dayIndex: 0, periodIndex: 0 }] : [],
+    for (let r = 0; r < numRoomsPerGrade; r++) {
+      const roomLabel = roomLabels[r] ?? `${r + 1}`;
+      classes.push({
+        id: `g${grade}_r${r + 1}`,
+        gradeLevel: grade,
+        roomNumber: `${grade}0${r + 1}`,
+        sectionName: `الصف ${grade} / ${roomLabel}`,
+        periodsPerDay,
       });
     }
   }
 
-  // 4. Curriculum distribution: assign realistic quotas to each class
-  const curriculum: CurriculumRequirementRecord[] = [];
-  let curId = 1;
+  // 2. Teachers registration
+  let teacherSeq = 1;
+  const teacherWorkloads = new Map<string, number>();
+  const teacherMaxCapacities = new Map<string, number>();
 
-  // Helper to find teacher by specialization
-  const getTeachersBySpec = (spec: string) => teachers.filter((t) => t.specialization === spec);
-
-  classes.forEach((cls) => {
-    const isPrimary = cls.gradeLevel <= 4;
-    const isPrep = cls.gradeLevel >= 5 && cls.gradeLevel <= 9;
-    const isHigh = cls.gradeLevel >= 10;
-
-    // Subjects and periods for this class type
-    const alloc: { subCode: string; periods: number }[] = isPrimary
-      ? [
-          { subCode: 'QUR', periods: 4 },
-          { subCode: 'ISL', periods: 4 },
-          { subCode: 'ARB', periods: 7 },
-          { subCode: 'ENG', periods: 4 },
-          { subCode: 'MTH', periods: 5 },
-          { subCode: 'SCI', periods: 3 },
-          { subCode: 'ART', periods: 1 },
-          { subCode: 'PE', periods: 2 },
-        ] // Total = 30 periods (6 per day x 5 days)
-      : isPrep
-      ? [
-          { subCode: 'QUR', periods: 2 },
-          { subCode: 'ISL', periods: 3 },
-          { subCode: 'ARB', periods: 6 },
-          { subCode: 'ENG', periods: 5 },
-          { subCode: 'MTH', periods: 6 },
-          { subCode: 'SCI', periods: 5 },
-          { subCode: 'SOC', periods: 3 },
-          { subCode: 'COM', periods: 2 },
-          { subCode: 'PE', periods: 2 },
-          { subCode: 'ART', periods: 1 },
-        ] // Total = 35 periods (7 per day x 5 days)
-      : [
-          { subCode: 'ISL', periods: 3 },
-          { subCode: 'ARB', periods: 6 },
-          { subCode: 'ENG', periods: 6 },
-          { subCode: 'MTH', periods: 6 },
-          { subCode: 'PHY', periods: 4 },
-          { subCode: 'CHM', periods: 4 },
-          { subCode: 'BIO', periods: 3 },
-          { subCode: 'COM', periods: 2 },
-          { subCode: 'PE', periods: 1 },
-        ]; // Total = 35 periods (7 per day x 5 days)
-
-    alloc.forEach((item) => {
-      const sub = subjects.find((s) => s.code === item.subCode);
-      if (!sub) return;
-
-      const candidates = getTeachersBySpec(sub.name);
-      const chosenTeacher = candidates.length > 0 ? candidates[cls.gradeLevel % candidates.length] : teachers[0];
-
-      curriculum.push({
-        id: `cur-${curId++}`,
-        classId: cls.id,
-        subjectId: sub.id,
-        teacherId: chosenTeacher.id,
-        periodsPerWeek: item.periods,
-      });
+  function registerTeacher(
+    name: string,
+    specialization: string,
+    workingDays = [0, 1, 2, 3, 4],
+    blockedSlots?: { dayIndex: number; periodIndex: number }[],
+    maxDaily = 5
+  ): string {
+    const id = `t_${teacherSeq++}`;
+    const unavailableSlots = blockedSlots || [];
+    teachers.push({
+      id,
+      name,
+      specialization,
+      maxDailyPeriods: maxDaily,
+      maxWeeklyPeriods: maxDaily * workingDays.length,
+      unavailableSlots,
     });
-  });
+    teacherWorkloads.set(id, 0);
+    const usableSlots = workingDays.length * maxDaily - unavailableSlots.length;
+    teacherMaxCapacities.set(id, usableSlots);
+    return id;
+  }
+
+  // Teacher pools
+  const islamicTeachers = [
+    registerTeacher('أ. أحمد الغامدي (إسلاميات)', 'الدراسات الإسلامية'),
+    registerTeacher('أ. خالد القرني (إسلاميات)', 'الدراسات الإسلامية'),
+    registerTeacher('أ. عبدالله الدوسري (إسلاميات)', 'الدراسات الإسلامية'),
+    registerTeacher('أ. فهد الشمري (إسلاميات)', 'الدراسات الإسلامية'),
+    registerTeacher('أ. عمر العتيبي (إسلاميات)', 'الدراسات الإسلامية'),
+    registerTeacher('أ. صالح العمري (إسلاميات)', 'الدراسات الإسلامية'),
+    registerTeacher('الشيخ إبراهيم السعد (إسلاميات - إشراف)', 'الدراسات الإسلامية', [0, 1, 2, 3], undefined, 4),
+  ];
+
+  const arabicTeachers = [
+    registerTeacher('أ. محمد الزهراني (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. سعيد القحطاني (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. فيصل المطيري (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. علي الشهري (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. طارق المالكي (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. ناصر السبيعي (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. وليد الثبيتي (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. حسام الغامدي (لغة عربية)', 'اللغة العربية'),
+    registerTeacher('أ. هشام السليمان (رئيس قسم العربي)', 'اللغة العربية', [0, 1, 2, 3, 4], [
+      { dayIndex: 4, periodIndex: 5 },
+      { dayIndex: 4, periodIndex: 6 },
+    ], 5),
+  ];
+
+  const mathTeachers = [
+    registerTeacher('أ. محمود المصري (رياضيات)', 'الرياضيات'),
+    registerTeacher('أ. زياد الشريف (رياضيات)', 'الرياضيات'),
+    registerTeacher('أ. ياسر الأحمد (رياضيات)', 'الرياضيات'),
+    registerTeacher('أ. حمزة عسيري (رياضيات)', 'الرياضيات'),
+    registerTeacher('أ. وليد الحربي (رياضيات)', 'الرياضيات'),
+    registerTeacher('أ. ماجد الجهني (رياضيات)', 'الرياضيات'),
+    registerTeacher('أ. راكان الحارثي (رياضيات)', 'الرياضيات'),
+    registerTeacher('أ. إياد النجار (رياضيات)', 'الرياضيات'),
+  ];
+
+  const scienceElementary = [
+    registerTeacher('أ. حسن العلي (علوم ابتدائي)', 'العلوم'),
+    registerTeacher('أ. سالم باوزير (علوم ابتدائي)', 'العلوم'),
+  ];
+  const scienceMiddle = [
+    registerTeacher('أ. مازن البلوي (علوم متوسط)', 'العلوم'),
+    registerTeacher('أ. عصام رضوان (علوم متوسط)', 'العلوم'),
+    registerTeacher('أ. نبيل الفهد (علوم متوسط)', 'العلوم'),
+  ];
+  const physicsTeachers = [
+    registerTeacher('د. عثمان الصالح (فيزياء)', 'الفيزياء'),
+    registerTeacher('أ. سمير خليل (فيزياء)', 'الفيزياء'),
+  ];
+  const chemistryTeachers = [
+    registerTeacher('أ. بسام الخالدي (كيمياء)', 'الكيمياء'),
+    registerTeacher('أ. رامي المنصور (كيمياء)', 'الكيمياء'),
+  ];
+  const biologyTeachers = [
+    registerTeacher('أ. سامي العمري (أحياء)', 'الأحياء'),
+    registerTeacher('أ. وائل حبيب (أحياء)', 'الأحياء'),
+  ];
+
+  const englishTeachers = [
+    registerTeacher('Mr. David Miller (English)', 'اللغة الإنجليزية'),
+    registerTeacher('Mr. Robert Vance (English)', 'اللغة الإنجليزية'),
+    registerTeacher('أ. تركي الرويلي (لغة إنجليزية)', 'اللغة الإنجليزية'),
+    registerTeacher('أ. بدر العنزي (لغة إنجليزية)', 'اللغة الإنجليزية'),
+    registerTeacher('أ. حسام فلاتة (لغة إنجليزية)', 'اللغة الإنجليزية'),
+    registerTeacher('أ. خالد الحربي (لغة إنجليزية)', 'اللغة الإنجليزية'),
+  ];
+
+  const socialTeachers = [
+    registerTeacher('أ. عبدالرحمن التميمي (دراسات اجتماعية)', 'الدراسات الاجتماعية'),
+    registerTeacher('أ. بندر السعدون (تاريخ وجغرافيا)', 'الدراسات الاجتماعية'),
+    registerTeacher('أ. سعود الرشيد (دراسات اجتماعية)', 'الدراسات الاجتماعية'),
+  ];
+
+  const computerTeachers = [
+    registerTeacher('م. عادل بخش (حاسب وتقنية)', 'الحاسب الآلي'),
+    registerTeacher('م. منير الصاعدي (حاسب - دوام جزئي)', 'الحاسب الآلي', [0, 2, 4], undefined, 4),
+    registerTeacher('م. فراس النعيمي (حاسب وذكاء اصطناعي)', 'الحاسب الآلي'),
+    registerTeacher('م. أنس البشير (حاسب وتقنية)', 'الحاسب الآلي'),
+  ];
+
+  const peTeachers = [
+    registerTeacher('كابتن مشعل الهلالي (تربية بدنية)', 'التربية البدنية'),
+    registerTeacher('كابتن سلمان النمري (تربية بدنية)', 'التربية البدنية'),
+    registerTeacher('كابتن ريان الصالح (تربية بدنية)', 'التربية البدنية'),
+  ];
+
+  const artTeachers = [
+    registerTeacher('فنان وائل الصباغ (تربية فنية)', 'التربية الفنية'),
+    registerTeacher('أ. رائد الشهري (تربية فنية)', 'التربية الفنية'),
+    registerTeacher('أ. لؤي الشامي (فنية - دوام جزئي)', 'التربية الفنية', [1, 3, 4], undefined, 4),
+  ];
+
+  function pickTeacher(pool: string[], hours: number): string {
+    const eligible = pool.filter((t) => {
+      const current = teacherWorkloads.get(t) ?? 0;
+      const maxCap = teacherMaxCapacities.get(t) ?? 25;
+      return current + hours <= maxCap;
+    });
+
+    if (eligible.length === 0) {
+      throw new Error(`Insufficient teacher capacity in pool for ${hours} hours.`);
+    }
+
+    eligible.sort((a, b) => (teacherWorkloads.get(a) ?? 0) - (teacherWorkloads.get(b) ?? 0));
+    const chosen = eligible[0]!;
+    teacherWorkloads.set(chosen, (teacherWorkloads.get(chosen) ?? 0) + hours);
+    return chosen;
+  }
+
+  let reqId = 1;
+  for (const c of classes) {
+    const grade = c.gradeLevel;
+
+    if (grade <= 4) {
+      // Lower Elementary: 30 periods/week
+      const items = [
+        { name: 'القرآن والدراسات الإسلامية', code: 'ISL', cat: 'core' as const, pool: islamicTeachers, hours: 6 },
+        { name: 'لغتي الجميلة', code: 'ARB', cat: 'core' as const, pool: arabicTeachers, hours: 8 },
+        { name: 'الرياضيات', code: 'MTH', cat: 'core' as const, pool: mathTeachers, hours: 5 },
+        { name: 'العلوم', code: 'SCI', cat: 'science' as const, pool: scienceElementary, hours: 3 },
+        { name: 'اللغة الإنجليزية', code: 'ENG', cat: 'core' as const, pool: englishTeachers, hours: 4 },
+        { name: 'التربية البدنية', code: 'PE', cat: 'activity' as const, pool: peTeachers, hours: 2 },
+        { name: 'التربية الفنية', code: 'ART', cat: 'activity' as const, pool: artTeachers, hours: 2 },
+      ];
+      for (const item of items) {
+        const subId = getOrCreateSubject(item.name, item.code, item.cat);
+        const tId = pickTeacher(item.pool, item.hours);
+        curriculum.push({
+          id: `cur_${reqId++}`,
+          classId: c.id,
+          subjectId: subId,
+          teacherId: tId,
+          periodsPerWeek: item.hours,
+        });
+      }
+    } else if (grade <= 9) {
+      // Upper Elementary & Middle: 35 periods/week
+      const items = [
+        { name: 'الدراسات الإسلامية', code: 'ISL', cat: 'core' as const, pool: islamicTeachers, hours: 5 },
+        { name: 'اللغة العربية', code: 'ARB', cat: 'core' as const, pool: arabicTeachers, hours: 6 },
+        { name: 'الرياضيات', code: 'MTH', cat: 'core' as const, pool: mathTeachers, hours: 6 },
+        { name: 'العلوم', code: 'SCI', cat: 'science' as const, pool: scienceMiddle, hours: 5 },
+        { name: 'اللغة الإنجليزية', code: 'ENG', cat: 'core' as const, pool: englishTeachers, hours: 4 },
+        { name: 'الدراسات الاجتماعية', code: 'SOC', cat: 'humanities' as const, pool: socialTeachers, hours: 3 },
+        { name: 'الحاسب الآلي', code: 'COM', cat: 'science' as const, pool: computerTeachers, hours: 2 },
+        { name: 'التربية البدنية', code: 'PE', cat: 'activity' as const, pool: peTeachers, hours: 2 },
+        { name: 'التربية الفنية', code: 'ART', cat: 'activity' as const, pool: artTeachers, hours: 2 },
+      ];
+      for (const item of items) {
+        const subId = getOrCreateSubject(item.name, item.code, item.cat);
+        const tId = pickTeacher(item.pool, item.hours);
+        curriculum.push({
+          id: `cur_${reqId++}`,
+          classId: c.id,
+          subjectId: subId,
+          teacherId: tId,
+          periodsPerWeek: item.hours,
+        });
+      }
+    } else {
+      // High School: 35 periods/week
+      const items = [
+        { name: 'التربية الإسلامية', code: 'ISL', cat: 'core' as const, pool: islamicTeachers, hours: 3 },
+        { name: 'اللغة العربية', code: 'ARB', cat: 'core' as const, pool: arabicTeachers, hours: 4 },
+        { name: 'الرياضيات', code: 'MTH', cat: 'core' as const, pool: mathTeachers, hours: 6 },
+        { name: 'الفيزياء', code: 'PHY', cat: 'science' as const, pool: physicsTeachers, hours: 4 },
+        { name: 'الكيمياء', code: 'CHM', cat: 'science' as const, pool: chemistryTeachers, hours: 4 },
+        { name: 'الأحياء', code: 'BIO', cat: 'science' as const, pool: biologyTeachers, hours: 4 },
+        { name: 'اللغة الإنجليزية', code: 'ENG', cat: 'core' as const, pool: englishTeachers, hours: 5 },
+        { name: 'علم البيانات والذكاء الاصطناعي', code: 'AI', cat: 'science' as const, pool: computerTeachers, hours: 3 },
+        { name: 'التربية البدنية', code: 'PE', cat: 'activity' as const, pool: peTeachers, hours: 2 },
+      ];
+      for (const item of items) {
+        const subId = getOrCreateSubject(item.name, item.code, item.cat);
+        const tId = pickTeacher(item.pool, item.hours);
+        curriculum.push({
+          id: `cur_${reqId++}`,
+          classId: c.id,
+          subjectId: subId,
+          teacherId: tId,
+          periodsPerWeek: item.hours,
+        });
+      }
+    }
+  }
 
   return {
     config: DEFAULT_SCHOOL_CONFIG,

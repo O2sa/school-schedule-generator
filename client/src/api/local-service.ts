@@ -1,3 +1,4 @@
+import { runSolver, cancelActiveSolver } from './worker/worker-client';
 import { db } from './db';
 import { DEFAULT_SCHOOL_CONFIG, generateArabicK12DemoData } from './demo-data';
 import type {
@@ -130,25 +131,26 @@ export class LocalDataService implements IDataService {
     options?: SolverOptions,
     onProgress?: (progress: SolverProgress) => void
   ): Promise<SavedScheduleRecord> {
-    // Will be fully wired via worker-client in Task 4
-    const config = await this.getConfig();
-    const schedule: SavedScheduleRecord = {
-      id: crypto.randomUUID(),
-      name: `جدول ${config.academicYear} - ${new Date().toLocaleTimeString('ar-SA')}`,
-      createdAt: new Date().toISOString(),
-      isActive: true,
-      status: 'solved',
-      solveTimeMs: 0,
-      backtrackCount: 0,
-      assignments: [],
-    };
+    const [config, teachers, classes, subjects, curriculum] = await Promise.all([
+      this.getConfig(),
+      this.getTeachers(),
+      this.getClasses(),
+      this.getSubjects(),
+      this.getCurriculum(),
+    ]);
+
+    const schedule = await runSolver(
+      { config, teachers, classes, subjects, curriculum, options },
+      onProgress
+    );
+
     await this.saveSchedule(schedule);
     await this.setActiveSchedule(schedule.id);
     return schedule;
   }
 
   cancelGeneration(): void {
-    // No-op placeholder until worker hook in Task 4
+    cancelActiveSolver();
   }
 
   // --- Backup & Portability ---
