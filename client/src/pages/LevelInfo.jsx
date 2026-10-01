@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch";
 import { useQuery } from "@tanstack/react-query";
 import SubjectsContainer from "./SubjectsContainer";
-import { STAGES } from "../../../utils/constants";
+import { STAGES } from "../utils/constants";
 
 const singleJobQuery = (id) => {
   return {

@@ -47,7 +47,7 @@ import {
   OFF_LECTURES,
   WEEK_DAYS,
   WORK_DAYS,
-} from "../../../utils/constants";
+} from "../utils/constants";
 import TeacherSchedule from "./TeacherSchedule";
 
 const singleJobQuery = (id) => {

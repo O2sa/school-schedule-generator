@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { Form, redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch";
-import { STAGES, WORK_DAYS } from "../../../utils/constants";
+import { STAGES, WORK_DAYS } from "../utils/constants";
 
 export const action = async ({ request }) => {
   const formData = await request.formData();

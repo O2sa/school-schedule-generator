@@ -12,7 +12,7 @@ import {
   OFF_LECTURES,
   STAGES,
   WORK_DAYS,
-} from "../../../utils/constants";
+} from "../utils/constants";
 import { Box, Button, LoadingOverlay, MultiSelect, Title } from "@mantine/core";
 import { useCreateElement, useCreateOneElement } from "../utils/crud";
 import { useState } from "react";

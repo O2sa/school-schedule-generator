@@ -7,7 +7,7 @@ import {
   NUMS_ST,
   OFF_LECTURES,
   WEEK_DAYS,
-} from "../../../utils/constants";
+} from "../utils/constants";
 import { Box, Text } from "@mantine/core";
 
 const examData = {

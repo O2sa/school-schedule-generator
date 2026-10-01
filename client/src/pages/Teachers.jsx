@@ -33,7 +33,7 @@ import {
 import customFetch from "../utils/customFetch";
 
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-import { WEEK_DAYS } from "../../../utils/constants";
+import { WEEK_DAYS } from "../utils/constants";
 import {
   useCreateElement,
   useDeleteElement,

@@ -35,7 +35,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import customFetch from "../utils/customFetch";
-import { NUMS_ST } from "../../../utils/constants";
+import { NUMS_ST } from "../utils/constants";
 
 function useUpdateSchedule(id) {
   const queryClient = useQueryClient();

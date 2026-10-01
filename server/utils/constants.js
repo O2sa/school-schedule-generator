@@ -6,7 +6,6 @@ export const DAYS_OF_WEEK_AR = [
   "الأربعاء",
   "الخميس",
   "الجمعة",
-
 ];
 
 export const DAYS_OF_WEEK_EN = [
@@ -34,6 +33,7 @@ export const DAYS_OF_WEEK_TEMP = [
   "wed",
   "thu",
 ];
+
 export const WEEK_DAYS = {
   sat: "السبت",
   sun: "الأحد",
@@ -44,20 +44,20 @@ export const WEEK_DAYS = {
   fri: "الجمعة",
 };
 
-export const STAGES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+export const STAGES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 export const WORK_DAYS = [1, 2, 3, 4, 5, 6, 7];
 
 export const OFF_LECTURES = [
-  { value: 0, label: "الأولى" },
-  { value: 1, label: "الثانية" },
-  { value: 2, label: "الثالثة" },
-  { value: 3, label: "الرابعة" },
-  { value: 4, label: "الخامسة" },
-  { value: 5, label: "السادسة" },
-  { value: 6, label: "السابعة" },
-  { value: 7, label: "الثامنة" },
-  { value: 8, label: "التاسعة" },
-  { value: 9, label: "العاشرة" },
+  { value: 0, label: "الحصة الأولى" },
+  { value: 1, label: "الحصة الثانية" },
+  { value: 2, label: "الحصة الثالثة" },
+  { value: 3, label: "الحصة الرابعة" },
+  { value: 4, label: "الحصة الخامسة" },
+  { value: 5, label: "الحصة السادسة" },
+  { value: 6, label: "الحصة السابعة" },
+  { value: 7, label: "الحصة الثامنة" },
+  { value: 8, label: "الحصة التاسعة" },
+  { value: 9, label: "الحصة العاشرة" },
 ];
 
 export const ALFA_NUMS = [
@@ -79,20 +79,11 @@ export const NUMS_ST = [
   "three",
   "four",
   "five",
+  "six",
   "seven",
   "eight",
   "nine",
   "ten",
+  "eleven",
+  "twelve",
 ];
-
-// if (
-//  true ||
-//   false
-// ) {
-//   console.log(false && false);
-
-// }
-
-console.log(
-
-);
