@@ -1,0 +1,59 @@
+{
+  "name": "school-timetabling-engine",
+  "version": "1.0.0",
+  "description": "Production-grade constraint-satisfaction school timetabling engine in TypeScript",
+  "keywords": [
+    "timetabling",
+    "school-schedule",
+    "schedule-generator",
+    "csp",
+    "constraint-satisfaction",
+    "backtracking",
+    "mrv",
+    "forward-checking",
+    "scheduler"
+  ],
+  "author": "",
+  "license": "MIT",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run typecheck && pnpm run build && pnpm run test",
+    "example:arabic": "tsx examples/arabic-k12-school.ts",
+    "example:basic": "tsx examples/basic.ts",
+    "example:bottleneck": "tsx examples/tight-coupling-bottleneck.ts",
+    "example:university": "tsx examples/university-engineering-faculty.ts",
+    "example:knife-edge": "tsx examples/knife-edge-stress-test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.5",
+    "tsup": "^8.2.4",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
