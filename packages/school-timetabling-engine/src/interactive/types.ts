@@ -1,5 +1,3 @@
-import type { TimetableAssignment } from '../domain/types';
-
 export interface MoveSlotCoordinates {
   day: number;
   period: number;
@@ -9,9 +7,19 @@ export interface TimetableLectureReference {
   lectureId: string;
   classId: string;
   teacherId: string;
-  subjectId?: string;
+  subjectId?: string | undefined;
   day: number;
   period: number;
+}
+
+export interface TimetableAssignment {
+  lectureId: string;
+  classId: string;
+  teacherId: string;
+  subjectId?: string | undefined;
+  dayIndex: number;
+  periodIndex: number;
+  roomNumber?: string | undefined;
 }
 
 export interface MoveRequest {
@@ -30,16 +38,16 @@ export interface MoveConflict {
   code: MoveConflictCode;
   message: string;
   details?: {
-    teacherId?: string;
-    classId?: string;
+    teacherId?: string | undefined;
+    classId?: string | undefined;
     day: number;
     period: number;
-  };
+  } | undefined;
 }
 
 export interface MoveValidationResult {
   valid: boolean;
   isSwap: boolean;
-  swappedLecture?: TimetableLectureReference;
+  swappedLecture?: TimetableLectureReference | undefined;
   conflicts: MoveConflict[];
 }

@@ -1,5 +1,6 @@
-import type { TimetableInput, TimetableAssignment } from '../domain/types';
+import type { TimetableInput } from '../domain/types';
 import type {
+  TimetableAssignment,
   MoveRequest,
   MoveValidationResult,
   MoveSlotCoordinates,
