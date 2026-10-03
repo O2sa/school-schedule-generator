@@ -37,6 +37,7 @@ import {
   useSchoolConfig,
   useCurriculum,
   useSchedules,
+  useScheduleActions,
 } from '../api/queries/useSchoolData';
 import { useDataService } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
@@ -50,9 +51,8 @@ import type { TimetableInput } from 'school-timetabling-engine';
 
 export function ScheduleView() {
   const navigate = useNavigate();
-  const service = useDataService();
+  const { saveSchedule } = useScheduleActions();
   const { data: schedule, isLoading } = useActiveSchedule();
-  const { refetch: refetchSchedules } = useSchedules();
   const { data: classes = [] } = useClasses();
   const { data: teachers = [] } = useTeachers();
   const { data: subjects = [] } = useSubjects();
@@ -81,11 +81,10 @@ export function ScheduleView() {
       if (!schedule) return;
       setIsSaving(true);
       try {
-        await service.saveSchedule({
+        await saveSchedule({
           ...schedule,
           assignments: updated,
         });
-        await refetchSchedules();
         notifications.show({
           title: 'تم حفظ التعديلات بنجاح',
           message: `تم تحديث الجدول وحفظ ${updated.length} حصة.`,
@@ -143,7 +142,15 @@ export function ScheduleView() {
     isEditing: editor.isEditing,
     selectedSlot: editor.selectedSlot,
     validTargets: editor.validTargets,
-    onSelectSlot: editor.selectSlot,
+    onSelectSlot: (day: number, period: number, item: any) => {
+      editor.selectSlot(day, period, item);
+      if (item?.classId) {
+        setSelectedClassId(item.classId);
+      }
+      if (item?.teacherId) {
+        setSelectedTeacherId(item.teacherId);
+      }
+    },
     onDropSlot: editor.executeMoveOrSwap,
     onClearSelection: editor.clearSelection,
   };
@@ -277,8 +284,11 @@ export function ScheduleView() {
               <SegmentedControl
                 value={activeTab}
                 onChange={(val) => {
-                  if (editor.isEditing && (val === 'master' || val === 'print')) {
-                    editor.toggleEditMode();
+                  if (editor.isEditing) {
+                    editor.clearSelection();
+                    if (val === 'master' || val === 'print') {
+                      editor.toggleEditMode();
+                    }
                   }
                   setActiveTab(val as typeof activeTab);
                 }}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -29,7 +30,7 @@ import {
   useSchoolConfig,
   useSchedules,
 } from '../api/queries/useSchoolData';
-import { useDataService } from '../api/data-context';
+import { useData, useDataService } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
 import { DiagnosticsReport, type DiagnosticItem } from '../components/generator/DiagnosticsReport';
 import type { SavedScheduleRecord, SolverProgress } from '../api/types';
@@ -37,6 +38,8 @@ import type { SavedScheduleRecord, SolverProgress } from '../api/types';
 export function Generator() {
   const navigate = useNavigate();
   const service = useDataService();
+  const queryClient = useQueryClient();
+  const { mode } = useData();
 
   const { data: classes = [] } = useClasses();
   const { data: teachers = [] } = useTeachers();
@@ -81,7 +84,12 @@ export function Generator() {
       );
 
       setLastResult(schedule);
-      await refetchSchedules();
+      queryClient.setQueryData(['activeSchedule', mode], schedule);
+      await Promise.all([
+        refetchSchedules(),
+        queryClient.invalidateQueries({ queryKey: ['activeSchedule', mode] }),
+        queryClient.invalidateQueries({ queryKey: ['schedules', mode] }),
+      ]);
     } catch (err: unknown) {
       const e = err as { message?: string; diagnostics?: DiagnosticItem[] };
       if (e?.diagnostics && Array.isArray(e.diagnostics)) {

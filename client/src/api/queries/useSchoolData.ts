@@ -186,5 +186,18 @@ export function useScheduleActions() {
     },
   });
 
-  return { setActiveSchedule: activateMutation.mutateAsync, deleteSchedule: deleteMutation.mutateAsync };
+  const saveMutation = useMutation({
+    mutationFn: (schedule: SavedScheduleRecord) => service.saveSchedule(schedule),
+    onSuccess: (_data, variables) => {
+      queryClient.setQueryData(['activeSchedule', mode], variables);
+      queryClient.invalidateQueries({ queryKey: ['schedules', mode] });
+      queryClient.invalidateQueries({ queryKey: ['activeSchedule', mode] });
+    },
+  });
+
+  return {
+    setActiveSchedule: activateMutation.mutateAsync,
+    deleteSchedule: deleteMutation.mutateAsync,
+    saveSchedule: saveMutation.mutateAsync,
+  };
 }
