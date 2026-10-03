@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -80,6 +80,61 @@ describe('Timetable Views Rendering', () => {
 
     expect(screen.getByText('أحمد محمود')).toBeDefined();
     expect(screen.getByText('الصف 1 / أ')).toBeDefined();
+  });
+
+
+  it('renders ClassTimetable in edit mode with draggable and clickable slots', () => {
+    const onSelectSlot = vi.fn();
+    const onDropSlot = vi.fn();
+
+    const { rerender } = render(
+      <MantineProvider>
+        <ClassTimetable
+          cls={dummyClass}
+          assignments={dummyAssignments}
+          teachers={[dummyTeacher]}
+          subjects={[dummySubject]}
+          editorProps={{
+            isEditing: true,
+            selectedSlot: null,
+            validTargets: new Set(['0__1']),
+            onSelectSlot,
+            onDropSlot,
+            onClearSelection: vi.fn(),
+          }}
+        />
+      </MantineProvider>
+    );
+
+    // Initial cell has draggable attribute
+    const mathCell = screen.getByText('الرياضيات').closest('div');
+    expect(mathCell?.getAttribute('draggable')).toBe('true');
+
+    // Simulate selecting slot (0, 0)
+    rerender(
+      <MantineProvider>
+        <ClassTimetable
+          cls={dummyClass}
+          assignments={dummyAssignments}
+          teachers={[dummyTeacher]}
+          subjects={[dummySubject]}
+          editorProps={{
+            isEditing: true,
+            selectedSlot: { dayIndex: 0, periodIndex: 0 },
+            validTargets: new Set(['0__1']),
+            onSelectSlot,
+            onDropSlot,
+            onClearSelection: vi.fn(),
+          }}
+        />
+      </MantineProvider>
+    );
+
+    // Cell at (0, 1) is a valid target
+    const targetCell = screen.getByTestId('slot-0-1');
+    expect(targetCell).toBeDefined();
+    targetCell.click();
+    expect(onDropSlot).toHaveBeenCalledWith(0, 1);
   });
 
   it('renders MasterMatrix with school day filter', () => {

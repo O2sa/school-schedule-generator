@@ -1,18 +1,26 @@
 import React from 'react';
 import { Table, Card, Text, Badge, Group, Progress } from '@mantine/core';
 import type { TeacherRecord, ClassRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
+import type { TimetableEditorProps } from './ClassTimetable';
 
 interface TeacherTimetableProps {
   teacher: TeacherRecord;
   assignments: TimetableAssignment[];
   classes: ClassRecord[];
   subjects: SubjectRecord[];
+  editorProps?: TimetableEditorProps;
 }
 
 const DAYS = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
 const PERIODS = [0, 1, 2, 3, 4, 5, 6];
 
-export function TeacherTimetable({ teacher, assignments, classes, subjects }: TeacherTimetableProps) {
+export function TeacherTimetable({
+  teacher,
+  assignments,
+  classes,
+  subjects,
+  editorProps,
+}: TeacherTimetableProps) {
   const classMap = new Map(classes.map((c) => [c.id, c]));
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
 
@@ -37,17 +45,15 @@ export function TeacherTimetable({ teacher, assignments, classes, subjects }: Te
           </Text>
         </div>
         <div style={{ textAlign: 'left', minWidth: 200 }}>
-          <Group justify="space-between" mb={2}>
-            <Text size="xs" fw={600}>
-              إجمالي الحصص المسندة:
+          <Group justify="space-between" mb={4}>
+            <Text size="xs">نصاب الحصص الأسبوعي</Text>
+            <Text size="xs" fw={700}>
+              {teacherAssignments.length} / {teacher.maxWeeklyPeriods || 24}
             </Text>
-            <Badge color="indigo" size="md">
-              {teacherAssignments.length} / {teacher.maxWeeklyPeriods} حصة
-            </Badge>
           </Group>
           <Progress
-            value={(teacherAssignments.length / teacher.maxWeeklyPeriods) * 100}
-            color="indigo"
+            value={(teacherAssignments.length / (teacher.maxWeeklyPeriods || 24)) * 100}
+            color={teacherAssignments.length > (teacher.maxWeeklyPeriods || 24) ? 'red' : 'indigo'}
             size="sm"
             radius="xl"
           />
@@ -72,48 +78,153 @@ export function TeacherTimetable({ teacher, assignments, classes, subjects }: Te
                 {dayName}
               </Table.Td>
               {PERIODS.map((pIdx) => {
-                if (isBlocked(dIdx, pIdx)) {
-                  return (
-                    <Table.Td key={pIdx} p={4} style={{ background: 'var(--mantine-color-red-0)' }}>
-                      <Text size="xs" c="red.6" fw={600}>
-                        محجوبة
-                      </Text>
-                    </Table.Td>
-                  );
-                }
-
+                const blocked = isBlocked(dIdx, pIdx);
                 const item = grid.get(`${dIdx}__${pIdx}`);
-                if (!item) {
-                  return (
-                    <Table.Td key={pIdx} p={4}>
-                      <Text size="xs" c="dimmed">
-                        فراغ
-                      </Text>
-                    </Table.Td>
-                  );
-                }
+                const slotKey = `${dIdx}__${pIdx}`;
 
-                const cls = classMap.get(item.classId);
-                const sub = subjectMap.get(item.subjectId);
+                const isSelected = Boolean(
+                  editorProps?.isEditing &&
+                    editorProps?.selectedSlot?.dayIndex === dIdx &&
+                    editorProps?.selectedSlot?.periodIndex === pIdx
+                );
+                const isValidTarget = Boolean(
+                  editorProps?.isEditing && editorProps?.validTargets?.has(slotKey)
+                );
+                const isConflict = Boolean(
+                  editorProps?.isEditing &&
+                    editorProps?.selectedSlot &&
+                    !isSelected &&
+                    !isValidTarget
+                );
+
+                const handleSlotClick = () => {
+                  if (!editorProps?.isEditing) return;
+                  if (isSelected) {
+                    editorProps.onClearSelection?.();
+                  } else if (editorProps.selectedSlot && isValidTarget) {
+                    editorProps.onDropSlot?.(dIdx, pIdx);
+                  } else if (item) {
+                    editorProps.onSelectSlot?.(dIdx, pIdx, item);
+                  }
+                };
+
+                const handleDragOver = (e: React.DragEvent) => {
+                  if (isValidTarget) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                  }
+                };
+
+                const handleDrop = (e: React.DragEvent) => {
+                  e.preventDefault();
+                  if (isValidTarget) {
+                    editorProps?.onDropSlot?.(dIdx, pIdx);
+                  }
+                };
+
+                const cls = item ? classMap.get(item.classId) : null;
+                const sub = item ? subjectMap.get(item.subjectId) : null;
+
+                let cellBg = undefined;
+                let cellCursor = undefined;
+                let cellOpacity = undefined;
+
+                if (editorProps?.isEditing) {
+                  if (isValidTarget) {
+                    cellBg = 'var(--mantine-color-teal-0)';
+                    cellCursor = 'pointer';
+                  } else if (isSelected) {
+                    cellBg = 'var(--mantine-color-blue-0)';
+                  } else if (isConflict) {
+                    cellOpacity = 0.45;
+                    cellCursor = 'not-allowed';
+                  } else if (item) {
+                    cellCursor = 'grab';
+                  }
+                } else if (blocked) {
+                  cellBg = 'var(--mantine-color-gray-1)';
+                }
 
                 return (
-                  <Table.Td key={pIdx} p={4}>
-                    <Card
-                      withBorder
-                      p={4}
-                      radius="sm"
-                      style={{
-                        background: 'var(--mantine-color-teal-0)',
-                        borderColor: 'var(--mantine-color-teal-2)',
-                      }}
-                    >
-                      <Text size="xs" fw={700} c="teal.9" truncate>
-                        {cls?.sectionName || 'فصل'}
+                  <Table.Td
+                    key={pIdx}
+                    p={6}
+                    data-testid={`teacher-slot-${dIdx}-${pIdx}`}
+                    onClick={handleSlotClick}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    style={{
+                      verticalAlign: 'middle',
+                      background: cellBg,
+                      opacity: cellOpacity,
+                      cursor: cellCursor,
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {blocked ? (
+                      <Badge variant="light" color="gray" size="sm">
+                        غير متاح
+                      </Badge>
+                    ) : item ? (
+                      <Card
+                        withBorder
+                        p={4}
+                        radius="sm"
+                        draggable={Boolean(editorProps?.isEditing)}
+                        onDragStart={(e) => {
+                          if (editorProps?.isEditing) {
+                            e.dataTransfer.setData('text/plain', slotKey);
+                            editorProps.onSelectSlot?.(dIdx, pIdx, item);
+                          }
+                        }}
+                        onDragEnd={() => {
+                          editorProps?.onClearSelection?.();
+                        }}
+                        style={{
+                          background: isSelected
+                            ? 'var(--mantine-color-blue-1)'
+                            : isValidTarget
+                            ? 'var(--mantine-color-teal-1)'
+                            : 'var(--mantine-color-teal-0)',
+                          borderColor: isSelected
+                            ? 'var(--mantine-color-blue-6)'
+                            : isValidTarget
+                            ? 'var(--mantine-color-teal-6)'
+                            : 'var(--mantine-color-teal-2)',
+                          boxShadow: isSelected
+                            ? '0 0 8px rgba(34, 139, 230, 0.4)'
+                            : undefined,
+                          transform: isSelected ? 'scale(1.02)' : undefined,
+                          cursor: editorProps?.isEditing ? 'grab' : undefined,
+                        }}
+                      >
+                        <Text
+                          size="xs"
+                          fw={700}
+                          c={
+                            isSelected
+                              ? 'blue.9'
+                              : isValidTarget
+                              ? 'teal.9'
+                              : 'teal.9'
+                          }
+                          truncate
+                        >
+                          {cls?.sectionName || 'فصل'}
+                        </Text>
+                        <Text size="10px" c="dimmed" truncate>
+                          {sub?.name || 'مادة'}
+                        </Text>
+                      </Card>
+                    ) : (
+                      <Text
+                        size="xs"
+                        c={isValidTarget ? 'teal.8' : 'dimmed'}
+                        fw={isValidTarget ? 700 : 400}
+                      >
+                        {isValidTarget ? 'نقل هنا' : '-'}
                       </Text>
-                      <Text size="10px" c="dimmed" truncate>
-                        {sub?.name || 'مادة'}
-                      </Text>
-                    </Card>
+                    )}
                   </Table.Td>
                 );
               })}
