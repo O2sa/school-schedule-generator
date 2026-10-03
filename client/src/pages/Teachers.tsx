@@ -8,14 +8,23 @@ import {
   Badge,
   ActionIcon,
   Text,
-  Stack,
   Loader,
   Center,
+  Tooltip,
 } from '@mantine/core';
-import { IconPlus, IconSearch, IconEdit, IconTrash } from '@tabler/icons-react';
+import {
+  IconPlus,
+  IconSearch,
+  IconEdit,
+  IconTrash,
+  IconCalendarTime,
+  IconBan,
+  IconCheck,
+} from '@tabler/icons-react';
 import { useTeachers, useTeacherMutations } from '../api/queries/useSchoolData';
 import { PageHeader } from '../components/common/PageHeader';
 import { TeacherModal } from '../components/forms/TeacherModal';
+import { TeacherAvailabilityDrawer } from '../components/teachers/TeacherAvailabilityDrawer';
 import type { TeacherRecord } from '../api/types';
 
 export function Teachers() {
@@ -25,6 +34,9 @@ export function Teachers() {
   const [search, setSearch] = useState('');
   const [modalOpened, setModalOpened] = useState(false);
   const [editingTeacher, setEditingTeacher] = useState<TeacherRecord | null>(null);
+
+  const [drawerOpened, setDrawerOpened] = useState(false);
+  const [availabilityTeacher, setAvailabilityTeacher] = useState<TeacherRecord | null>(null);
 
   const filtered = teachers.filter(
     (t) =>
@@ -42,6 +54,11 @@ export function Teachers() {
     setModalOpened(true);
   };
 
+  const handleOpenAvailability = (teacher: TeacherRecord) => {
+    setAvailabilityTeacher(teacher);
+    setDrawerOpened(true);
+  };
+
   const handleDelete = async (id: string) => {
     if (window.confirm('هل أنت متأكد من حذف هذا المعلم؟')) {
       await deleteTeacher(id);
@@ -52,7 +69,7 @@ export function Teachers() {
     <div>
       <PageHeader
         title="إدارة المعلمين"
-        subtitle={`إجمالي المعلمين المسجلين: ${teachers.length} معلم`}
+        subtitle={`إدارة المعلمين وتحديد أنصبتهم وأوقات توفرهم الأسبوعية (${teachers.length} معلم)`}
         actions={
           <Button leftSection={<IconPlus size={16} />} color="indigo" onClick={handleAdd}>
             إضافة معلم جديد
@@ -62,7 +79,7 @@ export function Teachers() {
 
       <Card withBorder radius="md" p="md">
         <TextInput
-          placeholder="بحث بالاسم أو التخصص..."
+          placeholder="البحث بالاسم أو التخصص..."
           leftSection={<IconSearch size={16} />}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -84,8 +101,8 @@ export function Teachers() {
                 <Table.Th>اسم المعلم</Table.Th>
                 <Table.Th>التخصص</Table.Th>
                 <Table.Th>الحد اليومي</Table.Th>
-                <Table.Th>الحد الأسبوعي</Table.Th>
-                <Table.Th>الحصص المحجوبة</Table.Th>
+                <Table.Th>النصاب الأسبوعي</Table.Th>
+                <Table.Th>أوقات التوفر</Table.Th>
                 <Table.Th style={{ textAlign: 'center' }}>الإجراءات</Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -102,23 +119,52 @@ export function Teachers() {
                   <Table.Td>{teacher.maxWeeklyPeriods} حصة</Table.Td>
                   <Table.Td>
                     {teacher.unavailableSlots?.length ? (
-                      <Badge color="red" variant="dot">
-                        {teacher.unavailableSlots.length} حصة
-                      </Badge>
+                      <Tooltip label="انقر لتعديل أوقات التوفر السريعة">
+                        <Badge
+                          color="red"
+                          variant="light"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleOpenAvailability(teacher)}
+                          leftSection={<IconBan size={12} />}
+                        >
+                          {teacher.unavailableSlots.length} فترات محظورة
+                        </Badge>
+                      </Tooltip>
                     ) : (
-                      <Text size="xs" c="dimmed">
-                        متاح دائماً
-                      </Text>
+                      <Tooltip label="انقر لتعديل أوقات التوفر السريعة">
+                        <Badge
+                          color="teal"
+                          variant="light"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleOpenAvailability(teacher)}
+                          leftSection={<IconCheck size={12} />}
+                        >
+                          متاح بالكامل
+                        </Badge>
+                      </Tooltip>
                     )}
                   </Table.Td>
                   <Table.Td>
                     <Group gap="xs" justify="center">
-                      <ActionIcon variant="subtle" color="blue" onClick={() => handleEdit(teacher)}>
-                        <IconEdit size={16} />
-                      </ActionIcon>
-                      <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(teacher.id)}>
-                        <IconTrash size={16} />
-                      </ActionIcon>
+                      <Tooltip label="تعديل أوقات التوفر">
+                        <ActionIcon
+                          variant="subtle"
+                          color="teal"
+                          onClick={() => handleOpenAvailability(teacher)}
+                        >
+                          <IconCalendarTime size={16} />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label="تعديل بيانات المعلم">
+                        <ActionIcon variant="subtle" color="blue" onClick={() => handleEdit(teacher)}>
+                          <IconEdit size={16} />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label="حذف المعلم">
+                        <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(teacher.id)}>
+                          <IconTrash size={16} />
+                        </ActionIcon>
+                      </Tooltip>
                     </Group>
                   </Table.Td>
                 </Table.Tr>
@@ -133,6 +179,13 @@ export function Teachers() {
         onClose={() => setModalOpened(false)}
         onSave={saveTeacher}
         teacher={editingTeacher}
+      />
+
+      <TeacherAvailabilityDrawer
+        opened={drawerOpened}
+        onClose={() => setDrawerOpened(false)}
+        teacher={availabilityTeacher}
+        onSave={saveTeacher}
       />
     </div>
   );
