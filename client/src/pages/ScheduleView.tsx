@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import {
   Card,
   Group,
-  SegmentedControl,
+  Tabs,
   Select,
   Text,
   Center,
@@ -281,9 +281,10 @@ export function ScheduleView() {
           {/* View Mode Selector Tabs */}
           <Card withBorder radius="md" p="sm" mb="md" className="no-print">
             <Group justify="space-between" align="center" wrap="wrap" gap="sm">
-              <SegmentedControl
+              <Tabs
                 value={activeTab}
                 onChange={(val) => {
+                  if (!val) return;
                   if (editor.isEditing) {
                     editor.clearSelection();
                     if (val === 'master' || val === 'print') {
@@ -292,14 +293,25 @@ export function ScheduleView() {
                   }
                   setActiveTab(val as typeof activeTab);
                 }}
-                data={[
-                  { label: 'جدول الفصل (Class)', value: 'class' },
-                  { label: 'جدول المعلم (Teacher)', value: 'teacher' },
-                  { label: 'الجدول العام للمدرسة (Matrix)', value: 'master' },
-                  { label: 'طباعة وتصدير (Print/PDF)', value: 'print' },
-                ]}
+                variant="pills"
                 color="indigo"
-              />
+                radius="md"
+              >
+                <Tabs.List style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  <Tabs.Tab value="class" leftSection={<IconSchool size={16} />}>
+                    جدول الفصل
+                  </Tabs.Tab>
+                  <Tabs.Tab value="teacher" leftSection={<IconUser size={16} />}>
+                    جدول المعلم
+                  </Tabs.Tab>
+                  <Tabs.Tab value="master" leftSection={<IconTable size={16} />}>
+                    المصفوفة الشاملة
+                  </Tabs.Tab>
+                  <Tabs.Tab value="print" leftSection={<IconPrinter size={16} />}>
+                    طباعة وتصدير
+                  </Tabs.Tab>
+                </Tabs.List>
+              </Tabs>
 
               {activeTab === 'class' && (
                 <Select
@@ -307,7 +319,7 @@ export function ScheduleView() {
                   data={classes.map((c) => ({ value: c.id, label: c.sectionName }))}
                   value={activeClass?.id}
                   onChange={setSelectedClassId}
-                  style={{ width: 220 }}
+                  style={{ minWidth: 200, flex: '1 1 200px', maxWidth: '100%' }}
                 />
               )}
 
@@ -317,7 +329,7 @@ export function ScheduleView() {
                   data={teachers.map((t) => ({ value: t.id, label: `${t.name} (${t.specialization})` }))}
                   value={activeTeacher?.id}
                   onChange={setSelectedTeacherId}
-                  style={{ width: 240 }}
+                  style={{ minWidth: 220, flex: '1 1 220px', maxWidth: '100%' }}
                 />
               )}
             </Group>
