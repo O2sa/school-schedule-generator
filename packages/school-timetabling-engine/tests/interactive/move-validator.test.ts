@@ -30,9 +30,9 @@ const mockInput: TimetableInput = {
 };
 
 const initialAssignments: TimetableAssignment[] = [
-  { lectureId: 'cls_1__0__0', classId: 'cls_1', teacherId: 't_1', dayIndex: 0, periodIndex: 0, roomNumber: '101' },
-  { lectureId: 'cls_1__0__1', classId: 'cls_1', teacherId: 't_2', dayIndex: 0, periodIndex: 1, roomNumber: '101' },
-  { lectureId: 'cls_2__1__2', classId: 'cls_2', teacherId: 't_1', dayIndex: 1, periodIndex: 2, roomNumber: '102' },
+  { lectureId: 'cls_1__0__0', classId: 'cls_1', teacherId: 't_1', subjectId: 'sub_1', dayIndex: 0, periodIndex: 0, roomNumber: '101' },
+  { lectureId: 'cls_1__0__1', classId: 'cls_1', teacherId: 't_2', subjectId: 'sub_2', dayIndex: 0, periodIndex: 1, roomNumber: '101' },
+  { lectureId: 'cls_2__1__2', classId: 'cls_2', teacherId: 't_1', subjectId: 'sub_1', dayIndex: 1, periodIndex: 2, roomNumber: '102' },
 ];
 
 describe('Interactive Move Validator', () => {

@@ -16,10 +16,10 @@ export interface TimetableAssignment {
   lectureId: string;
   classId: string;
   teacherId: string;
-  subjectId?: string | undefined;
+  subjectId: string;
   dayIndex: number;
   periodIndex: number;
-  roomNumber?: string | undefined;
+  roomNumber: string;
 }
 
 export interface MoveRequest {

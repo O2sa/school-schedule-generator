@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTimetableEditor } from '../src/hooks/useTimetableEditor';
 import type { TimetableInput, TimetableAssignment } from 'school-timetabling-engine';
@@ -10,21 +10,21 @@ const mockInput: TimetableInput = {
   ],
   periodsPerDay: 4,
   classes: [
-    { id: 'cls_1', name: 'الصف 10أ', periodsPerDay: 4 },
+    { id: 'cls_1', name: 'صف 10أ', lecturesPerDay: 4 },
   ],
   teachers: [
-    { id: 't_1', name: 'أحمد', maxPeriodsPerDay: 3, blockedSlots: [{ day: 0, period: 3 }] },
-    { id: 't_2', name: 'سارة', maxPeriodsPerDay: 4, blockedSlots: [] },
+    { id: 't_1', name: 'أحمد', workingDays: [0, 1], maxLecturesPerDay: 3, blockedSlots: [{ day: 0, period: 3 }] },
+    { id: 't_2', name: 'خالد', workingDays: [0, 1], maxLecturesPerDay: 4, blockedSlots: [] },
   ],
   requirements: [
-    { id: 'req_1', classId: 'cls_1', teacherId: 't_1', lecturesPerWeek: 2 },
-    { id: 'req_2', classId: 'cls_1', teacherId: 't_2', lecturesPerWeek: 2 },
+    { id: 'req_1', classId: 'cls_1', teacherId: 't_1', subjectId: 'sub_1', subjectName: 'رياضيات', lecturesPerWeek: 2 },
+    { id: 'req_2', classId: 'cls_1', teacherId: 't_2', subjectId: 'sub_2', subjectName: 'علوم', lecturesPerWeek: 2 },
   ],
 };
 
 const initialAssignments: TimetableAssignment[] = [
-  { lectureId: 'cls_1__0__0', classId: 'cls_1', teacherId: 't_1', dayIndex: 0, periodIndex: 0, roomNumber: '101' },
-  { lectureId: 'cls_1__0__1', classId: 'cls_1', teacherId: 't_2', dayIndex: 0, periodIndex: 1, roomNumber: '101' },
+  { lectureId: 'cls_1__0__0', classId: 'cls_1', teacherId: 't_1', subjectId: 'sub_1', dayIndex: 0, periodIndex: 0, roomNumber: '101' },
+  { lectureId: 'cls_1__0__1', classId: 'cls_1', teacherId: 't_2', subjectId: 'sub_2', dayIndex: 0, periodIndex: 1, roomNumber: '101' },
 ];
 
 describe('useTimetableEditor hook', () => {

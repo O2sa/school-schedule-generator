@@ -5,7 +5,7 @@ import type {
   ClassDefinition,
   TeacherDefinition,
   TeachingRequirement,
-} from 'school-timetabling-engine';
+} from "school-timetabling-engine";
 import type {
   SchoolConfigRecord,
   TeacherRecord,
@@ -15,7 +15,7 @@ import type {
   SavedScheduleRecord,
   TimetableAssignment,
   SolverOptions,
-} from '../types';
+} from "../types";
 
 export function buildTimetableInput(data: {
   config: SchoolConfigRecord;
@@ -25,7 +25,15 @@ export function buildTimetableInput(data: {
   curriculum: CurriculumRequirementRecord[];
   options?: SolverOptions;
 }): TimetableInput {
-  const dayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  const dayNames = [
+    "الأحد",
+    "الإثنين",
+    "الثلاثاء",
+    "الأربعاء",
+    "الخميس",
+    "الجمعة",
+    "السبت",
+  ];
   const days: SchoolDay[] = data.config.workingDays.map((d) => ({
     id: d,
     name: dayNames[d] || `يوم ${d}`,
@@ -58,7 +66,7 @@ export function buildTimetableInput(data: {
       classId: c.classId,
       teacherId: c.teacherId,
       subjectId: c.subjectId,
-      subjectName: sub?.name || 'مادة غير معروفة',
+      subjectName: sub?.name || "مادة غير معروفة",
       lecturesPerWeek: c.periodsPerWeek,
     };
   });
@@ -85,30 +93,30 @@ export function mapSolverResultToSavedSchedule(
     config: SchoolConfigRecord;
     classes: ClassRecord[];
     subjects: SubjectRecord[];
-  }
+  },
 ): SavedScheduleRecord {
   const classMap = new Map(data.classes.map((c) => [c.id, c]));
 
-  if (result.status === 'SUCCESS') {
+  if (result.status === "SUCCESS") {
     const assignments: TimetableAssignment[] = result.lectures.map((l) => {
       const cls = classMap.get(l.classId);
       return {
         lectureId: `${l.classId}__${l.day}__${l.period}`,
         classId: l.classId,
         teacherId: l.teacherId,
-        subjectId: l.subjectId || '',
+        subjectId: l.subjectId || "",
         dayIndex: l.day,
         periodIndex: l.period,
-        roomNumber: cls?.roomNumber || 'قاعة 1',
+        roomNumber: cls?.roomNumber || "قاعة 1",
       };
     });
 
     return {
       id: crypto.randomUUID(),
-      name: `جدول مكتمل - ${new Date().toLocaleTimeString('ar-SA')}`,
+      name: `جدول مكتمل - ${new Date().toLocaleTimeString("ar-SA")}`,
       createdAt: new Date().toISOString(),
       isActive: true,
-      status: 'solved',
+      status: "solved",
       solveTimeMs: result.statistics.executionTimeMs,
       backtrackCount: result.statistics.backtracks,
       assignments,
@@ -117,10 +125,10 @@ export function mapSolverResultToSavedSchedule(
 
   return {
     id: crypto.randomUUID(),
-    name: `جدول غير مكتمل (${result.status}) - ${new Date().toLocaleTimeString('ar-SA')}`,
+    name: `جدول غير مكتمل (${result.status}) - ${new Date().toLocaleTimeString("ar-SA")}`,
     createdAt: new Date().toISOString(),
     isActive: false,
-    status: result.status === 'INFEASIBLE' ? 'unsat' : 'timeout',
+    status: result.status === "INFEASIBLE" ? "unsat" : "timeout",
     solveTimeMs: result.statistics?.executionTimeMs ?? 0,
     backtrackCount: result.statistics?.backtracks ?? 0,
     assignments: [],

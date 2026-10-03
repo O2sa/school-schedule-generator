@@ -38,7 +38,9 @@ export function runSolver(
     if (typeof window !== 'undefined' && typeof Worker !== 'undefined') {
       try {
         cancelActiveSolver();
-        const worker = new Worker(new URL('./solver.worker.ts', import.meta.url), {
+        const workerUrl = new URL('./solver.worker.ts', import.meta.url);
+        workerUrl.searchParams.set('t', Date.now().toString());
+        const worker = new Worker(workerUrl, {
           type: 'module',
         });
         activeWorker = worker;
@@ -55,7 +57,13 @@ export function runSolver(
             reject(err);
           } else if (type === 'TIMEOUT') {
             activeWorker = null;
-            reject(new Error('انتهى الوقت المحدد دون العثور على حل متكامل'));
+            const timeSec = Math.round((resPayload?.statistics?.executionTimeMs || 0) / 1000);
+            const bt = resPayload?.statistics?.backtracks?.toLocaleString() || 0;
+            const it = resPayload?.statistics?.iterations?.toLocaleString() || 0;
+            const err = new Error(`انتهت مهلة البحث (${timeSec} ثانية) بعد ${bt} تراجع و ${it} محاولة دون حل كامل`);
+            (err as any).statistics = resPayload?.statistics;
+            (err as any).diagnostics = resPayload?.diagnostics;
+            reject(err);
           } else if (type === 'PROGRESS') {
             onProgress?.(resPayload);
           } else if (type === 'ERROR') {

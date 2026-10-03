@@ -27,8 +27,10 @@ self.onmessage = (e: MessageEvent) => {
       const input = buildTimetableInput(data);
       const startTime = performance.now();
 
+      console.log('[SolverWorker] Starting solve with options:', input.options);
       const result = solveTimetable(input);
       const elapsedMs = Math.round(performance.now() - startTime);
+      console.log('[SolverWorker] Finished solve in', elapsedMs, 'ms with status:', result.status, 'statistics:', result.statistics);
 
       if (result.status === 'SUCCESS') {
         const saved = mapSolverResultToSavedSchedule(result, data);
@@ -46,6 +48,7 @@ self.onmessage = (e: MessageEvent) => {
         self.postMessage({
           type: 'TIMEOUT',
           payload: {
+            diagnostics: (result as any).diagnostics,
             statistics: result.statistics,
           },
         });
