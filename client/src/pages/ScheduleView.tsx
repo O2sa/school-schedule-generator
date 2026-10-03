@@ -280,7 +280,7 @@ export function ScheduleView() {
 
           {/* View Mode Selector Tabs */}
           <Card withBorder radius="md" p="sm" mb="md" className="no-print">
-            <Group justify="space-between" align="center">
+            <Group justify="space-between" align="center" wrap="wrap" gap="sm">
               <SegmentedControl
                 value={activeTab}
                 onChange={(val) => {

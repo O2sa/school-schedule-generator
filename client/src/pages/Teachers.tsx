@@ -95,17 +95,18 @@ export function Teachers() {
             <Text c="dimmed">لا يوجد معلمون مطابقون للبحث.</Text>
           </Center>
         ) : (
-          <Table striped highlightOnHover verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>اسم المعلم</Table.Th>
-                <Table.Th>التخصص</Table.Th>
-                <Table.Th>الحد اليومي</Table.Th>
-                <Table.Th>النصاب الأسبوعي</Table.Th>
-                <Table.Th>أوقات التوفر</Table.Th>
-                <Table.Th style={{ textAlign: 'center' }}>الإجراءات</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
+          <Table.ScrollContainer minWidth={750}>
+            <Table striped highlightOnHover verticalSpacing="sm">
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>اسم المعلم</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>التخصص</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>الحد اليومي</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>النصاب الأسبوعي</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>أوقات التوفر</Table.Th>
+                  <Table.Th style={{ textAlign: 'center', whiteSpace: 'nowrap', width: 130 }}>الإجراءات</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
             <Table.Tbody>
               {filtered.map((teacher) => (
                 <Table.Tr key={teacher.id}>
@@ -171,6 +172,7 @@ export function Teachers() {
               ))}
             </Table.Tbody>
           </Table>
+        </Table.ScrollContainer>
         )}
       </Card>
 

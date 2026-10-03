@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Card, ScrollArea, Select, Group, TextInput, Text, Badge } from '@mantine/core';
+import { Table, Card, Select, Group, TextInput, Text, Badge } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import type { ClassRecord, TeacherRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
 
@@ -60,7 +60,7 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
         </Text>
       </Group>
 
-      <ScrollArea>
+      <Table.ScrollContainer minWidth={900}>
         <Table withTableBorder withColumnBorders style={{ minWidth: 900, textAlign: 'center' }}>
           <Table.Thead>
             <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
@@ -120,7 +120,7 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
             ))}
           </Table.Tbody>
         </Table>
-      </ScrollArea>
+      </Table.ScrollContainer>
     </Card>
   );
 }

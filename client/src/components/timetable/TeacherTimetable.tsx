@@ -60,17 +60,18 @@ export function TeacherTimetable({
         </div>
       </Group>
 
-      <Table withTableBorder withColumnBorders style={{ textAlign: 'center' }}>
-        <Table.Thead>
-          <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
-            <Table.Th style={{ textAlign: 'center', width: 100 }}>اليوم / الحصة</Table.Th>
-            {PERIODS.map((p) => (
-              <Table.Th key={p} style={{ textAlign: 'center' }}>
-                الحصة {p + 1}
-              </Table.Th>
-            ))}
-          </Table.Tr>
-        </Table.Thead>
+      <Table.ScrollContainer minWidth={720}>
+        <Table withTableBorder withColumnBorders style={{ textAlign: 'center', minWidth: 720 }}>
+          <Table.Thead>
+            <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
+              <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>اليوم / الحصة</Table.Th>
+              {PERIODS.map((p) => (
+                <Table.Th key={p} style={{ textAlign: 'center', minWidth: 85, whiteSpace: 'nowrap' }}>
+                  الحصة {p + 1}
+                </Table.Th>
+              ))}
+            </Table.Tr>
+          </Table.Thead>
         <Table.Tbody>
           {DAYS.map((dayName, dIdx) => (
             <Table.Tr key={dIdx}>
@@ -231,7 +232,8 @@ export function TeacherTimetable({
             </Table.Tr>
           ))}
         </Table.Tbody>
-      </Table>
+        </Table>
+      </Table.ScrollContainer>
     </Card>
   );
 }

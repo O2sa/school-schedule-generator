@@ -9,7 +9,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
   return (
-    <Group justify="space-between" align="flex-start" mb="xl">
+    <Group justify="space-between" align="flex-start" mb="xl" wrap="wrap" gap="sm">
       <Stack gap={4}>
         <Title order={2} style={{ letterSpacing: '-0.5px' }}>
           {title}
@@ -20,7 +20,7 @@ export function PageHeader({ title, subtitle, actions }: PageHeaderProps) {
           </Text>
         )}
       </Stack>
-      {actions && <Group>{actions}</Group>}
+      {actions && <Group gap="xs" wrap="wrap">{actions}</Group>}
     </Group>
   );
 }

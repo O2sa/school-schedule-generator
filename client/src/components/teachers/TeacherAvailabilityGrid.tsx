@@ -264,8 +264,9 @@ export function TeacherAvailabilityGrid({
       )}
 
       {/* Main Grid */}
-      <Card withBorder radius="md" p={6} style={{ overflowX: 'auto', userSelect: 'none' }}>
-        <Table withTableBorder withColumnBorders style={{ textAlign: 'center' }}>
+      <Card withBorder radius="md" p={6} style={{ userSelect: 'none' }}>
+        <Table.ScrollContainer minWidth={540}>
+          <Table withTableBorder withColumnBorders style={{ textAlign: 'center', minWidth: 540 }}>
           <Table.Thead>
             <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
               <Table.Th style={{ textAlign: 'center', width: 90 }}>اليوم / الحصة</Table.Th>
@@ -395,7 +396,8 @@ export function TeacherAvailabilityGrid({
               );
             })}
           </Table.Tbody>
-        </Table>
+          </Table>
+        </Table.ScrollContainer>
       </Card>
     </Stack>
   );

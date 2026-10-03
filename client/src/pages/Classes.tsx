@@ -84,17 +84,18 @@ export function Classes() {
             <Text c="dimmed">لا توجد فصول مطابقة.</Text>
           </Center>
         ) : (
-          <Table striped highlightOnHover verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>الصف الدراسي</Table.Th>
-                <Table.Th>اسم الفصل / الشعبة</Table.Th>
-                <Table.Th>رقم القاعة</Table.Th>
-                <Table.Th>الحصص اليومية</Table.Th>
-                <Table.Th>الحصص الأسبوعية</Table.Th>
-                <Table.Th style={{ textAlign: 'center' }}>الإجراءات</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
+          <Table.ScrollContainer minWidth={650}>
+            <Table striped highlightOnHover verticalSpacing="sm">
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>الصف الدراسي</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>اسم الفصل / الشعبة</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>رقم القاعة</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>الحصص اليومية</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>الحصص الأسبوعية</Table.Th>
+                  <Table.Th style={{ textAlign: 'center', whiteSpace: 'nowrap', width: 100 }}>الإجراءات</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
             <Table.Tbody>
               {filtered.map((cls) => (
                 <Table.Tr key={cls.id}>
@@ -125,6 +126,7 @@ export function Classes() {
               ))}
             </Table.Tbody>
           </Table>
+        </Table.ScrollContainer>
         )}
       </Card>
 

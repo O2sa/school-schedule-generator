@@ -130,16 +130,17 @@ export function Curriculum() {
             <Text c="dimmed">لم يتم توزيع أي مواد لهذا الفصل بعد.</Text>
           </Center>
         ) : (
-          <Table striped highlightOnHover verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>المادة</Table.Th>
-                <Table.Th>المعلم المسؤول</Table.Th>
-                <Table.Th>التخصص</Table.Th>
-                <Table.Th>الحصص أسبوعياً</Table.Th>
-                <Table.Th style={{ textAlign: 'center' }}>إجراء</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
+          <Table.ScrollContainer minWidth={650}>
+            <Table striped highlightOnHover verticalSpacing="sm">
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>المادة</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>المعلم المسؤول</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>التخصص</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>الحصص أسبوعياً</Table.Th>
+                  <Table.Th style={{ textAlign: 'center', whiteSpace: 'nowrap', width: 80 }}>إجراء</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
             <Table.Tbody>
               {classCurriculum.map((item) => {
                 const sub = subjectMap.get(item.subjectId);
@@ -164,6 +165,7 @@ export function Curriculum() {
               })}
             </Table.Tbody>
           </Table>
+        </Table.ScrollContainer>
         )}
       </Card>
 

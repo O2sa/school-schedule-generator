@@ -74,15 +74,16 @@ export function Subjects() {
         ) : subjects.length === 0 ? (
           <Center p="xl"><Text c="dimmed">لا توجد مواد مسجلة.</Text></Center>
         ) : (
-          <Table striped highlightOnHover verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>رمز المادة</Table.Th>
-                <Table.Th>اسم المادة</Table.Th>
-                <Table.Th>التصنيف</Table.Th>
-                <Table.Th style={{ textAlign: 'center' }}>حذف</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
+          <Table.ScrollContainer minWidth={500}>
+            <Table striped highlightOnHover verticalSpacing="sm">
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>رمز المادة</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>اسم المادة</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>التصنيف</Table.Th>
+                  <Table.Th style={{ textAlign: 'center', whiteSpace: 'nowrap', width: 80 }}>حذف</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
             <Table.Tbody>
               {subjects.map((sub) => (
                 <Table.Tr key={sub.id}>
@@ -98,6 +99,7 @@ export function Subjects() {
               ))}
             </Table.Tbody>
           </Table>
+        </Table.ScrollContainer>
         )}
       </Card>
 
