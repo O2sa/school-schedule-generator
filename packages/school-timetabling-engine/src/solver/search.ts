@@ -5,10 +5,7 @@ import { selectNextRequirement } from "../heuristics/mrv";
 import { scoreCandidateSlots } from "../heuristics/slot-scoring";
 import { checkForwardLookahead } from "./forward-checker";
 
-export type SearchOutcome =
-  | { status: "SUCCESS" }
-  | { status: "TIMEOUT" }
-  | { status: "DEAD_END" };
+export type SearchOutcome = { status: "SUCCESS" } | { status: "TIMEOUT" } | { status: "DEAD_END" };
 
 export function executeBacktrackingSearch(
   state: ScheduleState,

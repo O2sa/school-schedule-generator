@@ -41,3 +41,7 @@ export {
   TeacherDailyOverloadConstraint,
   defaultHardConstraints
 } from "./domain/constraints/built-in-constraints";
+
+// Interactive Editing
+export * from "./interactive/types";
+export * from "./interactive/move-validator";
