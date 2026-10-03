@@ -7,9 +7,11 @@ import {
   Text,
   Badge,
   Divider,
+  Alert,
 } from '@mantine/core';
-import { IconCalendarTime, IconDeviceFloppy } from '@tabler/icons-react';
+import { IconCalendarTime, IconDeviceFloppy, IconAlertTriangle } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
+import { validateTeacherCapacity } from 'school-timetabling-engine';
 import { useSchoolConfig } from '../../api/queries/useSchoolData';
 import { TeacherAvailabilityGrid } from './TeacherAvailabilityGrid';
 import type { TeacherRecord, UnavailableSlot } from '../../api/types';
@@ -41,7 +43,24 @@ export function TeacherAvailabilityDrawer({
 
   if (!teacher) return null;
 
+  const validation = validateTeacherCapacity({
+    workingDays: config?.workingDays ?? [0, 1, 2, 3, 4],
+    periodsPerDay: config?.periodsPerDayDefault ?? 7,
+    unavailableSlots: slots,
+    maxWeeklyPeriods: teacher.maxWeeklyPeriods,
+    maxDailyPeriods: teacher.maxDailyPeriods,
+  });
+
   const handleSave = async () => {
+    if (!validation.valid) {
+      notifications.show({
+        title: 'تعذر الحفظ',
+        message: validation.error,
+        color: 'red',
+      });
+      return;
+    }
+
     setIsSaving(true);
     try {
       await onSave({
@@ -103,6 +122,18 @@ export function TeacherAvailabilityDrawer({
           maxWeeklyPeriods={teacher.maxWeeklyPeriods}
         />
 
+        {!validation.valid && (
+          <Alert
+            icon={<IconAlertTriangle size={18} />}
+            color="red"
+            title="لا يمكن حفظ أوقات التوفر"
+            variant="light"
+            radius="md"
+          >
+            {validation.error}
+          </Alert>
+        )}
+
         <Divider mt="md" />
 
         <Group justify="flex-end" gap="sm">
@@ -113,6 +144,7 @@ export function TeacherAvailabilityDrawer({
             color="indigo"
             leftSection={<IconDeviceFloppy size={16} />}
             loading={isSaving}
+            disabled={!validation.valid}
             onClick={handleSave}
           >
             حفظ أوقات التوفر

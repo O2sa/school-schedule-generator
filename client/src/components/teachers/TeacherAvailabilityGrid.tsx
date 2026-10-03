@@ -253,12 +253,13 @@ export function TeacherAvailabilityGrid({
       {/* Capacity Warning */}
       {isUnderCapacity && (
         <Alert
-          color="orange"
+          color="red"
           icon={<IconAlertTriangle size={16} />}
-          title="تحذير نقص الطاقة الاستيعابية"
+          title="تنبيه: لا يمكن حفظ التوفر (عجز في الحصص)"
           p="xs"
+          radius="md"
         >
-          الفترات المتاحة للمعلم ({availableSlotsCount}) أقل من النصاب الأسبوعي المطلوب ({maxWeeklyPeriods} حصة).
+          الفترات المتاحة للمعلم ({availableSlotsCount}) أقل من النصاب الأسبوعي المطلوب ({maxWeeklyPeriods} حصة). لن يسمح النظام بحفظ هذا التوزيع حتى يتم تفريغ فترات إضافية أو تقليل النصاب.
         </Alert>
       )}
 

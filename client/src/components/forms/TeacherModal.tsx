@@ -8,8 +8,12 @@ import {
   Group,
   Stack,
   Text,
+  Alert,
 } from '@mantine/core';
+import { IconAlertTriangle } from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
 import { useForm } from '@mantine/form';
+import { validateTeacherCapacity } from 'school-timetabling-engine';
 import { useSchoolConfig } from '../../api/queries/useSchoolData';
 import { TeacherAvailabilityGrid } from '../teachers/TeacherAvailabilityGrid';
 import type { TeacherRecord, UnavailableSlot } from '../../api/types';
@@ -52,16 +56,41 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
     }
   }, [teacher, opened]);
 
+  const validation = validateTeacherCapacity({
+    workingDays: config?.workingDays ?? [0, 1, 2, 3, 4],
+    periodsPerDay: config?.periodsPerDayDefault ?? 7,
+    unavailableSlots,
+    maxWeeklyPeriods: form.values.maxWeeklyPeriods,
+    maxDailyPeriods: form.values.maxDailyPeriods,
+  });
+
   const handleSubmit = async (values: typeof form.values) => {
-    await onSave({
-      ...(teacher?.id ? { id: teacher.id } : {}),
-      name: values.name,
-      specialization: values.specialization,
-      maxDailyPeriods: values.maxDailyPeriods,
-      maxWeeklyPeriods: values.maxWeeklyPeriods,
-      unavailableSlots,
-    });
-    onClose();
+    if (!validation.valid) {
+      notifications.show({
+        title: 'تعذر حفظ بيانات المعلم',
+        message: validation.error,
+        color: 'red',
+      });
+      return;
+    }
+
+    try {
+      await onSave({
+        ...(teacher?.id ? { id: teacher.id } : {}),
+        name: values.name,
+        specialization: values.specialization,
+        maxDailyPeriods: values.maxDailyPeriods,
+        maxWeeklyPeriods: values.maxWeeklyPeriods,
+        unavailableSlots,
+      });
+      onClose();
+    } catch (err: unknown) {
+      notifications.show({
+        title: 'خطأ أثناء الحفظ',
+        message: err instanceof Error ? err.message : 'تعذر حفظ بيانات المعلم',
+        color: 'red',
+      });
+    }
   };
 
   return (
@@ -130,11 +159,23 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
             />
           </div>
 
+          {!validation.valid && (
+            <Alert
+              icon={<IconAlertTriangle size={18} />}
+              color="red"
+              title="تعذر الحفظ - تجاوز سعة المعلم"
+              variant="light"
+              radius="md"
+            >
+              {validation.error}
+            </Alert>
+          )}
+
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={onClose}>
               إلغاء
             </Button>
-            <Button type="submit" color="indigo">
+            <Button type="submit" color="indigo" disabled={!validation.valid}>
               حفظ
             </Button>
           </Group>

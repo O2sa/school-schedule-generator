@@ -93,4 +93,24 @@ describe('LocalDataService (IndexedDB with Dexie)', () => {
     expect((await service.getClasses()).length).toBe(24);
     expect((await service.getTeachers()).length).toBe(backup.teachers.length);
   });
+  it('rejects saving a teacher if needed lectures > available lectures', async () => {
+    // 5 working days * 7 periods = 35 total slots.
+    // If we block 25 slots, only 10 slots remain available.
+    const blockedSlots = [];
+    for (let d = 0; d < 5; d++) {
+      for (let p = 0; p < 5; p++) {
+        blockedSlots.push({ dayIndex: d, periodIndex: p });
+      }
+    }
+
+    await expect(
+      service.saveTeacher({
+        name: 'معلم متجاوز السعة',
+        specialization: 'فيزياء',
+        maxDailyPeriods: 4,
+        maxWeeklyPeriods: 18, // 18 needed > 10 available
+        unavailableSlots: blockedSlots,
+      })
+    ).rejects.toThrow();
+  });
 });

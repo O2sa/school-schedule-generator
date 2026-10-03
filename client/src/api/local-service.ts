@@ -1,3 +1,4 @@
+import { validateTeacherCapacity } from "school-timetabling-engine";
 import { runSolver, cancelActiveSolver } from './worker/worker-client';
 import { db } from './db';
 import { DEFAULT_SCHOOL_CONFIG, generateArabicK12DemoData } from './demo-data';
@@ -34,6 +35,26 @@ export class LocalDataService implements IDataService {
   }
 
   async saveTeacher(teacher: Omit<TeacherRecord, 'id'> & { id?: string }): Promise<TeacherRecord> {
+    const config = await this.getConfig();
+    let assignedCurriculumPeriods = 0;
+    if (teacher.id) {
+      const teacherCurriculum = await db.curriculum.where('teacherId').equals(teacher.id).toArray();
+      assignedCurriculumPeriods = teacherCurriculum.reduce((sum, item) => sum + item.periodsPerWeek, 0);
+    }
+
+    const validation = validateTeacherCapacity({
+      workingDays: config.workingDays,
+      periodsPerDay: config.periodsPerDayDefault,
+      unavailableSlots: teacher.unavailableSlots,
+      maxWeeklyPeriods: teacher.maxWeeklyPeriods,
+      maxDailyPeriods: teacher.maxDailyPeriods,
+      assignedCurriculumPeriods,
+    });
+
+    if (!validation.valid) {
+      throw new Error(validation.error);
+    }
+
     const id = teacher.id || crypto.randomUUID();
     const record: TeacherRecord = { ...teacher, id };
     await db.teachers.put(record);

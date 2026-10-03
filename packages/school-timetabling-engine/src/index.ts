@@ -45,3 +45,10 @@ export {
 // Interactive Editing
 export * from "./interactive/types";
 export * from "./interactive/move-validator";
+
+// Teacher Capacity Validation
+export {
+  validateTeacherCapacity,
+  type TeacherCapacityInput,
+  type TeacherCapacityValidationResult,
+} from "./validation/teacher-validator";
