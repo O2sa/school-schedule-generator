@@ -8,6 +8,7 @@ import {
   ScrollArea,
   Title,
   useMantineColorScheme,
+  useComputedColorScheme,
   ActionIcon,
   Tooltip,
   Box,
@@ -31,7 +32,8 @@ import { useTranslation } from '../i18n';
 export function AppLayout() {
   const [opened, { toggle, close }] = useDisclosure();
   const location = useLocation();
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { colorScheme, setColorScheme, clearColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
   const { t } = useTranslation();
 
   const navItems = [
@@ -69,9 +71,26 @@ export function AppLayout() {
           <Group gap="sm">
             <ModeToggleBadge />
             <LanguageToggle />
-            <Tooltip label={colorScheme === 'dark' ? t('common.colorSchemeDark') : t('common.colorSchemeLight')}>
-              <ActionIcon variant="default" size="lg" onClick={() => toggleColorScheme()} aria-label="Toggle color scheme">
-                {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
+            <Tooltip
+              label={
+                colorScheme === 'auto'
+                  ? `${computedColorScheme === 'dark' ? t('common.colorSchemeDark') : t('common.colorSchemeLight')} (${t('common.colorSchemeSystem')})`
+                  : computedColorScheme === 'dark'
+                  ? t('common.colorSchemeDark')
+                  : t('common.colorSchemeLight')
+              }
+            >
+              <ActionIcon
+                variant="default"
+                size="lg"
+                onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  clearColorScheme();
+                }}
+                aria-label="Toggle color scheme"
+              >
+                {computedColorScheme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
               </ActionIcon>
             </Tooltip>
           </Group>

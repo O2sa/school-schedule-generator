@@ -31,7 +31,7 @@ function AppWithI18n() {
 
   return (
     <DirectionProvider key={dir} initialDirection={dir} detectDirection={false}>
-      <MantineProvider theme={theme} defaultColorScheme="light">
+      <MantineProvider theme={theme} defaultColorScheme="auto">
         <Notifications position="top-center" />
         <BrowserRouter>
           <Routes>
