@@ -10,7 +10,6 @@ import {
   Button,
   Divider,
   FileInput,
-  Alert,
   Badge,
 } from '@mantine/core';
 import {
@@ -24,13 +23,15 @@ import {
 import { useSchoolConfig } from '../api/queries/useSchoolData';
 import { useDataService, useStorageMode } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
+import { useTranslation } from '../i18n';
 
 export function Settings() {
   const service = useDataService();
   const [mode, setMode] = useStorageMode();
   const { data: config, saveConfig } = useSchoolConfig();
+  const { t } = useTranslation();
 
-  const [schoolName, setSchoolName] = useState(config?.schoolName || 'مدرسة الأمل النموذجية للبنين');
+  const [schoolName, setSchoolName] = useState(config?.schoolName || 'مدرسة التميز النموذجية');
   const [academicYear, setAcademicYear] = useState(config?.academicYear || '2026 / 2027');
   const [term, setTerm] = useState(config?.term || 'الفصل الدراسي الأول');
 
@@ -65,24 +66,24 @@ export function Settings() {
     const text = await importFile.text();
     const payload = JSON.parse(text);
     await service.importBackup(payload);
-    alert('تم استيراد النسخة الاحتياطية بنجاح!');
+    alert(t('settings.importSuccess'));
     window.location.reload();
   };
 
   return (
     <div>
       <PageHeader
-        title="الإعدادات والنسخ الاحتياطي"
-        subtitle="تخصيص وضع التشغيل وبيانات المدرسة وحفظ واسترجاع قواعد البيانات"
+        title={t('settings.title')}
+        subtitle={t('settings.subtitle')}
       />
 
       {/* Mode Configuration */}
       <Card withBorder radius="md" p="lg" mb="xl">
         <Title order={4} mb="xs">
-          وضع التخزين والتشغيل (Storage Mode)
+          {t('settings.storageTitle')}
         </Title>
         <Text size="sm" c="dimmed" mb="md">
-          اختر المكان الذي يتم حفظ ومعالجة بيانات المدرسة فيه:
+          {t('settings.storageDesc')}
         </Text>
 
         <Radio.Group value={mode} onChange={(val) => setMode(val as 'client' | 'server')}>
@@ -94,10 +95,10 @@ export function Settings() {
                   <IconDeviceDesktop size={18} color="var(--mantine-color-teal-6)" />
                   <div>
                     <Text size="sm" fw={600}>
-                      وضع المتصفح المحلي (Client Mode) - مستحسن للاستخدام المستقل
+                      {t('settings.clientModeTitle')}
                     </Text>
                     <Text size="xs" c="dimmed">
-                      البيانات تُخزن في IndexedDB بالمتصفح ويتم التوليد عبر Web Worker دون الحاجة لأي خادم.
+                      {t('settings.clientModeDesc')}
                     </Text>
                   </div>
                 </Group>
@@ -111,10 +112,10 @@ export function Settings() {
                   <IconCloud size={18} color="var(--mantine-color-blue-6)" />
                   <div>
                     <Text size="sm" fw={600}>
-                      وضع الخادم المركزي (Server Mode) - للربط المؤسسي
+                      {t('settings.serverModeTitle')}
                     </Text>
                     <Text size="xs" c="dimmed">
-                      البيانات تتزامن مع خادم Express وقاعدة بيانات MongoDB المركزية.
+                      {t('settings.serverModeDesc')}
                     </Text>
                   </div>
                 </Group>
@@ -127,31 +128,31 @@ export function Settings() {
       {/* General School Info */}
       <Card withBorder radius="md" p="lg" mb="xl">
         <Title order={4} mb="xs">
-          بيانات المدرسة والتقويم
+          {t('settings.schoolInfoTitle')}
         </Title>
         <Stack gap="md" mt="md" style={{ maxWidth: 500 }}>
           <TextInput
-            label="اسم المدرسة"
+            label={t('settings.schoolName')}
             value={schoolName}
             onChange={(e) => setSchoolName(e.target.value)}
           />
           <TextInput
-            label="العام الدراسي"
+            label={t('settings.academicYear')}
             value={academicYear}
             onChange={(e) => setAcademicYear(e.target.value)}
           />
           <TextInput
-            label="الفصل الدراسي"
+            label={t('settings.term')}
             value={term}
             onChange={(e) => setTerm(e.target.value)}
           />
           <Group justify="flex-start">
             <Button color="indigo" onClick={handleSaveConfig}>
-              حفظ التعديلات
+              {t('settings.saveConfig')}
             </Button>
             {savedSuccess && (
               <Badge color="teal" variant="light" leftSection={<IconCheck size={14} />}>
-                تم الحفظ بنجاح
+                {t('settings.savedSuccess')}
               </Badge>
             )}
           </Group>
@@ -161,24 +162,24 @@ export function Settings() {
       {/* Backup and Restore */}
       <Card withBorder radius="md" p="lg">
         <Title order={4} mb="xs">
-          النسخ الاحتياطي ونقل البيانات (JSON Backup)
+          {t('settings.backupTitle')}
         </Title>
         <Text size="sm" c="dimmed" mb="md">
-          يمكنك تصدير قاعدة بيانات المدرسة بالكامل ونقلها بين المتصفح والخادم أو بين الأجهزة بسهولة:
+          {t('settings.backupDesc')}
         </Text>
 
-        <Group align="flex-end" justify="space-between">
+        <Group align="flex-end" justify="space-between" wrap="wrap" gap="md">
           <Button
             leftSection={<IconDownload size={18} />}
             color="indigo"
             onClick={handleExportBackup}
           >
-            تصدير نسخة احتياطية كاملة (JSON)
+            {t('settings.exportBtn')}
           </Button>
 
-          <Group align="flex-end">
+          <Group align="flex-end" wrap="wrap" gap="xs">
             <FileInput
-              placeholder="اختر ملف النسخة الاحتياطية..."
+              placeholder={t('settings.importFilePlaceholder')}
               accept=".json"
               value={importFile}
               onChange={setImportFile}
@@ -190,7 +191,7 @@ export function Settings() {
               disabled={!importFile}
               onClick={handleImportBackup}
             >
-              استيراد النسخة
+              {t('settings.importBtn')}
             </Button>
           </Group>
         </Group>

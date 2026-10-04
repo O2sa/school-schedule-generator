@@ -16,6 +16,7 @@ import { useForm } from '@mantine/form';
 import { validateTeacherCapacity } from 'school-timetabling-engine';
 import { useSchoolConfig } from '../../api/queries/useSchoolData';
 import { TeacherAvailabilityGrid } from '../teachers/TeacherAvailabilityGrid';
+import { useTranslation } from '../../i18n';
 import type { TeacherRecord, UnavailableSlot } from '../../api/types';
 
 interface TeacherModalProps {
@@ -27,17 +28,20 @@ interface TeacherModalProps {
 
 export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalProps) {
   const { data: config } = useSchoolConfig();
+  const { t, locale } = useTranslation();
   const [unavailableSlots, setUnavailableSlots] = useState<UnavailableSlot[]>([]);
+
+  const defaultSpecialization = locale === 'ar' ? 'لغة عربية' : 'Arabic';
 
   const form = useForm({
     initialValues: {
       name: '',
-      specialization: 'لغة عربية',
+      specialization: defaultSpecialization,
       maxDailyPeriods: 4,
       maxWeeklyPeriods: 18,
     },
     validate: {
-      name: (val) => (val.trim().length >= 2 ? null : 'يجب إدخال اسم المعلم بشكل صحيح'),
+      name: (val) => (val.trim().length >= 2 ? null : t('teacherModal.nameLabel')),
     },
   });
 
@@ -67,7 +71,7 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
   const handleSubmit = async (values: typeof form.values) => {
     if (!validation.valid) {
       notifications.show({
-        title: 'تعذر حفظ بيانات المعلم',
+        title: t('teacherModal.capacityExceeded'),
         message: validation.error,
         color: 'red',
       });
@@ -86,60 +90,78 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
       onClose();
     } catch (err: unknown) {
       notifications.show({
-        title: 'خطأ أثناء الحفظ',
-        message: err instanceof Error ? err.message : 'تعذر حفظ بيانات المعلم',
+        title: t('teacherModal.capacityExceeded'),
+        message: err instanceof Error ? err.message : t('common.loading'),
         color: 'red',
       });
     }
   };
 
+  const specializations = locale === 'ar'
+    ? [
+        'لغة عربية',
+        'لغة إنجليزية',
+        'رياضيات',
+        'علوم عامة',
+        'فيزياء',
+        'كيمياء',
+        'أحياء',
+        'تاريخ',
+        'جغرافيا',
+        'تربية إسلامية',
+        'تربية رياضية',
+        'تربية فنية',
+        'حاسب آلي',
+      ]
+    : [
+        'Arabic',
+        'English',
+        'Mathematics',
+        'General Science',
+        'Physics',
+        'Chemistry',
+        'Biology',
+        'History',
+        'Geography',
+        'Islamic Studies',
+        'Physical Education',
+        'Art',
+        'Computer Science',
+      ];
+
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title={teacher ? 'تعديل بيانات المعلم' : 'إضافة معلم جديد'}
+      title={teacher ? t('teacherModal.titleEdit') : t('teacherModal.titleAdd')}
       size="xl"
       centered
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
           <TextInput
-            label="اسم المعلم"
-            placeholder="مثال: أ. أحمد العتيبي"
+            label={t('teacherModal.nameLabel')}
+            placeholder={t('teacherModal.namePlaceholder')}
             required
             {...form.getInputProps('name')}
           />
 
           <Select
-            label="التخصص"
-            data={[
-              'لغة عربية',
-              'لغة إنجليزية',
-              'رياضيات',
-              'علوم عامة',
-              'فيزياء',
-              'كيمياء',
-              'أحياء',
-              'تاريخ',
-              'جغرافيا',
-              'تربية إسلامية',
-              'تربية رياضية',
-              'تربية فنية',
-              'حاسب آلي',
-            ]}
+            label={t('teacherModal.specializationLabel')}
+            data={specializations}
             required
             {...form.getInputProps('specialization')}
           />
 
           <Group grow>
             <NumberInput
-              label="الحد الأقصى اليومي للحصص"
+              label={t('teacherModal.dailyMaxLabel')}
               min={1}
               max={7}
               {...form.getInputProps('maxDailyPeriods')}
             />
             <NumberInput
-              label="النصاب الأسبوعي للحصص"
+              label={t('teacherModal.weeklyQuotaLabel')}
               min={1}
               max={35}
               {...form.getInputProps('maxWeeklyPeriods')}
@@ -148,7 +170,7 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
 
           <div>
             <Text size="sm" fw={600} mb="xs">
-              أوقات التوفر الأسبوعية (الحصص المحظورة):
+              {t('teacherModal.availabilityTitle')}
             </Text>
             <TeacherAvailabilityGrid
               value={unavailableSlots}
@@ -163,7 +185,7 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
             <Alert
               icon={<IconAlertTriangle size={18} />}
               color="red"
-              title="تعذر الحفظ - تجاوز سعة المعلم"
+              title={t('teacherModal.capacityExceeded')}
               variant="light"
               radius="md"
             >
@@ -173,10 +195,10 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
 
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={onClose}>
-              إلغاء
+              {t('common.cancel')}
             </Button>
             <Button type="submit" color="indigo" disabled={!validation.valid}>
-              حفظ
+              {t('common.save')}
             </Button>
           </Group>
         </Stack>

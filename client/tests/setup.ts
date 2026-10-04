@@ -21,3 +21,8 @@ class ResizeObserverMock {
   disconnect() {}
 }
 window.ResizeObserver = ResizeObserverMock;
+
+// Default test environment locale to Arabic to match existing Arabic-targeted test assertions
+if (typeof window !== 'undefined' && window.localStorage) {
+  window.localStorage.setItem('app_locale', 'ar');
+}

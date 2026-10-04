@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Group, Stack, Text, Title, Button, Divider, Table } from '@mantine/core';
+import { Card, Group, Text, Title, Button, Divider } from '@mantine/core';
 import { IconPrinter } from '@tabler/icons-react';
 import type { SchoolConfigRecord, ClassRecord, TeacherRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
 import { ClassTimetable } from './ClassTimetable';
+import { useTranslation } from '../../i18n';
 
 interface PrintTimetableProps {
   config: SchoolConfigRecord;
@@ -19,18 +20,22 @@ export function PrintTimetable({
   subjects,
   assignments,
 }: PrintTimetableProps) {
+  const { t, locale } = useTranslation();
+
   const handlePrint = () => {
     window.print();
   };
+
+  const dateLocale = locale === 'ar' ? 'ar-SA' : 'en-US';
 
   return (
     <div>
       <Group justify="space-between" mb="lg" className="no-print">
         <Text size="sm" c="dimmed">
-          معاينة الطباعة وتصدير PDF (منسق لورق A4 الأفقي والرأسي)
+          {t('scheduleView.printPreviewSubtitle')}
         </Text>
         <Button leftSection={<IconPrinter size={18} />} color="indigo" onClick={handlePrint}>
-          طباعة الجدول الآن (Print / PDF)
+          {t('scheduleView.printButton')}
         </Button>
       </Group>
 
@@ -43,19 +48,22 @@ export function PrintTimetable({
               <Group justify="space-between" align="center">
                 <div>
                   <Text size="xs" c="dimmed">
-                    المملكة العربية السعودية - وزارة التعليم
+                    {t('scheduleView.ministryHeader')}
                   </Text>
                   <Title order={3}>{config.schoolName}</Title>
                   <Text size="xs" c="dimmed">
-                    العام الدراسي: {config.academicYear} | {config.term}
+                    {t('dashboard.subtitle', { year: config.academicYear, term: config.term })}
                   </Text>
                 </div>
-                <div style={{ textAlign: 'left' }}>
+                <div style={{ textAlign: locale === 'ar' ? 'left' : 'right' }}>
                   <Title order={4} c="indigo">
-                    جدول حصص: {cls.sectionName}
+                    {t('scheduleView.scheduleFor', { section: cls.sectionName })}
                   </Title>
                   <Text size="xs" c="dimmed">
-                    القاعة: {cls.roomNumber} | تاريخ الإصدار: {new Date().toLocaleDateString('ar-SA')}
+                    {t('scheduleView.roomAndDate', {
+                      room: cls.roomNumber,
+                      date: new Date().toLocaleDateString(dateLocale),
+                    })}
                   </Text>
                 </div>
               </Group>
@@ -71,13 +79,13 @@ export function PrintTimetable({
             {/* Signature Block */}
             <Group justify="space-between" mt="xl" px="xl" pt="md">
               <Text size="xs" fw={600}>
-                وكيل الشؤون التعليمية والمدرسية: ....................
+                {t('scheduleView.vicePrincipal')}
               </Text>
               <Text size="xs" fw={600}>
-                مدير المدرسة: ....................
+                {t('scheduleView.principal')}
               </Text>
               <Text size="xs" fw={600}>
-                ختم المدرسة: [ .................... ]
+                {t('scheduleView.schoolSeal')}
               </Text>
             </Group>
             {idx < 3 && <Divider my="xl" className="no-print" />}

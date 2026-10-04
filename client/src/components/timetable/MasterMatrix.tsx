@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Table, Card, Select, Group, TextInput, Text, Badge } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
+import { Table, Card, Select, Group, Text } from '@mantine/core';
 import type { ClassRecord, TeacherRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
+import { useTranslation } from '../../i18n';
 
 interface MasterMatrixProps {
   classes: ClassRecord[];
@@ -10,14 +10,20 @@ interface MasterMatrixProps {
   assignments: TimetableAssignment[];
 }
 
-const DAYS = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
 const PERIODS = [0, 1, 2, 3, 4, 5, 6];
 
-export function MasterMatrix({ classes, teachers, subjects, assignments }: MasterMatrixProps) {
+export function MasterMatrix({
+  classes,
+  teachers,
+  subjects,
+  assignments,
+}: MasterMatrixProps) {
+  const { t } = useTranslation();
+  const DAYS: string[] = t('common.days');
   const [selectedDay, setSelectedDay] = useState<string>('0');
   const [filterTeacher, setFilterTeacher] = useState<string>('all');
 
-  const teacherMap = new Map(teachers.map((t) => [t.id, t]));
+  const teacherMap = new Map(teachers.map((tRec) => [tRec.id, tRec]));
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
 
   const dayIdx = parseInt(selectedDay, 10);
@@ -39,7 +45,7 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
       <Group justify="space-between" mb="md">
         <Group>
           <Select
-            label="اختر اليوم"
+            label={t('scheduleView.matrixDayFilter')}
             data={DAYS.map((d, i) => ({ value: String(i), label: d }))}
             value={selectedDay}
             onChange={(v) => v && setSelectedDay(v)}
@@ -47,8 +53,11 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
           />
 
           <Select
-            label="تصفية حسب المعلم"
-            data={[{ value: 'all', label: 'جميع المعلمين' }, ...teachers.map((t) => ({ value: t.id, label: t.name }))]}
+            label={t('scheduleView.filterByTeacher')}
+            data={[
+              { value: 'all', label: t('common.allTeachers') },
+              ...teachers.map((tRec) => ({ value: tRec.id, label: tRec.name })),
+            ]}
             value={filterTeacher}
             onChange={(v) => v && setFilterTeacher(v)}
             style={{ width: 220 }}
@@ -56,7 +65,8 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
         </Group>
 
         <Text size="sm" c="dimmed">
-          يوم: <Text span fw={700} c="indigo">{DAYS[dayIdx]}</Text> | إجمالي الحصص المعروضة: {dayAssignments.length}
+          {t('scheduleView.dayLabel', { day: DAYS[dayIdx] || '' })} |{' '}
+          {t('scheduleView.totalDisplayedLectures', { count: dayAssignments.length })}
         </Text>
       </Group>
 
@@ -64,10 +74,12 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
         <Table withTableBorder withColumnBorders style={{ minWidth: 900, textAlign: 'center' }}>
           <Table.Thead>
             <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
-              <Table.Th style={{ width: 140, textAlign: 'center' }}>الفصل / الشعبة</Table.Th>
+              <Table.Th style={{ width: 140, textAlign: 'center' }}>
+                {t('scheduleView.classSection')}
+              </Table.Th>
               {PERIODS.map((p) => (
                 <Table.Th key={p} style={{ textAlign: 'center' }}>
-                  الحصة {p + 1}
+                  {t('common.periodNumber', { number: p + 1 })}
                 </Table.Th>
               ))}
             </Table.Tr>
@@ -83,7 +95,7 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
                     return (
                       <Table.Td key={pIdx} p={4} style={{ background: 'var(--mantine-color-gray-2)' }}>
                         <Text size="10px" c="dimmed">
-                          انصراف
+                          {t('common.dismissal')}
                         </Text>
                       </Table.Td>
                     );
@@ -107,10 +119,10 @@ export function MasterMatrix({ classes, teachers, subjects, assignments }: Maste
                     <Table.Td key={pIdx} p={4}>
                       <Card withBorder p={4} radius="xs" bg="var(--mantine-color-indigo-0)">
                         <Text size="11px" fw={700} c="indigo.9" truncate>
-                          {sub?.name || 'مادة'}
+                          {sub?.name || t('common.subjectFallback')}
                         </Text>
                         <Text size="9px" c="dimmed" truncate>
-                          {tch?.name || 'معلم'}
+                          {tch?.name || t('common.teacherFallback')}
                         </Text>
                       </Card>
                     </Table.Td>

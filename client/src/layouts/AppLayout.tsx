@@ -26,21 +26,23 @@ import {
 } from '@tabler/icons-react';
 import { ModeToggleBadge } from '../components/common/ModeToggleBadge';
 import { LanguageToggle } from '../components/common/LanguageToggle';
-
-const navItems = [
-  { label: 'الرئيسية', to: '/', icon: IconDashboard },
-  { label: 'المعلمون', to: '/teachers', icon: IconUsers },
-  { label: 'الفصول والقاعات', to: '/classes', icon: IconSchool },
-  { label: 'الخطة الدراسية', to: '/curriculum', icon: IconBook },
-  { label: 'توليد الجدول', to: '/generator', icon: IconCpu },
-  { label: 'عرض الجدول', to: '/schedule', icon: IconCalendarTime },
-  { label: 'الإعدادات والنسخ', to: '/settings', icon: IconSettings },
-];
+import { useTranslation } from '../i18n';
 
 export function AppLayout() {
   const [opened, { toggle, close }] = useDisclosure();
   const location = useLocation();
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { label: t('nav.dashboard'), to: '/', icon: IconDashboard },
+    { label: t('nav.teachers'), to: '/teachers', icon: IconUsers },
+    { label: t('nav.classes'), to: '/classes', icon: IconSchool },
+    { label: t('nav.curriculum'), to: '/curriculum', icon: IconBook },
+    { label: t('nav.generator'), to: '/generator', icon: IconCpu },
+    { label: t('nav.schedule'), to: '/schedule', icon: IconCalendarTime },
+    { label: t('nav.settings'), to: '/settings', icon: IconSettings },
+  ];
 
   return (
     <AppShell
@@ -59,7 +61,7 @@ export function AppLayout() {
             <Group gap="xs">
               <IconCalendarTime size={26} color="var(--mantine-color-indigo-6)" />
               <Title order={3} size="h4" visibleFrom="xs">
-                نظام الجداول الذكي
+                {t('nav.appTitle')}
               </Title>
             </Group>
           </Group>
@@ -67,7 +69,7 @@ export function AppLayout() {
           <Group gap="sm">
             <ModeToggleBadge />
             <LanguageToggle />
-            <Tooltip label={colorScheme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي'}>
+            <Tooltip label={colorScheme === 'dark' ? t('common.colorSchemeDark') : t('common.colorSchemeLight')}>
               <ActionIcon variant="default" size="lg" onClick={() => toggleColorScheme()} aria-label="Toggle color scheme">
                 {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
               </ActionIcon>

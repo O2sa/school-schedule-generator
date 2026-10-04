@@ -1,15 +1,26 @@
 import React from 'react';
-import { ActionIcon, Tooltip, useDirection } from '@mantine/core';
+import { Button, Tooltip, Text } from '@mantine/core';
 import { IconLanguage } from '@tabler/icons-react';
+import { useTranslation } from '../../i18n';
 
 export function LanguageToggle() {
-  const { dir, toggleDirection } = useDirection();
+  const { locale, toggleLocale, t } = useTranslation();
 
   return (
-    <Tooltip label={dir === 'rtl' ? 'Switch to English (LTR)' : 'التبديل إلى العربية (RTL)'}>
-      <ActionIcon variant="default" size="lg" onClick={() => toggleDirection()} aria-label="Toggle language direction">
-        <IconLanguage size={18} />
-      </ActionIcon>
+    <Tooltip label={t('common.languageToggle')}>
+      <Button
+        variant="default"
+        size="sm"
+        onClick={toggleLocale}
+        leftSection={<IconLanguage size={16} />}
+        aria-label="Toggle Language"
+        radius="md"
+        px="xs"
+      >
+        <Text size="xs" fw={700}>
+          {locale === 'ar' ? 'English' : 'العربية'}
+        </Text>
+      </Button>
     </Tooltip>
   );
 }

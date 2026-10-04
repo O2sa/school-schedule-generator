@@ -1,3 +1,4 @@
+import { useTranslation } from "../../i18n";
 import React from 'react';
 import { Table, Card, Text } from '@mantine/core';
 import type { ClassRecord, TeacherRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
@@ -19,15 +20,19 @@ interface ClassTimetableProps {
   editorProps?: TimetableEditorProps;
 }
 
-const DAYS = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+
 
 export function ClassTimetable({
+  // Hook i18n
+
   cls,
   assignments,
   teachers,
   subjects,
   editorProps,
 }: ClassTimetableProps) {
+  const { t } = useTranslation();
+  const DAYS: string[] = t('common.days');
   const teacherMap = new Map(teachers.map((t) => [t.id, t]));
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
 
@@ -47,10 +52,10 @@ export function ClassTimetable({
         <Table withTableBorder withColumnBorders style={{ textAlign: 'center', minWidth: 720 }}>
           <Table.Thead>
             <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
-              <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>اليوم / الحصة</Table.Th>
+              <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>{t('scheduleView.matrixDayFilter')}</Table.Th>
               {periods.map((p) => (
                 <Table.Th key={p} style={{ textAlign: 'center', minWidth: 85, whiteSpace: 'nowrap' }}>
-                  الحصة {p + 1}
+                  {t('common.periodNumber', { number: p + 1 })}
                 </Table.Th>
               ))}
             </Table.Tr>
@@ -186,10 +191,10 @@ export function ClassTimetable({
                           }
                           truncate
                         >
-                          {sub?.name || 'مادة'}
+                          {sub?.name || t("common.subjectFallback")}
                         </Text>
                         <Text size="10px" c="dimmed" truncate>
-                          {tch?.name || 'معلم'}
+                          {tch?.name || t("common.teacherFallback")}
                         </Text>
                       </Card>
                     ) : (
@@ -198,7 +203,7 @@ export function ClassTimetable({
                         c={isValidTarget ? 'teal.8' : 'dimmed'}
                         fw={isValidTarget ? 700 : 400}
                       >
-                        {isValidTarget ? 'نقل هنا' : '-'}
+                        {isValidTarget ? t("common.moveHere") : '-'}
                       </Text>
                     )}
                   </Table.Td>

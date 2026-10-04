@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import {
   Modal,
   TextInput,
-  NumberInput,
   Select,
   Radio,
   Button,
@@ -10,6 +9,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useTranslation } from '../../i18n';
 import type { ClassRecord } from '../../api/types';
 
 interface ClassModalProps {
@@ -20,16 +20,18 @@ interface ClassModalProps {
 }
 
 export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalProps) {
+  const { t } = useTranslation();
+
   const form = useForm({
     initialValues: {
       gradeLevel: 1,
-      sectionName: 'الصف 1 / أ',
+      sectionName: '1 / A',
       roomNumber: '101',
       periodsPerDay: 6,
     },
     validate: {
-      sectionName: (val) => (val.trim().length >= 2 ? null : 'اسم الفصل مطلوب'),
-      roomNumber: (val) => (val.trim().length >= 1 ? null : 'رقم القاعة مطلوب'),
+      sectionName: (val) => (val.trim().length >= 2 ? null : t('classModal.sectionLabel')),
+      roomNumber: (val) => (val.trim().length >= 1 ? null : t('classModal.roomLabel')),
     },
   });
 
@@ -48,7 +50,6 @@ export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalP
 
   const handleGradeChange = (grade: number) => {
     form.setFieldValue('gradeLevel', grade);
-    // Auto set periods: 6 for grades 1-4, 7 for 5-12
     const periods = grade <= 4 ? 6 : 7;
     form.setFieldValue('periodsPerDay', periods);
   };
@@ -68,16 +69,16 @@ export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalP
     <Modal
       opened={opened}
       onClose={onClose}
-      title={classRecord ? 'تعديل بيانات الفصل' : 'إضافة فصل وقاعة جديدة'}
+      title={classRecord ? t('classModal.titleEdit') : t('classModal.titleAdd')}
       centered
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
           <Select
-            label="المستوى الدراسي (الصف)"
+            label={t('classModal.gradeLabel')}
             data={Array.from({ length: 12 }, (_, i) => ({
               value: String(i + 1),
-              label: `الصف ${i + 1}`,
+              label: t('classes.gradePrefix', { grade: i + 1 }),
             }))}
             value={String(form.values.gradeLevel)}
             onChange={(val) => val && handleGradeChange(parseInt(val, 10))}
@@ -85,37 +86,37 @@ export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalP
           />
 
           <TextInput
-            label="اسم الفصل / الشعبة"
-            placeholder="مثال: الصف 1 / أ"
+            label={t('classModal.sectionLabel')}
+            placeholder={t('classModal.sectionPlaceholder')}
             required
             {...form.getInputProps('sectionName')}
           />
 
           <TextInput
-            label="رقم القاعة / الغرفة الدراسية"
-            placeholder="مثال: 101 أو معمل الحاسب"
+            label={t('classModal.roomLabel')}
+            placeholder={t('classModal.roomPlaceholder')}
             required
             {...form.getInputProps('roomNumber')}
           />
 
           <Radio.Group
-            label="عدد الحصص اليومية"
-            description="الصفوف الأولية (1-4) عادة 6 حصص، والعليا والمتوسطة والثانوية (5-12) 7 حصص."
+            label={t('classModal.periodsPerDayLabel')}
+            description={t('classModal.periodsPerDayDesc')}
             value={String(form.values.periodsPerDay)}
             onChange={(val) => form.setFieldValue('periodsPerDay', parseInt(val, 10))}
           >
-            <Group mt="xs">
-              <Radio value="6" label="6 حصص يومياً (30 أسبوعياً)" />
-              <Radio value="7" label="7 حصص يومياً (35 أسبوعياً)" />
+            <Group mt="xs" wrap="wrap">
+              <Radio value="6" label={t('classModal.sixPeriodsOption')} />
+              <Radio value="7" label={t('classModal.sevenPeriodsOption')} />
             </Group>
           </Radio.Group>
 
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={onClose}>
-              إلغاء
+              {t('common.cancel')}
             </Button>
             <Button type="submit" color="indigo">
-              حفظ
+              {t('common.save')}
             </Button>
           </Group>
         </Stack>

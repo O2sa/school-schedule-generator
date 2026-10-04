@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import {
-  Button,
   Card,
   Grid,
   Group,
-  Progress,
   Stack,
   Text,
   Title,
-  Badge,
+  Button,
+  Progress,
   NumberInput,
-  ThemeIcon,
+  Badge,
   Alert,
 } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   IconCpu,
   IconCheck,
-  IconClock,
   IconRefresh,
   IconCalendarTime,
   IconExclamationCircle,
@@ -33,6 +31,7 @@ import {
 import { useData, useDataService } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
 import { DiagnosticsReport, type DiagnosticItem } from '../components/generator/DiagnosticsReport';
+import { useTranslation } from '../i18n';
 import type { SavedScheduleRecord, SolverProgress } from '../api/types';
 
 export function Generator() {
@@ -40,6 +39,7 @@ export function Generator() {
   const service = useDataService();
   const queryClient = useQueryClient();
   const { mode } = useData();
+  const { t } = useTranslation();
 
   const { data: classes = [] } = useClasses();
   const { data: teachers = [] } = useTeachers();
@@ -55,7 +55,6 @@ export function Generator() {
   const [diagnostics, setDiagnostics] = useState<DiagnosticItem[] | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Live timer while solving
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isSolving) {
@@ -95,7 +94,7 @@ export function Generator() {
       if (e?.diagnostics && Array.isArray(e.diagnostics)) {
         setDiagnostics(e.diagnostics);
       } else {
-        setErrorMsg(e?.message || 'حدث خطأ غير متوقع أثناء معالجة الجدول');
+        setErrorMsg(e?.message || t('generator.errorTitle'));
       }
     } finally {
       setIsSolving(false);
@@ -110,8 +109,8 @@ export function Generator() {
   return (
     <div>
       <PageHeader
-        title="توليد الجدول المدرسي الذكي"
-        subtitle="محرك CSP ذكي يقوم بتوزيع الحصص وحل التعارضات بالكامل وفق القيود المدرسية"
+        title={t('generator.title')}
+        subtitle={t('generator.subtitle')}
       />
 
       {/* Metrics Row */}
@@ -119,40 +118,40 @@ export function Generator() {
         <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
           <Card withBorder radius="md" p="md">
             <Text size="xs" c="dimmed" fw={700}>
-              إجمالي الفصول والقاعات
+              {t('generator.metricClasses')}
             </Text>
             <Title order={3} mt={4}>
-              {classes.length} فصل
+              {classes.length} {t('common.classesCount', { count: '' })}
             </Title>
           </Card>
         </Grid.Col>
         <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
           <Card withBorder radius="md" p="md">
             <Text size="xs" c="dimmed" fw={700}>
-              إجمالي المعلمين
+              {t('generator.metricTeachers')}
             </Text>
             <Title order={3} mt={4}>
-              {teachers.length} معلم
+              {teachers.length} {t('common.teachersCount', { count: '' })}
             </Title>
           </Card>
         </Grid.Col>
         <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
           <Card withBorder radius="md" p="md">
             <Text size="xs" c="dimmed" fw={700}>
-              الحصص المطلوبة أسبوعياً
+              {t('generator.metricRequired')}
             </Text>
             <Title order={3} mt={4} c="indigo">
-              {totalRequiredLectures} حصة
+              {totalRequiredLectures} {t('common.periods')}
             </Title>
           </Card>
         </Grid.Col>
         <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
           <Card withBorder radius="md" p="md">
             <Text size="xs" c="dimmed" fw={700}>
-              السعة الاستيعابية للفصول
+              {t('generator.metricCapacity')}
             </Text>
             <Title order={3} mt={4} c={totalRequiredLectures === totalClassCapacity ? 'teal' : 'orange'}>
-              {totalClassCapacity} حصة
+              {totalClassCapacity} {t('common.periods')}
             </Title>
           </Card>
         </Grid.Col>
@@ -161,16 +160,16 @@ export function Generator() {
       {/* Solver Action Center */}
       <Card withBorder radius="md" p="xl" mb="lg">
         <Stack gap="lg">
-          <Group justify="space-between" align="center">
+          <Group justify="space-between" align="center" wrap="wrap" gap="sm">
             <div>
-              <Title order={3}>مركز التحكم بالتوليد</Title>
+              <Title order={3}>{t('generator.controlTitle')}</Title>
               <Text size="sm" c="dimmed">
-                وضع المحرك: {service.mode === 'client' ? 'Web Worker محلي في المتصفح' : 'معالجة على خادم النظام'}
+                {t('generator.solverEngine')} {service.mode === 'client' ? t('generator.modeWorker') : t('generator.modeServer')}
               </Text>
             </div>
-            <Group>
+            <Group wrap="wrap" gap="sm">
               <NumberInput
-                label="الحد الأقصى للوقت (ثوان)"
+                label={t('generator.timeoutLabel')}
                 value={timeoutSec}
                 onChange={(val) => setTimeoutSec(Number(val) || 15)}
                 min={5}
@@ -187,11 +186,11 @@ export function Generator() {
                 onClick={handleStartSolving}
                 mt={24}
               >
-                {isSolving ? 'جارِ التحليل والتوليد...' : 'بدء توليد الجدول'}
+                {isSolving ? t('generator.solvingBtn') : t('generator.startBtn')}
               </Button>
               {isSolving && (
                 <Button size="lg" variant="default" color="red" onClick={handleCancel} mt={24}>
-                  إلغاء
+                  {t('generator.cancelBtn')}
                 </Button>
               )}
             </Group>
@@ -200,12 +199,12 @@ export function Generator() {
           {isSolving && (
             <Card withBorder p="md" bg="var(--mantine-color-indigo-0)">
               <Stack gap="xs">
-                <Group justify="space-between">
+                <Group justify="space-between" wrap="wrap">
                   <Text size="sm" fw={600}>
-                    معالجة فضاء البحث والتحقق الاستباقي (Forward Checking)...
+                    {t('generator.solvingProgress')}
                   </Text>
                   <Badge color="indigo" size="lg">
-                    {elapsedMs} مللي ثانية
+                    {elapsedMs} {t('generator.msUnit')}
                   </Badge>
                 </Group>
                 <Progress value={100} animated color="indigo" size="md" radius="xl" />
@@ -216,16 +215,15 @@ export function Generator() {
           {lastResult && lastResult.status === 'solved' && (
             <Alert
               color="teal"
-              title="تم إنشاء الجدول الدراسي بنجاح تام!"
+              title={t('generator.solvedAlert')}
               icon={<IconCheck size={20} />}
             >
               <Stack gap="xs" mt={4}>
                 <Text size="sm">
-                  تم تعيين جميع الـ {lastResult.assignments.length} حصة بنجاح دون أي تعارض زمني في زمن قدره{' '}
-                  <Text span fw={700}>
-                    {lastResult.solveTimeMs} مللي ثانية
-                  </Text>
-                  .
+                  {t('generator.solvedDesc', {
+                    count: lastResult.assignments.length,
+                    time: lastResult.solveTimeMs,
+                  })}
                 </Text>
                 <Group mt="xs">
                   <Button
@@ -233,7 +231,7 @@ export function Generator() {
                     leftSection={<IconCalendarTime size={16} />}
                     onClick={() => navigate('/schedule')}
                   >
-                    عرض الجدول المدرسي الآن
+                    {t('generator.viewSchedule')}
                   </Button>
                 </Group>
               </Stack>
@@ -241,7 +239,7 @@ export function Generator() {
           )}
 
           {errorMsg && (
-            <Alert color="red" title="خطأ في التوليد" icon={<IconExclamationCircle size={20} />}>
+            <Alert color="red" title={t('generator.errorTitle')} icon={<IconExclamationCircle size={20} />}>
               {errorMsg}
             </Alert>
           )}

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Grid,
@@ -8,18 +7,16 @@ import {
   Text,
   Title,
   Button,
-  ThemeIcon,
   Badge,
-  Alert,
+  ThemeIcon,
 } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 import {
   IconUsers,
   IconSchool,
   IconBook,
-  IconCpu,
   IconCalendarTime,
-  IconDatabaseImport,
-  IconCheck,
+  IconCpu,
   IconSparkles,
 } from '@tabler/icons-react';
 import {
@@ -31,11 +28,13 @@ import {
 } from '../api/queries/useSchoolData';
 import { useDataService, useStorageMode } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
+import { useTranslation } from '../i18n';
 
 export function Dashboard() {
   const navigate = useNavigate();
   const service = useDataService();
   const [mode] = useStorageMode();
+  const { t } = useTranslation();
 
   const { data: teachers = [], refetch: refetchTeachers } = useTeachers();
   const { data: classes = [], refetch: refetchClasses } = useClasses();
@@ -63,8 +62,11 @@ export function Dashboard() {
   return (
     <div>
       <PageHeader
-        title={config?.schoolName || 'نظام الجداول المدرسية الذكي'}
-        subtitle={`العام الدراسي: ${config?.academicYear || '2026/2027'} | ${config?.term || 'الفصل الأول'}`}
+        title={config?.schoolName || t('dashboard.defaultSchoolName')}
+        subtitle={t('dashboard.subtitle', {
+          year: config?.academicYear || '2026/2027',
+          term: config?.term || t('dashboard.defaultTerm'),
+        })}
       />
 
       {/* Hero Welcome Banner */}
@@ -78,24 +80,23 @@ export function Dashboard() {
           color: 'white',
         }}
       >
-        <Group justify="space-between" align="center">
+        <Group justify="space-between" align="center" wrap="wrap" gap="md">
           <Stack gap="xs">
-            <Group gap="xs">
+            <Group gap="xs" wrap="wrap">
               <Badge color="teal" variant="filled" size="lg">
-                {mode === 'client' ? 'وضع المتصفح المحلي (مستقل)' : 'وضع الخادم المركزي'}
+                {mode === 'client' ? t('dashboard.heroBadgeClient') : t('dashboard.heroBadgeServer')}
               </Badge>
               <Badge color="gray" variant="light" size="lg">
-                محرك CSP الذكي
+                {t('dashboard.heroBadgeCSP')}
               </Badge>
             </Group>
-            <Title order={2}>مرحباً بك في المنظومة الذكية لتوليد الجداول</Title>
+            <Title order={2}>{t('dashboard.heroTitle')}</Title>
             <Text size="sm" style={{ opacity: 0.9, maxWidth: 650 }}>
-              منصة متطورة لتوزيع الحصص المدرسية وفق معايير المدارس العربية (صفوف 1-12، فترات 6 و7 حصص،
-              أسبوع الأحد-الخميس)، مع منع التعارضات بدقة 100%.
+              {t('dashboard.heroDesc')}
             </Text>
           </Stack>
 
-          <Group>
+          <Group wrap="wrap" gap="sm">
             <Button
               size="md"
               color="teal"
@@ -104,7 +105,7 @@ export function Dashboard() {
               loading={preloading}
               onClick={handlePreloadDemo}
             >
-              تحميل نموذج مدرسة نموذجية (Demo)
+              {t('dashboard.preloadDemo')}
             </Button>
             <Button
               size="md"
@@ -113,7 +114,7 @@ export function Dashboard() {
               leftSection={<IconCpu size={18} />}
               onClick={() => navigate('/generator')}
             >
-              توليد جدول جديد
+              {t('dashboard.generateSchedule')}
             </Button>
           </Group>
         </Group>
@@ -126,7 +127,7 @@ export function Dashboard() {
             <Group justify="space-between">
               <div>
                 <Text size="xs" c="dimmed" fw={700}>
-                  الهيئة التعليمية
+                  {t('dashboard.statsTeachers')}
                 </Text>
                 <Title order={2} mt={4}>
                   {teachers.length}
@@ -137,7 +138,7 @@ export function Dashboard() {
               </ThemeIcon>
             </Group>
             <Text size="xs" c="dimmed" mt="xs">
-              معلم مسجل بالنظام
+              {t('dashboard.statsTeachersSub')}
             </Text>
           </Card>
         </Grid.Col>
@@ -147,7 +148,7 @@ export function Dashboard() {
             <Group justify="space-between">
               <div>
                 <Text size="xs" c="dimmed" fw={700}>
-                  الفصول والقاعات
+                  {t('dashboard.statsClasses')}
                 </Text>
                 <Title order={2} mt={4}>
                   {classes.length}
@@ -158,7 +159,7 @@ export function Dashboard() {
               </ThemeIcon>
             </Group>
             <Text size="xs" c="dimmed" mt="xs">
-              فصل دراسي (صفوف 1-12)
+              {t('dashboard.statsClassesSub')}
             </Text>
           </Card>
         </Grid.Col>
@@ -168,7 +169,7 @@ export function Dashboard() {
             <Group justify="space-between">
               <div>
                 <Text size="xs" c="dimmed" fw={700}>
-                  المواد الدراسية
+                  {t('dashboard.statsSubjects')}
                 </Text>
                 <Title order={2} mt={4}>
                   {subjects.length}
@@ -179,7 +180,7 @@ export function Dashboard() {
               </ThemeIcon>
             </Group>
             <Text size="xs" c="dimmed" mt="xs">
-              مادة معتمدة في الخطة
+              {t('dashboard.statsSubjectsSub')}
             </Text>
           </Card>
         </Grid.Col>
@@ -189,10 +190,10 @@ export function Dashboard() {
             <Group justify="space-between">
               <div>
                 <Text size="xs" c="dimmed" fw={700}>
-                  حالة الجدول المدرسي
+                  {t('dashboard.statsActiveSchedule')}
                 </Text>
                 <Title order={3} mt={4} c={activeSchedule ? 'teal' : 'gray'}>
-                  {activeSchedule ? 'مكتمل ونشط' : 'لم يولد بعد'}
+                  {activeSchedule ? t('dashboard.statsActiveScheduleSolved') : t('dashboard.statsActiveScheduleNone')}
                 </Title>
               </div>
               <ThemeIcon color={activeSchedule ? 'teal' : 'gray'} variant="light" size="xl" radius="md">
@@ -200,7 +201,7 @@ export function Dashboard() {
               </ThemeIcon>
             </Group>
             <Text size="xs" c="dimmed" mt="xs">
-              {activeSchedule ? `${activeSchedule.assignments.length} حصة مسندة` : 'اضغط توليد للبدء'}
+              {activeSchedule ? t('dashboard.statsLecturesCount', { count: activeSchedule.assignments.length }) : t('dashboard.statsNoSchedule')}
             </Text>
           </Card>
         </Grid.Col>
@@ -208,7 +209,7 @@ export function Dashboard() {
 
       {/* Quick Launchpad */}
       <Title order={4} mb="md">
-        الوصول السريع
+        {t('dashboard.quickLaunch')}
       </Title>
       <Grid>
         <Grid.Col span={{ base: 12, sm: 4 }}>
@@ -225,10 +226,10 @@ export function Dashboard() {
               </ThemeIcon>
               <div>
                 <Text fw={600} size="sm">
-                  إعداد الفصول والقاعات
+                  {t('dashboard.cardClasses')}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  تحديد عدد الحصص لكل صف دراسي (6 أو 7 حصص)
+                  {t('dashboard.cardClassesDesc')}
                 </Text>
               </div>
             </Group>
@@ -249,10 +250,10 @@ export function Dashboard() {
               </ThemeIcon>
               <div>
                 <Text fw={600} size="sm">
-                  الخطة الدراسية والأنصبة
+                  {t('dashboard.cardCurriculum')}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  إسناد المواد للمعلمين وتحديد الحصص الأسبوعية
+                  {t('dashboard.cardCurriculumDesc')}
                 </Text>
               </div>
             </Group>
@@ -273,10 +274,10 @@ export function Dashboard() {
               </ThemeIcon>
               <div>
                 <Text fw={600} size="sm">
-                  استعراض وطباعة الجداول
+                  {t('dashboard.cardTimetables')}
                 </Text>
                 <Text size="xs" c="dimmed">
-                  عرض جداول الفصول والمعلمين والطباعة بصيغة A4
+                  {t('dashboard.cardTimetablesDesc')}
                 </Text>
               </div>
             </Group>

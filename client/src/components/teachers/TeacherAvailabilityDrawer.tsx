@@ -14,6 +14,7 @@ import { notifications } from '@mantine/notifications';
 import { validateTeacherCapacity } from 'school-timetabling-engine';
 import { useSchoolConfig } from '../../api/queries/useSchoolData';
 import { TeacherAvailabilityGrid } from './TeacherAvailabilityGrid';
+import { useTranslation } from '../../i18n';
 import type { TeacherRecord, UnavailableSlot } from '../../api/types';
 
 interface TeacherAvailabilityDrawerProps {
@@ -30,6 +31,7 @@ export function TeacherAvailabilityDrawer({
   onSave,
 }: TeacherAvailabilityDrawerProps) {
   const { data: config } = useSchoolConfig();
+  const { t } = useTranslation();
   const [slots, setSlots] = useState<UnavailableSlot[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -54,7 +56,7 @@ export function TeacherAvailabilityDrawer({
   const handleSave = async () => {
     if (!validation.valid) {
       notifications.show({
-        title: 'تعذر الحفظ',
+        title: t('availabilityDrawer.cannotSave'),
         message: validation.error,
         color: 'red',
       });
@@ -68,15 +70,15 @@ export function TeacherAvailabilityDrawer({
         unavailableSlots: slots,
       });
       notifications.show({
-        title: 'تم الحفظ',
-        message: `تم تحديث أوقات توفر المعلم ${teacher.name} بنجاح.`,
+        title: t('common.save'),
+        message: t('availabilityDrawer.saveSuccess', { name: teacher.name }),
         color: 'teal',
       });
       onClose();
     } catch (err: unknown) {
       notifications.show({
-        title: 'خطأ',
-        message: err instanceof Error ? err.message : 'فشل حفظ أوقات التوفر',
+        title: t('availabilityDrawer.cannotSave'),
+        message: err instanceof Error ? err.message : t('common.loading'),
         color: 'red',
       });
     } finally {
@@ -95,14 +97,14 @@ export function TeacherAvailabilityDrawer({
           <IconCalendarTime size={22} color="var(--mantine-color-indigo-6)" />
           <div>
             <Text fw={700} size="md">
-              أوقات توفر المعلم: {teacher.name}
+              {t('availabilityDrawer.title', { name: teacher.name })}
             </Text>
             <Group gap="xs" mt={2}>
               <Badge size="xs" variant="light" color="indigo">
                 {teacher.specialization}
               </Badge>
               <Text size="xs" c="dimmed">
-                النصاب الأسبوعي: {teacher.maxWeeklyPeriods || 24} حصة
+                {t('availabilityDrawer.weeklyQuotaBadge', { count: teacher.maxWeeklyPeriods || 24 })}
               </Text>
             </Group>
           </div>
@@ -111,7 +113,7 @@ export function TeacherAvailabilityDrawer({
     >
       <Stack gap="md" mt="xs">
         <Text size="xs" c="dimmed">
-          حدد الفترات التي لا يمكن للمعلم التدريس فيها (محظور). يمكنك النقر أو السحب لتحديد الفترات، أو استخدام الأزرار ورؤوس الجداول للتحديد السريع.
+          {t('availabilityDrawer.instructions')}
         </Text>
 
         <TeacherAvailabilityGrid
@@ -126,7 +128,7 @@ export function TeacherAvailabilityDrawer({
           <Alert
             icon={<IconAlertTriangle size={18} />}
             color="red"
-            title="لا يمكن حفظ أوقات التوفر"
+            title={t('availabilityDrawer.cannotSave')}
             variant="light"
             radius="md"
           >
@@ -138,7 +140,7 @@ export function TeacherAvailabilityDrawer({
 
         <Group justify="flex-end" gap="sm">
           <Button variant="default" onClick={onClose} disabled={isSaving}>
-            إلغاء
+            {t('common.cancel')}
           </Button>
           <Button
             color="indigo"
@@ -147,7 +149,7 @@ export function TeacherAvailabilityDrawer({
             disabled={!validation.valid}
             onClick={handleSave}
           >
-            حفظ أوقات التوفر
+            {t('availabilityDrawer.saveBtn')}
           </Button>
         </Group>
       </Stack>

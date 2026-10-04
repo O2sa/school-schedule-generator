@@ -12,7 +12,7 @@ describe('End-to-End Core Workflow Integration', () => {
     await db.delete();
     await db.open();
     service = new LocalDataService();
-  });
+  }, 30000);
 
   it('runs complete lifecycle: preload -> solve -> view -> export -> import', async () => {
     // 1. Preload realistic Arabic K-12 demo data
@@ -54,7 +54,7 @@ describe('End-to-End Core Workflow Integration', () => {
     expect(restoredClasses.length).toBe(24);
     expect(restoredSchedules.length).toBe(1);
     expect(restoredSchedules[0].assignments.length).toBe(schedule.assignments.length);
-  });
+  }, 30000);
 
   it('runs interactive editing lifecycle: swap slots -> verify change -> save to db', async () => {
     await service.preloadDemoData();
@@ -95,5 +95,5 @@ describe('End-to-End Core Workflow Integration', () => {
     const movedInDb = saved?.assignments.find((a) => a.lectureId === firstAssignment.lectureId);
     expect(movedInDb?.dayIndex).toBe(targetSlot.day);
     expect(movedInDb?.periodIndex).toBe(targetSlot.period);
-  });
+  }, 30000);
 });

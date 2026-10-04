@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Badge, Button, Group, Modal, Stack, Text, ThemeIcon } from '@mantine/core';
 import { IconDeviceDesktop, IconCloud, IconArrowsExchange } from '@tabler/icons-react';
 import { useStorageMode } from '../../api/data-context';
+import { useTranslation } from '../../i18n';
 
 export function ModeToggleBadge() {
   const [mode, setMode] = useStorageMode();
   const [opened, setOpened] = useState(false);
+  const { t } = useTranslation();
 
   const isClient = mode === 'client';
 
@@ -30,13 +32,13 @@ export function ModeToggleBadge() {
         }
         onClick={() => setOpened(true)}
       >
-        {isClient ? 'وضع المتصفح المحلي' : 'وضع الخادم المركزي'}
+        {isClient ? t('common.modeClient') : t('common.modeServer')}
       </Badge>
 
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
-        title="تغيير وضع التشغيل والتخزين"
+        title={t('settings.storageTitle')}
         centered
       >
         <Stack gap="md">
@@ -46,30 +48,20 @@ export function ModeToggleBadge() {
             </ThemeIcon>
             <div style={{ flex: 1 }}>
               <Text fw={600} size="sm">
-                الوضع الحالي: {isClient ? 'وضع المتصفح المحلي (مستقل)' : 'وضع الخادم المركزي (API)'}
+                {isClient ? t('settings.clientModeTitle') : t('settings.serverModeTitle')}
               </Text>
               <Text size="xs" c="dimmed" mt={4}>
-                {isClient
-                  ? 'البيانات تُخزن في قاعدة بيانات المتصفح (IndexedDB) وتتم معالجة الجدول دون الحاجة لخادم.'
-                  : 'البيانات تُخزن على خادم Express وقاعدة بيانات MongoDB المركزية.'}
+                {isClient ? t('settings.clientModeDesc') : t('settings.serverModeDesc')}
               </Text>
             </div>
           </Group>
 
-          <Text size="sm">
-            هل ترغب في التبديل إلى{' '}
-            <Text span fw={700} c={isClient ? 'blue' : 'teal'}>
-              {isClient ? 'وضع الخادم المركزي' : 'وضع المتصفح المحلي'}
-            </Text>
-            ؟
-          </Text>
-
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={() => setOpened(false)}>
-              إلغاء
+              {t('common.cancel')}
             </Button>
             <Button color={isClient ? 'blue' : 'teal'} onClick={handleSwitch}>
-              تأكيد التبديل
+              {t('common.edit')}
             </Button>
           </Group>
         </Stack>

@@ -1,3 +1,4 @@
+import { useTranslation } from "../../i18n";
 import React from 'react';
 import { Table, Card, Text, Badge, Group, Progress } from '@mantine/core';
 import type { TeacherRecord, ClassRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
@@ -11,7 +12,7 @@ interface TeacherTimetableProps {
   editorProps?: TimetableEditorProps;
 }
 
-const DAYS = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+
 const PERIODS = [0, 1, 2, 3, 4, 5, 6];
 
 export function TeacherTimetable({
@@ -21,6 +22,8 @@ export function TeacherTimetable({
   subjects,
   editorProps,
 }: TeacherTimetableProps) {
+  const { t } = useTranslation();
+  const DAYS: string[] = t('common.days');
   const classMap = new Map(classes.map((c) => [c.id, c]));
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
 
@@ -41,12 +44,12 @@ export function TeacherTimetable({
             {teacher.name}
           </Text>
           <Text size="xs" c="dimmed">
-            التخصص: {teacher.specialization}
+            {t('teachers.colSpecialty')}: {teacher.specialization}
           </Text>
         </div>
         <div style={{ textAlign: 'left', minWidth: 200 }}>
           <Group justify="space-between" mb={4}>
-            <Text size="xs">نصاب الحصص الأسبوعي</Text>
+            <Text size="xs">{t("scheduleView.weeklyQuotaProgress")}</Text>
             <Text size="xs" fw={700}>
               {teacherAssignments.length} / {teacher.maxWeeklyPeriods || 24}
             </Text>
@@ -64,10 +67,10 @@ export function TeacherTimetable({
         <Table withTableBorder withColumnBorders style={{ textAlign: 'center', minWidth: 720 }}>
           <Table.Thead>
             <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
-              <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>اليوم / الحصة</Table.Th>
+              <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>{t('scheduleView.matrixDayFilter')}</Table.Th>
               {PERIODS.map((p) => (
                 <Table.Th key={p} style={{ textAlign: 'center', minWidth: 85, whiteSpace: 'nowrap' }}>
-                  الحصة {p + 1}
+                  {t('common.periodNumber', { number: p + 1 })}
                 </Table.Th>
               ))}
             </Table.Tr>
@@ -164,7 +167,7 @@ export function TeacherTimetable({
                   >
                     {blocked ? (
                       <Badge variant="light" color="gray" size="sm">
-                        غير متاح
+                        {t('common.unavailable')}
                       </Badge>
                     ) : item ? (
                       <Card
@@ -211,10 +214,10 @@ export function TeacherTimetable({
                           }
                           truncate
                         >
-                          {cls?.sectionName || 'فصل'}
+                          {cls?.sectionName || t("common.classFallback")}
                         </Text>
                         <Text size="10px" c="dimmed" truncate>
-                          {sub?.name || 'مادة'}
+                          {sub?.name || t("common.subjectFallback")}
                         </Text>
                       </Card>
                     ) : (
@@ -223,7 +226,7 @@ export function TeacherTimetable({
                         c={isValidTarget ? 'teal.8' : 'dimmed'}
                         fw={isValidTarget ? 700 : 400}
                       >
-                        {isValidTarget ? 'نقل هنا' : '-'}
+                        {isValidTarget ? t("common.moveHere") : '-'}
                       </Text>
                     )}
                   </Table.Td>

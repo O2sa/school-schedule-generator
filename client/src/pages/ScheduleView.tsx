@@ -34,12 +34,10 @@ import {
   useClasses,
   useTeachers,
   useSubjects,
-  useSchoolConfig,
   useCurriculum,
-  useSchedules,
+  useSchoolConfig,
   useScheduleActions,
 } from '../api/queries/useSchoolData';
-import { useDataService } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
 import { ClassTimetable } from '../components/timetable/ClassTimetable';
 import { TeacherTimetable } from '../components/timetable/TeacherTimetable';
@@ -47,17 +45,22 @@ import { MasterMatrix } from '../components/timetable/MasterMatrix';
 import { PrintTimetable } from '../components/timetable/PrintTimetable';
 import { useTimetableEditor } from '../hooks/useTimetableEditor';
 import { buildTimetableInput } from '../api/worker/solver-adapter';
+import { useTranslation } from '../i18n';
 import type { TimetableInput } from 'school-timetabling-engine';
 
 export function ScheduleView() {
   const navigate = useNavigate();
-  const { saveSchedule } = useScheduleActions();
-  const { data: schedule, isLoading } = useActiveSchedule();
-  const { data: classes = [] } = useClasses();
-  const { data: teachers = [] } = useTeachers();
-  const { data: subjects = [] } = useSubjects();
+  const { t } = useTranslation();
+
+  const { data: schedule, isLoading: scheduleLoading } = useActiveSchedule();
+  const { data: classes = [], isLoading: classesLoading } = useClasses();
+  const { data: teachers = [], isLoading: teachersLoading } = useTeachers();
+  const { data: subjects = [], isLoading: subjectsLoading } = useSubjects();
+  const { data: curriculum = [], isLoading: curriculumLoading } = useCurriculum();
   const { data: config } = useSchoolConfig();
-  const { data: curriculum = [] } = useCurriculum();
+  const { saveSchedule } = useScheduleActions();
+
+  const isLoading = scheduleLoading || classesLoading || teachersLoading || subjectsLoading || curriculumLoading;
 
   const [activeTab, setActiveTab] = useState<'class' | 'teacher' | 'master' | 'print'>('class');
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
@@ -65,7 +68,7 @@ export function ScheduleView() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const activeClass = classes.find((c) => c.id === (selectedClassId || classes[0]?.id));
-  const activeTeacher = teachers.find((t) => t.id === (selectedTeacherId || teachers[0]?.id));
+  const activeTeacher = teachers.find((tItem) => tItem.id === (selectedTeacherId || teachers[0]?.id));
 
   // Build TimetableInput representation for engine move validator
   const timetableInput = useMemo<TimetableInput | null>(() => {
@@ -86,14 +89,14 @@ export function ScheduleView() {
           assignments: updated,
         });
         notifications.show({
-          title: 'تم حفظ التعديلات بنجاح',
-          message: `تم تحديث الجدول وحفظ ${updated.length} حصة.`,
+          title: t('common.save'),
+          message: t('scheduleView.changesCount', { count: updated.length }),
           color: 'teal',
         });
       } catch (err: unknown) {
         notifications.show({
-          title: 'خطأ أثناء الحفظ',
-          message: err instanceof Error ? err.message : 'تعذر حفظ التعديلات',
+          title: t('generator.errorTitle'),
+          message: err instanceof Error ? err.message : t('common.loading'),
           color: 'red',
         });
       } finally {
@@ -101,9 +104,9 @@ export function ScheduleView() {
       }
     },
     onConflict: (validation) => {
-      const firstMsg = validation.conflicts[0]?.message || 'تعذر النقل لوجود تعارض في القيود المحددة';
+      const firstMsg = validation.conflicts[0]?.message || t('generator.errorTitle');
       notifications.show({
-        title: 'تعذر نقل الحصة',
+        title: t('generator.errorTitle'),
         message: firstMsg,
         color: 'red',
       });
@@ -158,11 +161,14 @@ export function ScheduleView() {
   return (
     <div>
       <PageHeader
-        title="عرض وتحليل الجدول المدرسي"
+        title={t('scheduleView.title')}
         subtitle={
           schedule
-            ? `الجدول النشط: ${schedule.name} (تم تعيين ${currentAssignments.length} حصة)`
-            : 'استعراض الحصص المجدولة وطباعتها'
+            ? t('scheduleView.subtitle', {
+                name: schedule.name,
+                count: currentAssignments.length,
+              })
+            : t('scheduleView.noSchedule')
         }
         actions={
           schedule && schedule.assignments.length > 0 && activeTab !== 'print' && activeTab !== 'master' ? (
@@ -172,7 +178,7 @@ export function ScheduleView() {
               leftSection={editor.isEditing ? <IconCheck size={18} /> : <IconPencil size={18} />}
               onClick={editor.toggleEditMode}
             >
-              {editor.isEditing ? 'إنهاء التعديل' : 'تعديل الجدول تفاعلياً'}
+              {editor.isEditing ? t('scheduleView.exitEdit') : t('scheduleView.enterEdit')}
             </Button>
           ) : undefined
         }
@@ -182,16 +188,16 @@ export function ScheduleView() {
         <Center p="xl"><Loader /></Center>
       ) : !schedule || schedule.assignments.length === 0 ? (
         <Card withBorder radius="md" p="xl">
-          <Alert color="indigo" title="لا يوجد جدول مدرسي مُولد بعد" icon={<IconInfoCircle size={20} />}>
+          <Alert color="indigo" title={t('scheduleView.noScheduleTitle')} icon={<IconInfoCircle size={20} />}>
             <Text size="sm" mb="md">
-              لم يتم العثور على جدول مدرسي نشط. يمكنك الانتقال إلى صفحة التوليد لبدء حل القيود وإنشاء جدولك الأول.
+              {t('scheduleView.noScheduleDesc')}
             </Text>
             <Button
               color="indigo"
               leftSection={<IconCpu size={16} />}
               onClick={() => navigate('/generator')}
             >
-              الانتقال إلى توليد الجدول
+              {t('scheduleView.goToGenerator')}
             </Button>
           </Alert>
         </Card>
@@ -211,24 +217,24 @@ export function ScheduleView() {
               }}
               className="no-print"
             >
-              <Group justify="space-between" align="center">
-                <Group gap="sm">
+              <Group justify="space-between" align="center" wrap="wrap" gap="sm">
+                <Group gap="sm" wrap="wrap">
                   <Badge color="teal" size="lg" variant="filled">
-                    وضع التعديل التفاعلي نشط
+                    {t('scheduleView.editingBanner')}
                   </Badge>
                   {editor.hasChanges ? (
                     <Badge color="orange" size="md" variant="light">
-                      لديك {editor.changeCount} تعديل غير محفوظ
+                      {t('scheduleView.changesCount', { count: editor.changeCount })}
                     </Badge>
                   ) : (
                     <Text size="xs" c="dimmed">
-                      اسحب الحصة أو اضغط عليها لنقلها أو تبديلها (يدعم الفأرة وشاشات اللمس)
+                      {t('scheduleView.editingTip')}
                     </Text>
                   )}
                 </Group>
 
-                <Group gap="xs">
-                  <Tooltip label="تراجع (Ctrl+Z)">
+                <Group gap="xs" wrap="wrap">
+                  <Tooltip label={t('scheduleView.undo')}>
                     <ActionIcon
                       variant="light"
                       color="indigo"
@@ -240,7 +246,7 @@ export function ScheduleView() {
                     </ActionIcon>
                   </Tooltip>
 
-                  <Tooltip label="إعادة (Ctrl+Y)">
+                  <Tooltip label={t('scheduleView.redo')}>
                     <ActionIcon
                       variant="light"
                       color="indigo"
@@ -260,7 +266,7 @@ export function ScheduleView() {
                     onClick={editor.discardChanges}
                     leftSection={<IconX size={14} />}
                   >
-                    إلغاء التعديلات
+                    {t('scheduleView.discard')}
                   </Button>
 
                   <Button
@@ -271,7 +277,7 @@ export function ScheduleView() {
                     onClick={editor.saveChanges}
                     leftSection={<IconDeviceFloppy size={16} />}
                   >
-                    حفظ التعديلات
+                    {t('scheduleView.saveChanges')}
                   </Button>
                 </Group>
               </Group>
@@ -299,23 +305,23 @@ export function ScheduleView() {
               >
                 <Tabs.List style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   <Tabs.Tab value="class" leftSection={<IconSchool size={16} />}>
-                    جدول الفصل
+                    {t('scheduleView.tabClass')}
                   </Tabs.Tab>
                   <Tabs.Tab value="teacher" leftSection={<IconUser size={16} />}>
-                    جدول المعلم
+                    {t('scheduleView.tabTeacher')}
                   </Tabs.Tab>
                   <Tabs.Tab value="master" leftSection={<IconTable size={16} />}>
-                    المصفوفة الشاملة
+                    {t('scheduleView.tabMaster')}
                   </Tabs.Tab>
                   <Tabs.Tab value="print" leftSection={<IconPrinter size={16} />}>
-                    طباعة وتصدير
+                    {t('scheduleView.tabPrint')}
                   </Tabs.Tab>
                 </Tabs.List>
               </Tabs>
 
               {activeTab === 'class' && (
                 <Select
-                  placeholder="اختر الفصل..."
+                  placeholder={t('scheduleView.selectClass')}
                   data={classes.map((c) => ({ value: c.id, label: c.sectionName }))}
                   value={activeClass?.id}
                   onChange={setSelectedClassId}
@@ -325,8 +331,8 @@ export function ScheduleView() {
 
               {activeTab === 'teacher' && (
                 <Select
-                  placeholder="اختر المعلم..."
-                  data={teachers.map((t) => ({ value: t.id, label: `${t.name} (${t.specialization})` }))}
+                  placeholder={t('scheduleView.selectTeacher')}
+                  data={teachers.map((tItem) => ({ value: tItem.id, label: `${tItem.name} (${tItem.specialization})` }))}
                   value={activeTeacher?.id}
                   onChange={setSelectedTeacherId}
                   style={{ minWidth: 220, flex: '1 1 220px', maxWidth: '100%' }}

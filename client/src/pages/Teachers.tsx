@@ -25,11 +25,13 @@ import { useTeachers, useTeacherMutations } from '../api/queries/useSchoolData';
 import { PageHeader } from '../components/common/PageHeader';
 import { TeacherModal } from '../components/forms/TeacherModal';
 import { TeacherAvailabilityDrawer } from '../components/teachers/TeacherAvailabilityDrawer';
+import { useTranslation } from '../i18n';
 import type { TeacherRecord } from '../api/types';
 
 export function Teachers() {
   const { data: teachers = [], isLoading } = useTeachers();
   const { saveTeacher, deleteTeacher } = useTeacherMutations();
+  const { t } = useTranslation();
 
   const [search, setSearch] = useState('');
   const [modalOpened, setModalOpened] = useState(false);
@@ -39,9 +41,9 @@ export function Teachers() {
   const [availabilityTeacher, setAvailabilityTeacher] = useState<TeacherRecord | null>(null);
 
   const filtered = teachers.filter(
-    (t) =>
-      t.name.toLowerCase().includes(search.toLowerCase()) ||
-      t.specialization.toLowerCase().includes(search.toLowerCase())
+    (tRecord) =>
+      tRecord.name.toLowerCase().includes(search.toLowerCase()) ||
+      tRecord.specialization.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleEdit = (teacher: TeacherRecord) => {
@@ -60,7 +62,7 @@ export function Teachers() {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('هل أنت متأكد من حذف هذا المعلم؟')) {
+    if (window.confirm(t('teachers.deleteConfirm'))) {
       await deleteTeacher(id);
     }
   };
@@ -68,18 +70,18 @@ export function Teachers() {
   return (
     <div>
       <PageHeader
-        title="إدارة المعلمين"
-        subtitle={`إدارة المعلمين وتحديد أنصبتهم وأوقات توفرهم الأسبوعية (${teachers.length} معلم)`}
+        title={t('teachers.title')}
+        subtitle={t('teachers.subtitle', { count: teachers.length })}
         actions={
           <Button leftSection={<IconPlus size={16} />} color="indigo" onClick={handleAdd}>
-            إضافة معلم جديد
+            {t('teachers.add')}
           </Button>
         }
       />
 
       <Card withBorder radius="md" p="md">
         <TextInput
-          placeholder="البحث بالاسم أو التخصص..."
+          placeholder={t('teachers.search')}
           leftSection={<IconSearch size={16} />}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -92,87 +94,87 @@ export function Teachers() {
           </Center>
         ) : filtered.length === 0 ? (
           <Center p="xl">
-            <Text c="dimmed">لا يوجد معلمون مطابقون للبحث.</Text>
+            <Text c="dimmed">{t('teachers.empty')}</Text>
           </Center>
         ) : (
           <Table.ScrollContainer minWidth={750}>
             <Table striped highlightOnHover verticalSpacing="sm">
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th style={{ whiteSpace: 'nowrap' }}>اسم المعلم</Table.Th>
-                  <Table.Th style={{ whiteSpace: 'nowrap' }}>التخصص</Table.Th>
-                  <Table.Th style={{ whiteSpace: 'nowrap' }}>الحد اليومي</Table.Th>
-                  <Table.Th style={{ whiteSpace: 'nowrap' }}>النصاب الأسبوعي</Table.Th>
-                  <Table.Th style={{ whiteSpace: 'nowrap' }}>أوقات التوفر</Table.Th>
-                  <Table.Th style={{ textAlign: 'center', whiteSpace: 'nowrap', width: 130 }}>الإجراءات</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>{t('teachers.colName')}</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>{t('teachers.colSpecialty')}</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>{t('teachers.colDailyMax')}</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>{t('teachers.colWeeklyQuota')}</Table.Th>
+                  <Table.Th style={{ whiteSpace: 'nowrap' }}>{t('teachers.colAvailability')}</Table.Th>
+                  <Table.Th style={{ textAlign: 'center', whiteSpace: 'nowrap', width: 130 }}>{t('teachers.colActions')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
-            <Table.Tbody>
-              {filtered.map((teacher) => (
-                <Table.Tr key={teacher.id}>
-                  <Table.Td fw={600}>{teacher.name}</Table.Td>
-                  <Table.Td>
-                    <Badge variant="light" color="indigo">
-                      {teacher.specialization}
-                    </Badge>
-                  </Table.Td>
-                  <Table.Td>{teacher.maxDailyPeriods} حصص</Table.Td>
-                  <Table.Td>{teacher.maxWeeklyPeriods} حصة</Table.Td>
-                  <Table.Td>
-                    {teacher.unavailableSlots?.length ? (
-                      <Tooltip label="انقر لتعديل أوقات التوفر السريعة">
-                        <Badge
-                          color="red"
-                          variant="light"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => handleOpenAvailability(teacher)}
-                          leftSection={<IconBan size={12} />}
-                        >
-                          {teacher.unavailableSlots.length} فترات محظورة
-                        </Badge>
-                      </Tooltip>
-                    ) : (
-                      <Tooltip label="انقر لتعديل أوقات التوفر السريعة">
-                        <Badge
-                          color="teal"
-                          variant="light"
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => handleOpenAvailability(teacher)}
-                          leftSection={<IconCheck size={12} />}
-                        >
-                          متاح بالكامل
-                        </Badge>
-                      </Tooltip>
-                    )}
-                  </Table.Td>
-                  <Table.Td>
-                    <Group gap="xs" justify="center">
-                      <Tooltip label="تعديل أوقات التوفر">
-                        <ActionIcon
-                          variant="subtle"
-                          color="teal"
-                          onClick={() => handleOpenAvailability(teacher)}
-                        >
-                          <IconCalendarTime size={16} />
-                        </ActionIcon>
-                      </Tooltip>
-                      <Tooltip label="تعديل بيانات المعلم">
-                        <ActionIcon variant="subtle" color="blue" onClick={() => handleEdit(teacher)}>
-                          <IconEdit size={16} />
-                        </ActionIcon>
-                      </Tooltip>
-                      <Tooltip label="حذف المعلم">
-                        <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(teacher.id)}>
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Tooltip>
-                    </Group>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
+              <Table.Tbody>
+                {filtered.map((teacher) => (
+                  <Table.Tr key={teacher.id}>
+                    <Table.Td fw={600}>{teacher.name}</Table.Td>
+                    <Table.Td>
+                      <Badge variant="light" color="indigo">
+                        {teacher.specialization}
+                      </Badge>
+                    </Table.Td>
+                    <Table.Td>{t('common.periodsCount', { count: teacher.maxDailyPeriods })}</Table.Td>
+                    <Table.Td>{t('common.periodsCount', { count: teacher.maxWeeklyPeriods })}</Table.Td>
+                    <Table.Td>
+                      {teacher.unavailableSlots?.length ? (
+                        <Tooltip label={t('teachers.editAvailabilityTooltip')}>
+                          <Badge
+                            color="red"
+                            variant="light"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleOpenAvailability(teacher)}
+                            leftSection={<IconBan size={12} />}
+                          >
+                            {t('teachers.blockedCount', { count: teacher.unavailableSlots.length })}
+                          </Badge>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip label={t('teachers.editAvailabilityTooltip')}>
+                          <Badge
+                            color="teal"
+                            variant="light"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleOpenAvailability(teacher)}
+                            leftSection={<IconCheck size={12} />}
+                          >
+                            {t('teachers.fullAvailable')}
+                          </Badge>
+                        </Tooltip>
+                      )}
+                    </Table.Td>
+                    <Table.Td>
+                      <Group gap="xs" justify="center">
+                        <Tooltip label={t('teachers.editAvailabilityTooltip')}>
+                          <ActionIcon
+                            variant="subtle"
+                            color="teal"
+                            onClick={() => handleOpenAvailability(teacher)}
+                          >
+                            <IconCalendarTime size={16} />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label={t('teachers.editTeacherTooltip')}>
+                          <ActionIcon variant="subtle" color="blue" onClick={() => handleEdit(teacher)}>
+                            <IconEdit size={16} />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label={t('teachers.deleteTeacherTooltip')}>
+                          <ActionIcon variant="subtle" color="red" onClick={() => handleDelete(teacher.id)}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Tooltip>
+                      </Group>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
         )}
       </Card>
 
