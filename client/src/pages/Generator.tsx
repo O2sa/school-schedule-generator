@@ -94,7 +94,15 @@ export function Generator() {
       if (e?.diagnostics && Array.isArray(e.diagnostics)) {
         setDiagnostics(e.diagnostics);
       } else {
-        setErrorMsg(e?.message || t('generator.errorTitle'));
+        const rawMsg = e?.message || '';
+        const isTimeout = rawMsg.includes('مهلة') || rawMsg.includes('الوقت') || rawMsg.toLowerCase().includes('timeout');
+        const isInf = rawMsg.includes('غير قابل') || rawMsg.toLowerCase().includes('infeasible');
+        const displayMsg = isTimeout
+          ? t('generator.timeoutDesc')
+          : isInf
+          ? t('generator.infeasibleDesc')
+          : rawMsg || t('generator.errorTitle');
+        setErrorMsg(displayMsg);
       }
     } finally {
       setIsSolving(false);

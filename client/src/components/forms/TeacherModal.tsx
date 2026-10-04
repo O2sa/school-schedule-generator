@@ -70,9 +70,19 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
 
   const handleSubmit = async (values: typeof form.values) => {
     if (!validation.valid) {
+      const validationMsg = validation.code === 'DAILY_CAPACITY_EXCEEDED'
+        ? t('teacherModal.dailyCapacityExceededError', {
+            needed: validation.neededLectures,
+            capacity: validation.effectiveCapacity,
+            maxDaily: values.maxDailyPeriods,
+          })
+        : t('teacherModal.capacityExceededError', {
+            needed: validation.neededLectures,
+            available: validation.availableSlotsCount,
+          });
       notifications.show({
         title: t('teacherModal.capacityExceeded'),
-        message: validation.error,
+        message: validationMsg,
         color: 'red',
       });
       return;
@@ -97,37 +107,7 @@ export function TeacherModal({ opened, onClose, onSave, teacher }: TeacherModalP
     }
   };
 
-  const specializations = locale === 'ar'
-    ? [
-        'لغة عربية',
-        'لغة إنجليزية',
-        'رياضيات',
-        'علوم عامة',
-        'فيزياء',
-        'كيمياء',
-        'أحياء',
-        'تاريخ',
-        'جغرافيا',
-        'تربية إسلامية',
-        'تربية رياضية',
-        'تربية فنية',
-        'حاسب آلي',
-      ]
-    : [
-        'Arabic',
-        'English',
-        'Mathematics',
-        'General Science',
-        'Physics',
-        'Chemistry',
-        'Biology',
-        'History',
-        'Geography',
-        'Islamic Studies',
-        'Physical Education',
-        'Art',
-        'Computer Science',
-      ];
+  const specializations: string[] = Array.isArray(t('teacherModal.specializations')) ? t('teacherModal.specializations') : [];
 
   return (
     <Modal

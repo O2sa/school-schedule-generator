@@ -40,6 +40,9 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
       window.localStorage.setItem('app_locale', locale);
       document.documentElement.lang = locale;
       document.documentElement.dir = dir;
+      const title = t('nav.appTitle');
+      const brand = t('nav.brandName');
+      document.title = `${title} | ${brand}`;
     }
   }, [locale, dir]);
 

@@ -31,9 +31,9 @@ export function Settings() {
   const { data: config, saveConfig } = useSchoolConfig();
   const { t } = useTranslation();
 
-  const [schoolName, setSchoolName] = useState(config?.schoolName || 'مدرسة التميز النموذجية');
+  const [schoolName, setSchoolName] = useState(config?.schoolName || t('dashboard.defaultSchoolName'));
   const [academicYear, setAcademicYear] = useState(config?.academicYear || '2026 / 2027');
-  const [term, setTerm] = useState(config?.term || 'الفصل الدراسي الأول');
+  const [term, setTerm] = useState(config?.term || t('dashboard.defaultTerm'));
 
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [importFile, setImportFile] = useState<File | null>(null);

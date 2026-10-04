@@ -1,6 +1,7 @@
 import React from 'react';
-import { Alert, Card, Stack, Text, Title, Badge, List, ThemeIcon, Group } from '@mantine/core';
-import { IconAlertTriangle, IconInfoCircle, IconBulb } from '@tabler/icons-react';
+import { Alert, Card, Stack, Text, Title, Badge, List, Group } from '@mantine/core';
+import { IconAlertTriangle, IconBulb } from '@tabler/icons-react';
+import { useTranslation } from '../../i18n';
 
 export interface DiagnosticItem {
   code: string;
@@ -15,20 +16,22 @@ interface DiagnosticsReportProps {
 }
 
 export function DiagnosticsReport({ diagnostics }: DiagnosticsReportProps) {
-  const getArabicCodeTitle = (code: string) => {
+  const { t } = useTranslation();
+
+  const getCodeTitle = (code: string) => {
     switch (code) {
       case 'TEACHER_CAPACITY_EXCEEDED':
-        return 'تجاوز الطاقة الاستيعابية للمعلم';
+        return t('generator.diagTeacherCapacity');
       case 'TEACHER_DAILY_CAPACITY_DEFICIT':
-        return 'عجز في السعة اليومية للمعلم';
+        return t('generator.diagTeacherDaily');
       case 'CLASS_OVERBOOKED':
-        return 'تجاوز نصاب حصص الفصل الدراسي';
+        return t('generator.diagClassOverbooked');
       case 'TOTAL_CAPACITY_DEFICIT':
-        return 'عجز إجمالي في طاقة الهيئة التعليمية';
+        return t('generator.diagTotalCapacity');
       case 'SLOT_SATURATION':
-        return 'تشبع الحصص المتاحة لقاعة أو فصل';
+        return t('generator.diagSlotSaturation');
       default:
-        return 'تعارض في القيود';
+        return t('generator.diagConflictDefault');
     }
   };
 
@@ -37,11 +40,10 @@ export function DiagnosticsReport({ diagnostics }: DiagnosticsReportProps) {
       <Stack gap="md">
         <Alert
           color="red"
-          title="لم يتم العثور على حل متوافق مع كافة القيود"
+          title={t('generator.diagnosticsTitle')}
           icon={<IconAlertTriangle size={20} />}
         >
-          اكتشف محرك التحليل الذكي {diagnostics.length} تعارضات تمنع اكتمال الجدول بنسبة 100%. راجع
-          التفاصيل أدناه لتعديل الأنصبة أو القيود:
+          {t('generator.diagnosticsDesc', { count: diagnostics.length })}
         </Alert>
 
         <Stack gap="sm">
@@ -49,11 +51,11 @@ export function DiagnosticsReport({ diagnostics }: DiagnosticsReportProps) {
             <Card key={idx} withBorder p="sm" radius="sm" bg="var(--mantine-color-red-0)">
               <Group justify="space-between" mb={4}>
                 <Badge color="red" variant="filled">
-                  {getArabicCodeTitle(d.code)}
+                  {getCodeTitle(d.code)}
                 </Badge>
                 {d.teacherId && (
                   <Badge variant="outline" color="gray">
-                    معلم: {d.teacherId}
+                    {t('generator.diagTeacherLabel', { name: d.teacherId })}
                   </Badge>
                 )}
               </Group>
@@ -68,19 +70,13 @@ export function DiagnosticsReport({ diagnostics }: DiagnosticsReportProps) {
           <Title order={5} mb="xs" c="blue.9">
             <Group gap="xs">
               <IconBulb size={18} />
-              <span>إرشادات سريعة لمعالجة التعارضات:</span>
+              <span>{t('generator.diagTipsTitle')}</span>
             </Group>
           </Title>
           <List size="sm" c="blue.8" spacing="xs">
-            <List.Item>
-              في حال تجاوز طاقة المعلم: قم بزيادة الحد اليومي للحصص من صفحة "المعلمون"، أو وزع بعض الحصص على معلم آخر في "الخطة الدراسية".
-            </List.Item>
-            <List.Item>
-              في حال الحصص المحجوبة: تأكد من عدم حجب فترات طويلة لمعلم يحمل نصاباً مرتفعاً.
-            </List.Item>
-            <List.Item>
-              تحقق من أن مجموع حصص الفصل الأسبوعية يطابق تماماً السعة (30 حصة لصفوف 1-4، و35 حصة لصفوف 5-12).
-            </List.Item>
+            <List.Item>{t('generator.diagTip1')}</List.Item>
+            <List.Item>{t('generator.diagTip2')}</List.Item>
+            <List.Item>{t('generator.diagTip3')}</List.Item>
           </List>
         </Card>
       </Stack>

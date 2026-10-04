@@ -309,7 +309,7 @@ export function TeacherAvailabilityGrid({
             </Table.Thead>
             <Table.Tbody>
               {workingDays.map((d) => {
-                const dayLabel = dayNames[d] || `اليوم ${d}`;
+                const dayLabel = dayNames[d] || t('common.dayNumber', { number: d + 1 });
                 return (
                   <Table.Tr key={d}>
                     <Table.Td

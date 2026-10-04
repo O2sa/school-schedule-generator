@@ -55,9 +55,19 @@ export function TeacherAvailabilityDrawer({
 
   const handleSave = async () => {
     if (!validation.valid) {
+      const validationMsg = validation.code === 'DAILY_CAPACITY_EXCEEDED'
+        ? t('teacherModal.dailyCapacityExceededError', {
+            needed: validation.neededLectures,
+            capacity: validation.effectiveCapacity,
+            maxDaily: teacher.maxDailyPeriods || 7,
+          })
+        : t('teacherModal.capacityExceededError', {
+            needed: validation.neededLectures,
+            available: validation.availableSlotsCount,
+          });
       notifications.show({
         title: t('availabilityDrawer.cannotSave'),
-        message: validation.error,
+        message: validationMsg,
         color: 'red',
       });
       return;
