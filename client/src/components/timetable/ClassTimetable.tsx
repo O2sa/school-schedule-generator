@@ -1,6 +1,6 @@
 import { useTranslation } from "../../i18n";
 import React from 'react';
-import { Table, Card, Text } from '@mantine/core';
+import { Table, Card, Text, useComputedColorScheme } from '@mantine/core';
 import type { ClassRecord, TeacherRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
 
 export interface TimetableEditorProps {
@@ -30,6 +30,8 @@ export function ClassTimetable({
   workingDays,
 }: ClassTimetableProps) {
   const { t } = useTranslation();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const isDark = computedColorScheme === 'dark';
   const DAYS: string[] = t('common.days');
   const teacherMap = new Map(teachers.map((t) => [t.id, t]));
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
@@ -50,7 +52,7 @@ export function ClassTimetable({
       <Table.ScrollContainer minWidth={720}>
         <Table withTableBorder withColumnBorders style={{ textAlign: 'center', minWidth: 720 }}>
           <Table.Thead>
-            <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
+            <Table.Tr style={{ background: isDark ? 'var(--mantine-color-dark-6)' : 'var(--mantine-color-gray-1)', borderBottom: isDark ? '1px solid var(--mantine-color-dark-4)' : undefined }}>
               <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>
                 {t('scheduleView.matrixDayFilter')}
               </Table.Th>
@@ -64,7 +66,7 @@ export function ClassTimetable({
           <Table.Tbody>
             {activeDays.map((dIdx) => (
               <Table.Tr key={dIdx}>
-                <Table.Td fw={700} style={{ background: 'var(--mantine-color-gray-0)' }}>
+                <Table.Td fw={700} style={{ background: isDark ? 'var(--mantine-color-dark-7)' : 'var(--mantine-color-gray-0)', color: isDark ? 'var(--mantine-color-dark-0)' : undefined }}>
                   {DAYS[dIdx]}
                 </Table.Td>
                 {periods.map((pIdx) => {
@@ -119,10 +121,10 @@ export function ClassTimetable({
 
                   if (editorProps?.isEditing) {
                     if (isValidTarget) {
-                      cellBg = 'var(--mantine-color-teal-0)';
+                      cellBg = isDark ? 'rgba(32, 201, 151, 0.22)' : 'var(--mantine-color-teal-0)';
                       cellCursor = 'pointer';
                     } else if (isSelected) {
-                      cellBg = 'var(--mantine-color-blue-0)';
+                      cellBg = isDark ? 'rgba(51, 154, 240, 0.28)' : 'var(--mantine-color-blue-0)';
                     } else if (isConflict) {
                       cellOpacity = 0.45;
                       cellCursor = 'not-allowed';
@@ -164,15 +166,15 @@ export function ClassTimetable({
                           }}
                           style={{
                             background: isSelected
-                              ? 'var(--mantine-color-blue-1)'
+                              ? (isDark ? 'rgba(51, 154, 240, 0.35)' : 'var(--mantine-color-blue-1)')
                               : isValidTarget
-                              ? 'var(--mantine-color-teal-1)'
-                              : 'var(--mantine-color-indigo-0)',
+                              ? (isDark ? 'rgba(32, 201, 151, 0.28)' : 'var(--mantine-color-teal-1)')
+                              : (isDark ? 'rgba(92, 124, 250, 0.18)' : 'var(--mantine-color-indigo-0)'),
                             borderColor: isSelected
-                              ? 'var(--mantine-color-blue-6)'
+                              ? 'var(--mantine-color-blue-5)'
                               : isValidTarget
-                              ? 'var(--mantine-color-teal-6)'
-                              : 'var(--mantine-color-indigo-2)',
+                              ? 'var(--mantine-color-teal-5)'
+                              : (isDark ? 'rgba(92, 124, 250, 0.35)' : 'var(--mantine-color-indigo-2)'),
                             boxShadow: isSelected
                               ? '0 0 8px rgba(34, 139, 230, 0.4)'
                               : undefined,
@@ -184,17 +186,15 @@ export function ClassTimetable({
                             size="xs"
                             fw={700}
                             c={
-                              isSelected
-                                ? 'blue.9'
-                                : isValidTarget
-                                ? 'teal.9'
-                                : 'indigo.9'
+                              isDark
+                                ? (isSelected ? 'blue.2' : isValidTarget ? 'teal.2' : 'indigo.2')
+                                : (isSelected ? 'blue.9' : isValidTarget ? 'teal.9' : 'indigo.9')
                             }
                             truncate
                           >
                             {sub?.name || t("common.subjectFallback")}
                           </Text>
-                          <Text size="10px" c="dimmed" truncate>
+                          <Text size="10px" c={isDark ? 'gray.4' : 'dimmed'} truncate>
                             {tch?.name || t("common.teacherFallback")}
                           </Text>
                         </Card>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Card, Select, Group, Text } from '@mantine/core';
+import { Table, Card, Select, Group, Text, useComputedColorScheme } from '@mantine/core';
 import type { ClassRecord, TeacherRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
 import { useTranslation } from '../../i18n';
 
@@ -24,6 +24,8 @@ export function MasterMatrix({
   const maxPeriods = periodsCount || (classes.length > 0 ? Math.max(...classes.map((c) => c.periodsPerDay || 7), 7) : 7);
   const periods = Array.from({ length: maxPeriods }, (_, i) => i);
   const { t } = useTranslation();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const isDark = computedColorScheme === 'dark';
   const DAYS: string[] = t('common.days');
   const [selectedDay, setSelectedDay] = useState<string>(() => String(activeDays[0] ?? 0));
 
@@ -84,7 +86,7 @@ export function MasterMatrix({
       <Table.ScrollContainer minWidth={900}>
         <Table withTableBorder withColumnBorders style={{ minWidth: 900, textAlign: 'center' }}>
           <Table.Thead>
-            <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
+            <Table.Tr style={{ background: isDark ? 'var(--mantine-color-dark-6)' : 'var(--mantine-color-gray-1)', borderBottom: isDark ? '1px solid var(--mantine-color-dark-4)' : undefined }}>
               <Table.Th style={{ width: 140, textAlign: 'center' }}>
                 {t('scheduleView.classSection')}
               </Table.Th>
@@ -98,14 +100,14 @@ export function MasterMatrix({
           <Table.Tbody>
             {classes.map((cls) => (
               <Table.Tr key={cls.id}>
-                <Table.Td fw={700} style={{ background: 'var(--mantine-color-gray-0)' }}>
+                <Table.Td fw={700} style={{ background: isDark ? 'var(--mantine-color-dark-7)' : 'var(--mantine-color-gray-0)', color: isDark ? 'var(--mantine-color-dark-0)' : undefined }}>
                   {cls.sectionName}
                 </Table.Td>
                 {periods.map((pIdx) => {
                   if (pIdx >= cls.periodsPerDay) {
                     return (
-                      <Table.Td key={pIdx} p={4} style={{ background: 'var(--mantine-color-gray-2)' }}>
-                        <Text size="10px" c="dimmed">
+                      <Table.Td key={pIdx} p={4} style={{ background: isDark ? 'var(--mantine-color-dark-8)' : 'var(--mantine-color-gray-2)' }}>
+                        <Text size="10px" c={isDark ? 'dark.3' : 'dimmed'}>
                           {t('common.dismissal')}
                         </Text>
                       </Table.Td>
@@ -116,7 +118,7 @@ export function MasterMatrix({
                   if (!item) {
                     return (
                       <Table.Td key={pIdx} p={4}>
-                        <Text size="xs" c="dimmed">
+                        <Text size="xs" c={isDark ? 'dark.3' : 'dimmed'}>
                           -
                         </Text>
                       </Table.Td>
@@ -128,11 +130,17 @@ export function MasterMatrix({
 
                   return (
                     <Table.Td key={pIdx} p={4}>
-                      <Card withBorder p={4} radius="xs" bg="var(--mantine-color-indigo-0)">
-                        <Text size="11px" fw={700} c="indigo.9" truncate>
+                      <Card
+                        withBorder
+                        p={4}
+                        radius="xs"
+                        bg={isDark ? 'rgba(92, 124, 250, 0.18)' : 'var(--mantine-color-indigo-0)'}
+                        style={{ borderColor: isDark ? 'rgba(92, 124, 250, 0.35)' : undefined }}
+                      >
+                        <Text size="11px" fw={700} c={isDark ? 'indigo.2' : 'indigo.9'} truncate>
                           {sub?.name || t('common.subjectFallback')}
                         </Text>
-                        <Text size="9px" c="dimmed" truncate>
+                        <Text size="9px" c={isDark ? 'gray.4' : 'dimmed'} truncate>
                           {tch?.name || t('common.teacherFallback')}
                         </Text>
                       </Card>

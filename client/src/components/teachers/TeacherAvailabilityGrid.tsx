@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Table,
   Button,
+  useComputedColorScheme,
   Group,
   Badge,
   Text,
@@ -38,6 +39,8 @@ export function TeacherAvailabilityGrid({
   maxWeeklyPeriods,
 }: TeacherAvailabilityGridProps) {
   const { t } = useTranslation();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const isDark = computedColorScheme === 'dark';
   const dayNames: string[] = t('common.days');
   const [internalSlots, setInternalSlots] = useState<UnavailableSlot[]>(value);
 
@@ -282,7 +285,7 @@ export function TeacherAvailabilityGrid({
         <Table.ScrollContainer minWidth={540}>
           <Table withTableBorder withColumnBorders style={{ textAlign: 'center', minWidth: 540 }}>
             <Table.Thead>
-              <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
+              <Table.Tr style={{ background: isDark ? 'var(--mantine-color-dark-6)' : 'var(--mantine-color-gray-1)', borderBottom: isDark ? '1px solid var(--mantine-color-dark-4)' : undefined }}>
                 <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>
                   {t('scheduleView.matrixDayFilter')}
                 </Table.Th>
@@ -316,7 +319,8 @@ export function TeacherAvailabilityGrid({
                       data-testid={`day-header-${d}`}
                       fw={700}
                       style={{
-                        background: 'var(--mantine-color-gray-0)',
+                        background: isDark ? 'var(--mantine-color-dark-7)' : 'var(--mantine-color-gray-0)',
+                        color: isDark ? 'var(--mantine-color-dark-0)' : undefined,
                         cursor: readOnly ? 'default' : 'pointer',
                         whiteSpace: 'nowrap',
                       }}
@@ -340,17 +344,21 @@ export function TeacherAvailabilityGrid({
                           onClick={() => handleCellClick(d, p)}
                           style={{
                             background: blocked
-                              ? 'var(--mantine-color-red-1)'
-                              : 'var(--mantine-color-teal-0)',
+                              ? (isDark ? 'rgba(235, 87, 87, 0.22)' : 'var(--mantine-color-red-1)')
+                              : (isDark ? 'rgba(32, 201, 151, 0.16)' : 'var(--mantine-color-teal-0)'),
+                            outline: isDark
+                              ? (blocked ? '1px solid rgba(235, 87, 87, 0.35)' : '1px solid rgba(32, 201, 151, 0.25)')
+                              : undefined,
+                            outlineOffset: '-1px',
                             cursor: readOnly ? 'default' : 'pointer',
-                            transition: 'background-color 0.15s ease',
+                            transition: 'all 0.15s ease',
                           }}
                         >
                           <Group justify="center" align="center" style={{ height: 38 }}>
                             {blocked ? (
-                              <IconBan size={16} color="var(--mantine-color-red-6)" />
+                              <IconBan size={16} color={isDark ? 'var(--mantine-color-red-4)' : 'var(--mantine-color-red-6)'} />
                             ) : (
-                              <IconCheck size={16} color="var(--mantine-color-teal-6)" />
+                              <IconCheck size={16} color={isDark ? 'var(--mantine-color-teal-4)' : 'var(--mantine-color-teal-6)'} />
                             )}
                           </Group>
                         </Table.Td>

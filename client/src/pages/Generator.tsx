@@ -11,6 +11,7 @@ import {
   NumberInput,
   Badge,
   Alert,
+  useComputedColorScheme,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -36,6 +37,8 @@ import type { SavedScheduleRecord, SolverProgress } from '../api/types';
 
 export function Generator() {
   const navigate = useNavigate();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const isDark = computedColorScheme === 'dark';
   const service = useDataService();
   const queryClient = useQueryClient();
   const { mode } = useData();
@@ -205,7 +208,7 @@ export function Generator() {
           </Group>
 
           {isSolving && (
-            <Card withBorder p="md" bg="var(--mantine-color-indigo-0)">
+            <Card withBorder p="md" bg={isDark ? "rgba(92, 124, 250, 0.15)" : "var(--mantine-color-indigo-0)"}>
               <Stack gap="xs">
                 <Group justify="space-between" wrap="wrap">
                   <Text size="sm" fw={600}>

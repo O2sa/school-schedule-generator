@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Card, Stack, Text, Title, Badge, List, Group } from '@mantine/core';
+import { Alert, Card, Stack, Text, Title, Badge, List, Group, useComputedColorScheme } from '@mantine/core';
 import { IconAlertTriangle, IconBulb } from '@tabler/icons-react';
 import { useTranslation } from '../../i18n';
 
@@ -17,6 +17,8 @@ interface DiagnosticsReportProps {
 
 export function DiagnosticsReport({ diagnostics }: DiagnosticsReportProps) {
   const { t } = useTranslation();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const isDark = computedColorScheme === 'dark';
 
   const getCodeTitle = (code: string) => {
     switch (code) {
@@ -48,7 +50,7 @@ export function DiagnosticsReport({ diagnostics }: DiagnosticsReportProps) {
 
         <Stack gap="sm">
           {diagnostics.map((d, idx) => (
-            <Card key={idx} withBorder p="sm" radius="sm" bg="var(--mantine-color-red-0)">
+            <Card key={idx} withBorder p="sm" radius="sm" bg={isDark ? "rgba(250, 82, 82, 0.15)" : "var(--mantine-color-red-0)"}>
               <Group justify="space-between" mb={4}>
                 <Badge color="red" variant="filled">
                   {getCodeTitle(d.code)}
@@ -66,7 +68,7 @@ export function DiagnosticsReport({ diagnostics }: DiagnosticsReportProps) {
           ))}
         </Stack>
 
-        <Card withBorder p="md" radius="sm" bg="var(--mantine-color-blue-0)">
+        <Card withBorder p="md" radius="sm" bg={isDark ? "rgba(51, 154, 240, 0.15)" : "var(--mantine-color-blue-0)"}>
           <Title order={5} mb="xs" c="blue.9">
             <Group gap="xs">
               <IconBulb size={18} />

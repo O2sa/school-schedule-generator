@@ -12,6 +12,7 @@ import {
   Badge,
   ActionIcon,
   Tooltip,
+  useComputedColorScheme,
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
@@ -51,6 +52,8 @@ import type { TimetableInput } from 'school-timetabling-engine';
 export function ScheduleView() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const isDark = computedColorScheme === 'dark';
 
   const { data: schedule, isLoading: scheduleLoading } = useActiveSchedule();
   const { data: classes = [], isLoading: classesLoading } = useClasses();
@@ -211,8 +214,8 @@ export function ScheduleView() {
               p="sm"
               mb="md"
               style={{
-                background: 'var(--mantine-color-teal-0)',
-                borderColor: 'var(--mantine-color-teal-3)',
+                background: isDark ? 'rgba(32, 201, 151, 0.12)' : 'var(--mantine-color-teal-0)',
+                borderColor: isDark ? 'rgba(32, 201, 151, 0.35)' : 'var(--mantine-color-teal-3)',
                 boxShadow: '0 4px 12px rgba(32, 201, 151, 0.15)',
               }}
               className="no-print"

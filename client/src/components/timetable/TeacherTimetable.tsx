@@ -1,6 +1,6 @@
 import { useTranslation } from "../../i18n";
 import React from 'react';
-import { Table, Card, Text, Badge, Group, Progress } from '@mantine/core';
+import { Table, Card, Text, Badge, Group, Progress, useComputedColorScheme } from '@mantine/core';
 import type { TeacherRecord, ClassRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
 import type { TimetableEditorProps } from './ClassTimetable';
 
@@ -27,6 +27,8 @@ export function TeacherTimetable({
   const maxPeriods = periodsCount || (classes.length > 0 ? Math.max(...classes.map((c) => c.periodsPerDay || 7), 7) : 7);
   const periods = Array.from({ length: maxPeriods }, (_, i) => i);
   const { t } = useTranslation();
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const isDark = computedColorScheme === 'dark';
   const DAYS: string[] = t('common.days');
   const classMap = new Map(classes.map((c) => [c.id, c]));
   const subjectMap = new Map(subjects.map((s) => [s.id, s]));
@@ -70,7 +72,7 @@ export function TeacherTimetable({
       <Table.ScrollContainer minWidth={720}>
         <Table withTableBorder withColumnBorders style={{ textAlign: 'center', minWidth: 720 }}>
           <Table.Thead>
-            <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
+            <Table.Tr style={{ background: isDark ? 'var(--mantine-color-dark-6)' : 'var(--mantine-color-gray-1)', borderBottom: isDark ? '1px solid var(--mantine-color-dark-4)' : undefined }}>
               <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>{t('scheduleView.matrixDayFilter')}</Table.Th>
               {periods.map((p) => (
                 <Table.Th key={p} style={{ textAlign: 'center', minWidth: 85, whiteSpace: 'nowrap' }}>
@@ -84,7 +86,7 @@ export function TeacherTimetable({
             const dayName = DAYS[dIdx];
             return (
             <Table.Tr key={dIdx}>
-              <Table.Td fw={700} style={{ background: 'var(--mantine-color-gray-0)' }}>
+              <Table.Td fw={700} style={{ background: isDark ? 'var(--mantine-color-dark-7)' : 'var(--mantine-color-gray-0)', color: isDark ? 'var(--mantine-color-dark-0)' : undefined }}>
                 {dayName}
               </Table.Td>
               {periods.map((pIdx) => {
@@ -141,10 +143,10 @@ export function TeacherTimetable({
 
                 if (editorProps?.isEditing) {
                   if (isValidTarget) {
-                    cellBg = 'var(--mantine-color-teal-0)';
+                    cellBg = isDark ? 'rgba(32, 201, 151, 0.22)' : 'var(--mantine-color-teal-0)';
                     cellCursor = 'pointer';
                   } else if (isSelected) {
-                    cellBg = 'var(--mantine-color-blue-0)';
+                    cellBg = isDark ? 'rgba(51, 154, 240, 0.28)' : 'var(--mantine-color-blue-0)';
                   } else if (isConflict) {
                     cellOpacity = 0.45;
                     cellCursor = 'not-allowed';
@@ -152,7 +154,7 @@ export function TeacherTimetable({
                     cellCursor = 'grab';
                   }
                 } else if (blocked) {
-                  cellBg = 'var(--mantine-color-gray-1)';
+                  cellBg = isDark ? 'var(--mantine-color-dark-8)' : 'var(--mantine-color-gray-1)';
                 }
 
                 return (
@@ -172,7 +174,7 @@ export function TeacherTimetable({
                     }}
                   >
                     {blocked ? (
-                      <Badge variant="light" color="gray" size="sm">
+                      <Badge variant="light" color={isDark ? "dark" : "gray"} size="sm">
                         {t('common.unavailable')}
                       </Badge>
                     ) : item ? (
@@ -192,15 +194,15 @@ export function TeacherTimetable({
                         }}
                         style={{
                           background: isSelected
-                            ? 'var(--mantine-color-blue-1)'
+                            ? (isDark ? 'rgba(51, 154, 240, 0.35)' : 'var(--mantine-color-blue-1)')
                             : isValidTarget
-                            ? 'var(--mantine-color-teal-1)'
-                            : 'var(--mantine-color-teal-0)',
+                            ? (isDark ? 'rgba(32, 201, 151, 0.28)' : 'var(--mantine-color-teal-1)')
+                            : (isDark ? 'rgba(32, 201, 151, 0.18)' : 'var(--mantine-color-teal-0)'),
                           borderColor: isSelected
-                            ? 'var(--mantine-color-blue-6)'
+                            ? 'var(--mantine-color-blue-5)'
                             : isValidTarget
-                            ? 'var(--mantine-color-teal-6)'
-                            : 'var(--mantine-color-teal-2)',
+                            ? 'var(--mantine-color-teal-5)'
+                            : (isDark ? 'rgba(32, 201, 151, 0.35)' : 'var(--mantine-color-teal-2)'),
                           boxShadow: isSelected
                             ? '0 0 8px rgba(34, 139, 230, 0.4)'
                             : undefined,
@@ -212,24 +214,22 @@ export function TeacherTimetable({
                           size="xs"
                           fw={700}
                           c={
-                            isSelected
-                              ? 'blue.9'
-                              : isValidTarget
-                              ? 'teal.9'
-                              : 'teal.9'
+                            isDark
+                              ? (isSelected ? 'blue.2' : isValidTarget ? 'teal.2' : 'teal.2')
+                              : (isSelected ? 'blue.9' : isValidTarget ? 'teal.9' : 'teal.9')
                           }
                           truncate
                         >
                           {cls?.sectionName || t("common.classFallback")}
                         </Text>
-                        <Text size="10px" c="dimmed" truncate>
+                        <Text size="10px" c={isDark ? 'gray.4' : 'dimmed'} truncate>
                           {sub?.name || t("common.subjectFallback")}
                         </Text>
                       </Card>
                     ) : (
                       <Text
                         size="xs"
-                        c={isValidTarget ? 'teal.8' : 'dimmed'}
+                        c={isDark ? (isValidTarget ? 'teal.3' : 'dark.3') : (isValidTarget ? 'teal.8' : 'dimmed')}
                         fw={isValidTarget ? 700 : 400}
                       >
                         {isValidTarget ? t("common.moveHere") : '-'}
