@@ -33,7 +33,7 @@ function AppWithI18n() {
     <DirectionProvider key={dir} initialDirection={dir} detectDirection={false}>
       <MantineProvider theme={theme} defaultColorScheme="auto">
         <Notifications position="top-center" />
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <Routes>
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Dashboard />} />
