@@ -158,7 +158,7 @@ describe('i18n - React Context & Hooks Provider', () => {
     expect(screen.getByTestId('dir').textContent).toBe('rtl');
     expect(screen.getByTestId('nav-dashboard').textContent).toBe('الرئيسية');
     expect(screen.getByTestId('period-number').textContent).toBe('الحصة 3');
-    expect(screen.getByTestId('days-count').textContent).toBe('5');
+    expect(screen.getByTestId('days-count').textContent).toBe('7');
 
     expect(document.documentElement.lang).toBe('ar');
     expect(document.documentElement.dir).toBe('rtl');

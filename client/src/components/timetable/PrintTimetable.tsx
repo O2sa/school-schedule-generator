@@ -74,6 +74,7 @@ export function PrintTimetable({
               assignments={assignments}
               teachers={teachers}
               subjects={subjects}
+              workingDays={config.workingDays}
             />
 
             {/* Signature Block */}

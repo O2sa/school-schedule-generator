@@ -12,7 +12,7 @@ interface DataContextValue {
   service: IDataService;
 }
 
-const DataContext = createContext<DataContextValue | null>(null);
+export const DataContext = createContext<DataContextValue | null>(null);
 
 const STORAGE_KEY = 'app_storage_mode';
 
@@ -44,6 +44,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
       {children}
     </DataContext.Provider>
   );
+}
+
+export function useOptionalData(): DataContextValue | null {
+  return useContext(DataContext);
 }
 
 export function useData(): DataContextValue {

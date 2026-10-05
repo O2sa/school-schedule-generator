@@ -8,19 +8,30 @@ interface MasterMatrixProps {
   teachers: TeacherRecord[];
   subjects: SubjectRecord[];
   assignments: TimetableAssignment[];
+  workingDays?: number[];
+  periodsCount?: number;
 }
-
-const PERIODS = [0, 1, 2, 3, 4, 5, 6];
 
 export function MasterMatrix({
   classes,
   teachers,
   subjects,
   assignments,
+  workingDays,
+  periodsCount,
 }: MasterMatrixProps) {
+  const activeDays = workingDays ?? [0, 1, 2, 3, 4];
+  const maxPeriods = periodsCount || (classes.length > 0 ? Math.max(...classes.map((c) => c.periodsPerDay || 7), 7) : 7);
+  const periods = Array.from({ length: maxPeriods }, (_, i) => i);
   const { t } = useTranslation();
   const DAYS: string[] = t('common.days');
-  const [selectedDay, setSelectedDay] = useState<string>('0');
+  const [selectedDay, setSelectedDay] = useState<string>(() => String(activeDays[0] ?? 0));
+
+  React.useEffect(() => {
+    if (!activeDays.includes(parseInt(selectedDay, 10)) && activeDays.length > 0) {
+      setSelectedDay(String(activeDays[0]));
+    }
+  }, [activeDays, selectedDay]);
   const [filterTeacher, setFilterTeacher] = useState<string>('all');
 
   const teacherMap = new Map(teachers.map((tRec) => [tRec.id, tRec]));
@@ -46,7 +57,7 @@ export function MasterMatrix({
         <Group>
           <Select
             label={t('scheduleView.matrixDayFilter')}
-            data={DAYS.map((d, i) => ({ value: String(i), label: d }))}
+            data={activeDays.map((dIdx) => ({ value: String(dIdx), label: DAYS[dIdx] }))}
             value={selectedDay}
             onChange={(v) => v && setSelectedDay(v)}
             style={{ width: 140 }}
@@ -77,7 +88,7 @@ export function MasterMatrix({
               <Table.Th style={{ width: 140, textAlign: 'center' }}>
                 {t('scheduleView.classSection')}
               </Table.Th>
-              {PERIODS.map((p) => (
+              {periods.map((p) => (
                 <Table.Th key={p} style={{ textAlign: 'center' }}>
                   {t('common.periodNumber', { number: p + 1 })}
                 </Table.Th>
@@ -90,7 +101,7 @@ export function MasterMatrix({
                 <Table.Td fw={700} style={{ background: 'var(--mantine-color-gray-0)' }}>
                   {cls.sectionName}
                 </Table.Td>
-                {PERIODS.map((pIdx) => {
+                {periods.map((pIdx) => {
                   if (pIdx >= cls.periodsPerDay) {
                     return (
                       <Table.Td key={pIdx} p={4} style={{ background: 'var(--mantine-color-gray-2)' }}>

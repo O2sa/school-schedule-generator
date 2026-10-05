@@ -3,10 +3,12 @@ import {
   Modal,
   TextInput,
   Select,
-  Radio,
+  NumberInput,
   Button,
   Group,
   Stack,
+  Text,
+  Badge,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from '../../i18n';
@@ -17,9 +19,18 @@ interface ClassModalProps {
   onClose: () => void;
   onSave: (cls: Omit<ClassRecord, 'id'> & { id?: string }) => Promise<unknown>;
   classRecord?: ClassRecord | null;
+  workingDaysCount?: number;
+  defaultPeriods?: number;
 }
 
-export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalProps) {
+export function ClassModal({
+  opened,
+  onClose,
+  onSave,
+  classRecord,
+  workingDaysCount = 5,
+  defaultPeriods = 6,
+}: ClassModalProps) {
   const { t } = useTranslation();
 
   const form = useForm({
@@ -27,11 +38,12 @@ export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalP
       gradeLevel: 1,
       sectionName: '1 / A',
       roomNumber: '101',
-      periodsPerDay: 6,
+      periodsPerDay: defaultPeriods,
     },
     validate: {
       sectionName: (val) => (val.trim().length >= 2 ? null : t('classModal.sectionLabel')),
       roomNumber: (val) => (val.trim().length >= 1 ? null : t('classModal.roomLabel')),
+      periodsPerDay: (val) => (Number(val) >= 1 && Number(val) <= 12 ? null : t('classModal.periodsPerDayLabel')),
     },
   });
 
@@ -45,25 +57,31 @@ export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalP
       });
     } else {
       form.reset();
+      form.setFieldValue('periodsPerDay', defaultPeriods);
     }
-  }, [classRecord, opened]);
+  }, [classRecord, opened, defaultPeriods]);
 
   const handleGradeChange = (grade: number) => {
     form.setFieldValue('gradeLevel', grade);
-    const periods = grade <= 4 ? 6 : 7;
-    form.setFieldValue('periodsPerDay', periods);
+    if (!classRecord) {
+      const periods = defaultPeriods || (grade <= 4 ? 6 : 7);
+      form.setFieldValue('periodsPerDay', periods);
+    }
   };
 
   const handleSubmit = async (values: typeof form.values) => {
     await onSave({
       ...(classRecord?.id ? { id: classRecord.id } : {}),
-      gradeLevel: values.gradeLevel,
+      gradeLevel: Number(values.gradeLevel),
       sectionName: values.sectionName,
       roomNumber: values.roomNumber,
-      periodsPerDay: values.periodsPerDay,
+      periodsPerDay: Number(values.periodsPerDay) || 6,
     });
     onClose();
   };
+
+  const currentPeriods = Number(form.values.periodsPerDay) || 0;
+  const weeklyLectures = currentPeriods * workingDaysCount;
 
   return (
     <Modal
@@ -99,17 +117,42 @@ export function ClassModal({ opened, onClose, onSave, classRecord }: ClassModalP
             {...form.getInputProps('roomNumber')}
           />
 
-          <Radio.Group
-            label={t('classModal.periodsPerDayLabel')}
-            description={t('classModal.periodsPerDayDesc')}
-            value={String(form.values.periodsPerDay)}
-            onChange={(val) => form.setFieldValue('periodsPerDay', parseInt(val, 10))}
-          >
-            <Group mt="xs" wrap="wrap">
-              <Radio value="6" label={t('classModal.sixPeriodsOption')} />
-              <Radio value="7" label={t('classModal.sevenPeriodsOption')} />
+          <div>
+            <NumberInput
+              id="periodsPerDay"
+              label={t('classModal.periodsPerDayLabel')}
+              description={t('classModal.periodsPerDayDesc')}
+              min={1}
+              max={12}
+              step={1}
+              required
+              value={form.values.periodsPerDay}
+              onChange={(val) =>
+                form.setFieldValue(
+                  'periodsPerDay',
+                  typeof val === 'number' ? val : (parseInt(String(val), 10) || 6)
+                )
+              }
+            />
+
+            <Group gap="xs" mt="xs" align="center" wrap="wrap">
+              <Text size="xs" c="dimmed">{t('classModal.presetPeriods')}</Text>
+              {[6, 7, 8].map((count) => (
+                <Button
+                  key={count}
+                  size="compact-xs"
+                  variant={currentPeriods === count ? 'filled' : 'subtle'}
+                  color="indigo"
+                  onClick={() => form.setFieldValue('periodsPerDay', count)}
+                >
+                  {count}
+                </Button>
+              ))}
+              <Badge color="indigo" variant="light" size="sm" ml="auto">
+                {t('classModal.calculatedWeekly', { count: weeklyLectures, days: workingDaysCount })}
+              </Badge>
             </Group>
-          </Radio.Group>
+          </div>
 
           <Group justify="flex-end" mt="md">
             <Button variant="default" onClick={onClose}>

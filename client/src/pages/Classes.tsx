@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconPlus, IconSearch, IconEdit, IconTrash } from '@tabler/icons-react';
-import { useClasses, useClassMutations } from '../api/queries/useSchoolData';
+import { useClasses, useClassMutations, useSchoolConfig } from '../api/queries/useSchoolData';
 import { PageHeader } from '../components/common/PageHeader';
 import { ClassModal } from '../components/forms/ClassModal';
 import { useTranslation } from '../i18n';
@@ -22,6 +22,7 @@ import type { ClassRecord } from '../api/types';
 export function Classes() {
   const { data: classes = [], isLoading } = useClasses();
   const { saveClass, deleteClass } = useClassMutations();
+  const { data: config } = useSchoolConfig();
   const { t } = useTranslation();
 
   const [search, setSearch] = useState('');
@@ -133,6 +134,8 @@ export function Classes() {
         onClose={() => setModalOpened(false)}
         onSave={saveClass}
         classRecord={editingClass}
+        workingDaysCount={config?.workingDays?.length || 5}
+        defaultPeriods={config?.periodsPerDayDefault || 6}
       />
     </div>
   );

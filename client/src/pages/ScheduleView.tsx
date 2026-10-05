@@ -349,6 +349,7 @@ export function ScheduleView() {
               teachers={teachers}
               subjects={subjects}
               editorProps={editorProps}
+              workingDays={config?.workingDays}
             />
           )}
 
@@ -359,6 +360,8 @@ export function ScheduleView() {
               classes={classes}
               subjects={subjects}
               editorProps={editorProps}
+              workingDays={config?.workingDays}
+              periodsCount={config?.periodsPerDayDefault}
             />
           )}
 
@@ -368,6 +371,8 @@ export function ScheduleView() {
               teachers={teachers}
               subjects={subjects}
               assignments={currentAssignments}
+              workingDays={config?.workingDays}
+              periodsCount={config?.periodsPerDayDefault}
             />
           )}
 

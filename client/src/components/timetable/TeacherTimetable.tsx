@@ -10,10 +10,9 @@ interface TeacherTimetableProps {
   classes: ClassRecord[];
   subjects: SubjectRecord[];
   editorProps?: TimetableEditorProps;
+  workingDays?: number[];
+  periodsCount?: number;
 }
-
-
-const PERIODS = [0, 1, 2, 3, 4, 5, 6];
 
 export function TeacherTimetable({
   teacher,
@@ -21,7 +20,12 @@ export function TeacherTimetable({
   classes,
   subjects,
   editorProps,
+  workingDays,
+  periodsCount,
 }: TeacherTimetableProps) {
+  const activeDays = workingDays ?? [0, 1, 2, 3, 4];
+  const maxPeriods = periodsCount || (classes.length > 0 ? Math.max(...classes.map((c) => c.periodsPerDay || 7), 7) : 7);
+  const periods = Array.from({ length: maxPeriods }, (_, i) => i);
   const { t } = useTranslation();
   const DAYS: string[] = t('common.days');
   const classMap = new Map(classes.map((c) => [c.id, c]));
@@ -68,7 +72,7 @@ export function TeacherTimetable({
           <Table.Thead>
             <Table.Tr style={{ background: 'var(--mantine-color-gray-1)' }}>
               <Table.Th style={{ textAlign: 'center', width: 90, minWidth: 80, whiteSpace: 'nowrap' }}>{t('scheduleView.matrixDayFilter')}</Table.Th>
-              {PERIODS.map((p) => (
+              {periods.map((p) => (
                 <Table.Th key={p} style={{ textAlign: 'center', minWidth: 85, whiteSpace: 'nowrap' }}>
                   {t('common.periodNumber', { number: p + 1 })}
                 </Table.Th>
@@ -76,12 +80,14 @@ export function TeacherTimetable({
             </Table.Tr>
           </Table.Thead>
         <Table.Tbody>
-          {DAYS.map((dayName, dIdx) => (
+          {activeDays.map((dIdx) => {
+            const dayName = DAYS[dIdx];
+            return (
             <Table.Tr key={dIdx}>
               <Table.Td fw={700} style={{ background: 'var(--mantine-color-gray-0)' }}>
                 {dayName}
               </Table.Td>
-              {PERIODS.map((pIdx) => {
+              {periods.map((pIdx) => {
                 const blocked = isBlocked(dIdx, pIdx);
                 const item = grid.get(`${dIdx}__${pIdx}`);
                 const slotKey = `${dIdx}__${pIdx}`;
@@ -233,7 +239,8 @@ export function TeacherTimetable({
                 );
               })}
             </Table.Tr>
-          ))}
+          );
+          })}
         </Table.Tbody>
         </Table>
       </Table.ScrollContainer>
