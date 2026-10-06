@@ -17,7 +17,7 @@ import {
   getLargestPropertyValue,
   getWeekDays,
   groupBy,
-} from "../shedule_generator/utils.js";
+} from "../utils/helpers.js";
 
 const withValidationErrors = (validateValues) => {
   return [

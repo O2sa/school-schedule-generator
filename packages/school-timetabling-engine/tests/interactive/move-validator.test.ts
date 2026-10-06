@@ -10,17 +10,17 @@ import {
 
 const mockInput: TimetableInput = {
   days: [
-    { id: 0, name: 'الأحد' },
-    { id: 1, name: 'الإثنين' },
+    { id: 0, name: 'Day 1' },
+    { id: 1, name: 'Day 2' },
   ],
   periodsPerDay: 4,
   classes: [
-    { id: 'cls_1', name: 'الصف 10أ', periodsPerDay: 4 },
-    { id: 'cls_2', name: 'الصف 10ب', periodsPerDay: 4 },
+    { id: 'cls_1', name: 'Class 10A', lecturesPerDay: 4 },
+    { id: 'cls_2', name: 'Class 10B', lecturesPerDay: 4 },
   ],
   teachers: [
-    { id: 't_1', name: 'أحمد', maxPeriodsPerDay: 3, blockedSlots: [{ day: 0, period: 3 }] },
-    { id: 't_2', name: 'سارة', maxPeriodsPerDay: 4, blockedSlots: [] },
+    { id: 't_1', name: 'Teacher 1', workingDays: [0, 1], maxLecturesPerDay: 3, blockedSlots: [{ day: 0, period: 3 }] },
+    { id: 't_2', name: 'Teacher 2', workingDays: [0, 1], maxLecturesPerDay: 4, blockedSlots: [] },
   ],
   requirements: [
     { id: 'req_1', classId: 'cls_1', teacherId: 't_1', lecturesPerWeek: 2 },

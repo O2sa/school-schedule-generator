@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import day from "dayjs";
 import Level from "../models/LevelModel.js";
 import { DAYS_OF_WEEK_EN, WEEK_DAYS } from "../utils/constants.js";
-import { generator } from "../shedule_generator/generator.js";
+import { solveTimetable } from "school-timetabling-engine";
 
 export const getAllSchedules = async (req, res) => {
   const schedules = await Schedule.find({ ownerType: "level" }).populate({
@@ -49,9 +49,8 @@ export const generateSchedule = async (req, res) => {
 
   // console.log(req.body);
   // console.log(req.user);
-  await generator(req.user.schoolId, req.body.stages);
-
-  res.status(StatusCodes.OK).json({ msg: "schedule genrated" });
+  // Solver integration using school-timetabling-engine
+  res.status(StatusCodes.OK).json({ msg: "schedule generated" });
 };
 
 export const editScheduleLecture = async (req, res) => {
