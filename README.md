@@ -1,7 +1,7 @@
 # 📅 School Schedule Generator
 
 <p align="center">
-  <img src="./school-schedule.png" alt="School Schedule Generator Interface Screenshot" width="750"/>
+  <img src="./school-schedule.png" alt="School Schedule Generator Interface Screenshot" width="820"/>
 </p>
 
 <p align="center">
