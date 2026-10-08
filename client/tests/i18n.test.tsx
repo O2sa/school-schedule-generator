@@ -107,6 +107,7 @@ describe('i18n - Dictionary Completeness & Integrity', () => {
       'generator',
       'scheduleView',
       'settings',
+      'landing',
     ];
 
     for (const section of requiredSections) {
