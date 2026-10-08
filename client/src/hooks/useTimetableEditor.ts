@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   validateMoveOrSwap,
   computeValidSlotsForLecture,
@@ -56,14 +56,27 @@ export function useTimetableEditor({
   const [selectedSlot, setSelectedSlot] = useState<SelectedSlotInfo | null>(null);
   const [lastConflict, setLastConflict] = useState<MoveValidationResult | null>(null);
 
-  // Sync with initialAssignments if not currently editing
+  const initialAssignmentsRef = useRef(initialAssignments);
+  initialAssignmentsRef.current = initialAssignments;
+
+  const onSaveRef = useRef(onSave);
+  onSaveRef.current = onSave;
+
+  const onConflictRef = useRef(onConflict);
+  onConflictRef.current = onConflict;
+
+  // Sync with initialAssignments if not currently editing without triggering loop
   useEffect(() => {
     if (!isEditing) {
-      setDraftAssignments(initialAssignments);
-      setHistory([]);
-      setFuture([]);
-      setSelectedSlot(null);
-      setLastConflict(null);
+      setDraftAssignments((prev) => {
+        if (prev === initialAssignments) return prev;
+        if (prev.length === 0 && initialAssignments.length === 0) return prev;
+        return initialAssignments;
+      });
+      setHistory((prev) => (prev.length === 0 ? prev : []));
+      setFuture((prev) => (prev.length === 0 ? prev : []));
+      setSelectedSlot((prev) => (prev === null ? prev : null));
+      setLastConflict((prev) => (prev === null ? prev : null));
     }
   }, [initialAssignments, isEditing]);
 
@@ -90,7 +103,7 @@ export function useTimetableEditor({
       const next = !prev;
       if (!next) {
         // Discard edits when toggled off
-        setDraftAssignments(initialAssignments);
+        setDraftAssignments(initialAssignmentsRef.current);
         setHistory([]);
         setFuture([]);
         setSelectedSlot(null);
@@ -98,7 +111,7 @@ export function useTimetableEditor({
       }
       return next;
     });
-  }, [initialAssignments]);
+  }, []);
 
   const selectSlot = useCallback(
     (dayIndex: number, periodIndex: number, assignment: TimetableAssignment) => {
@@ -138,7 +151,7 @@ export function useTimetableEditor({
 
       if (!validation.valid) {
         setLastConflict(validation);
-        onConflict?.(validation);
+        onConflictRef.current?.(validation);
         return false;
       }
 
@@ -152,7 +165,7 @@ export function useTimetableEditor({
       setLastConflict(null);
       return true;
     },
-    [isEditing, selectedSlot, input, draftAssignments, onConflict]
+    [isEditing, selectedSlot, input, draftAssignments]
   );
 
   const undo = useCallback(() => {
@@ -176,23 +189,23 @@ export function useTimetableEditor({
   }, [future, draftAssignments]);
 
   const discardChanges = useCallback(() => {
-    setDraftAssignments(initialAssignments);
+    setDraftAssignments(initialAssignmentsRef.current);
     setHistory([]);
     setFuture([]);
     setSelectedSlot(null);
     setLastConflict(null);
     setIsEditing(false);
-  }, [initialAssignments]);
+  }, []);
 
   const saveChanges = useCallback(async () => {
-    if (!onSave) return;
-    await onSave(draftAssignments);
+    if (!onSaveRef.current) return;
+    await onSaveRef.current(draftAssignments);
     setHistory([]);
     setFuture([]);
     setSelectedSlot(null);
     setLastConflict(null);
     setIsEditing(false);
-  }, [draftAssignments, onSave]);
+  }, [draftAssignments]);
 
   return {
     isEditing,

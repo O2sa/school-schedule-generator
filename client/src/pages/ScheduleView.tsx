@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   Card,
   Group,
@@ -47,7 +47,15 @@ import { PrintTimetable } from '../components/timetable/PrintTimetable';
 import { useTimetableEditor } from '../hooks/useTimetableEditor';
 import { buildTimetableInput } from '../api/worker/solver-adapter';
 import { useTranslation } from '../i18n';
-import type { TimetableInput } from 'school-timetabling-engine';
+import type { TimetableInput, MoveValidationResult, TimetableAssignment } from 'school-timetabling-engine';
+import type { ClassRecord, TeacherRecord, SubjectRecord, CurriculumRequirementRecord } from '../api/types';
+
+// Stable empty fallbacks to avoid creating new array instances on each render
+const EMPTY_CLASSES: ClassRecord[] = [];
+const EMPTY_TEACHERS: TeacherRecord[] = [];
+const EMPTY_SUBJECTS: SubjectRecord[] = [];
+const EMPTY_CURRICULUM: CurriculumRequirementRecord[] = [];
+const EMPTY_ASSIGNMENTS: TimetableAssignment[] = [];
 
 export function ScheduleView() {
   const navigate = useNavigate();
@@ -56,12 +64,18 @@ export function ScheduleView() {
   const isDark = computedColorScheme === 'dark';
 
   const { data: schedule, isLoading: scheduleLoading } = useActiveSchedule();
-  const { data: classes = [], isLoading: classesLoading } = useClasses();
-  const { data: teachers = [], isLoading: teachersLoading } = useTeachers();
-  const { data: subjects = [], isLoading: subjectsLoading } = useSubjects();
-  const { data: curriculum = [], isLoading: curriculumLoading } = useCurriculum();
+  const { data: classesData, isLoading: classesLoading } = useClasses();
+  const { data: teachersData, isLoading: teachersLoading } = useTeachers();
+  const { data: subjectsData, isLoading: subjectsLoading } = useSubjects();
+  const { data: curriculumData, isLoading: curriculumLoading } = useCurriculum();
   const { data: config } = useSchoolConfig();
   const { saveSchedule } = useScheduleActions();
+
+  const classes = classesData ?? EMPTY_CLASSES;
+  const teachers = teachersData ?? EMPTY_TEACHERS;
+  const subjects = subjectsData ?? EMPTY_SUBJECTS;
+  const curriculum = curriculumData ?? EMPTY_CURRICULUM;
+  const initialAssignments = schedule?.assignments ?? EMPTY_ASSIGNMENTS;
 
   const isLoading = scheduleLoading || classesLoading || teachersLoading || subjectsLoading || curriculumLoading;
 
@@ -79,11 +93,8 @@ export function ScheduleView() {
     return buildTimetableInput({ config, classes, teachers, subjects, curriculum });
   }, [config, classes, teachers, subjects, curriculum]);
 
-  // Hook into interactive editing state
-  const editor = useTimetableEditor({
-    input: timetableInput,
-    initialAssignments: schedule?.assignments || [],
-    onSave: async (updated) => {
+  const handleSave = useCallback(
+    async (updated: TimetableAssignment[]) => {
       if (!schedule) return;
       setIsSaving(true);
       try {
@@ -106,7 +117,11 @@ export function ScheduleView() {
         setIsSaving(false);
       }
     },
-    onConflict: (validation) => {
+    [schedule, saveSchedule, t]
+  );
+
+  const handleConflict = useCallback(
+    (validation: MoveValidationResult) => {
       const firstMsg = validation.conflicts[0]?.message || t('generator.errorTitle');
       notifications.show({
         title: t('generator.errorTitle'),
@@ -114,37 +129,48 @@ export function ScheduleView() {
         color: 'red',
       });
     },
+    [t]
+  );
+
+  // Hook into interactive editing state
+  const editor = useTimetableEditor({
+    input: timetableInput,
+    initialAssignments,
+    onSave: handleSave,
+    onConflict: handleConflict,
   });
+
+  const { isEditing, redo, undo, clearSelection } = editor;
 
   // Global keyboard shortcuts for editing (Ctrl+Z, Ctrl+Y, Esc)
   useEffect(() => {
-    if (!editor.isEditing) return;
+    if (!isEditing) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
         e.preventDefault();
         if (e.shiftKey) {
-          editor.redo();
+          redo();
         } else {
-          editor.undo();
+          undo();
         }
       } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
         e.preventDefault();
-        editor.redo();
+        redo();
       } else if (e.key === 'Escape') {
         e.preventDefault();
-        editor.clearSelection();
+        clearSelection();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [editor]);
+  }, [isEditing, redo, undo, clearSelection]);
 
   // Active assignments to render (draft if editing, otherwise saved)
-  const currentAssignments = editor.isEditing ? editor.draftAssignments : (schedule?.assignments || []);
+  const currentAssignments = editor.isEditing ? editor.draftAssignments : initialAssignments;
 
-  const editorProps = {
+  const editorProps = useMemo(() => ({
     isEditing: editor.isEditing,
     selectedSlot: editor.selectedSlot,
     validTargets: editor.validTargets,
@@ -159,7 +185,7 @@ export function ScheduleView() {
     },
     onDropSlot: editor.executeMoveOrSwap,
     onClearSelection: editor.clearSelection,
-  };
+  }), [editor]);
 
   return (
     <div>

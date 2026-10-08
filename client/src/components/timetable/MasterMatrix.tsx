@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+
+const DEFAULT_WORKING_DAYS = [0, 1, 2, 3, 4];
 import { Table, Card, Select, Group, Text, useComputedColorScheme } from '@mantine/core';
 import type { ClassRecord, TeacherRecord, SubjectRecord, TimetableAssignment } from '../../api/types';
 import { useTranslation } from '../../i18n';
@@ -20,7 +22,7 @@ export function MasterMatrix({
   workingDays,
   periodsCount,
 }: MasterMatrixProps) {
-  const activeDays = workingDays ?? [0, 1, 2, 3, 4];
+  const activeDays = workingDays ?? DEFAULT_WORKING_DAYS;
   const maxPeriods = periodsCount || (classes.length > 0 ? Math.max(...classes.map((c) => c.periodsPerDay || 7), 7) : 7);
   const periods = Array.from({ length: maxPeriods }, (_, i) => i);
   const { t } = useTranslation();
