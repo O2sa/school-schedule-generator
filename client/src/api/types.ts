@@ -138,5 +138,5 @@ export interface IDataService {
   // Backup & Portability
   exportBackup(): Promise<SchoolBackupPayload>;
   importBackup(payload: SchoolBackupPayload): Promise<void>;
-  preloadDemoData(): Promise<void>;
+  preloadDemoData(options?: { preset?: 'k12' | 'secondary' | 'primary'; language?: 'ar' | 'en' }): Promise<void>;
 }

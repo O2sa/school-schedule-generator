@@ -20,11 +20,13 @@ import {
   IconCloud,
   IconCheck,
   IconCalendarWeek,
+  IconSparkles,
 } from '@tabler/icons-react';
 import { useSchoolConfig } from '../api/queries/useSchoolData';
 import { useDataService, useStorageMode } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
 import { useTranslation } from '../i18n';
+import { DemoDataModal } from '../components/common/DemoDataModal';
 
 // Ordering: Saturday (6), Sunday (0), Monday (1), Tuesday (2), Wednesday (3), Thursday (4), Friday (5)
 const ALL_DAYS_ORDER = [6, 0, 1, 2, 3, 4, 5];
@@ -44,6 +46,7 @@ export function Settings() {
 
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [importFile, setImportFile] = useState<File | null>(null);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
 
   useEffect(() => {
     if (config) {
@@ -306,13 +309,23 @@ export function Settings() {
         </Text>
 
         <Group align="flex-end" justify="space-between" wrap="wrap" gap="md">
-          <Button
-            leftSection={<IconDownload size={18} />}
-            color="indigo"
-            onClick={handleExportBackup}
-          >
-            {t('settings.exportBtn')}
-          </Button>
+          <Group wrap="wrap" gap="sm">
+            <Button
+              variant="light"
+              color="teal"
+              leftSection={<IconSparkles size={18} />}
+              onClick={() => setDemoModalOpen(true)}
+            >
+              {t('settings.loadSampleDataset')}
+            </Button>
+            <Button
+              leftSection={<IconDownload size={18} />}
+              color="indigo"
+              onClick={handleExportBackup}
+            >
+              {t('settings.exportBtn')}
+            </Button>
+          </Group>
 
           <Group align="flex-end" wrap="wrap" gap="xs">
             <FileInput
@@ -333,6 +346,12 @@ export function Settings() {
           </Group>
         </Group>
       </Card>
+
+      <DemoDataModal
+        opened={demoModalOpen}
+        onClose={() => setDemoModalOpen(false)}
+        onSuccess={() => window.location.reload()}
+      />
     </div>
   );
 }

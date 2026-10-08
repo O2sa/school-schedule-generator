@@ -11,7 +11,7 @@ import type {
   SolverOptions,
   SolverProgress,
 } from './types';
-import { DEFAULT_SCHOOL_CONFIG, generateArabicK12DemoData } from './demo-data';
+import { DEFAULT_SCHOOL_CONFIG, generateDemoData, type DemoDataOptions } from './demo-data';
 import { runSolver, cancelActiveSolver } from './worker/worker-client';
 
 export class RemoteDataService implements IDataService {
@@ -221,8 +221,8 @@ export class RemoteDataService implements IDataService {
     await this.http.post('/backup/import', payload);
   }
 
-  async preloadDemoData(): Promise<void> {
-    const demo = generateArabicK12DemoData();
+  async preloadDemoData(options?: DemoDataOptions): Promise<void> {
+    const demo = generateDemoData(options);
     await this.importBackup({
       version: 1,
       exportedAt: new Date().toISOString(),

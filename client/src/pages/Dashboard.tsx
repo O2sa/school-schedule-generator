@@ -29,6 +29,7 @@ import {
 import { useDataService, useStorageMode } from '../api/data-context';
 import { PageHeader } from '../components/common/PageHeader';
 import { useTranslation } from '../i18n';
+import { DemoDataModal } from '../components/common/DemoDataModal';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -40,23 +41,17 @@ export function Dashboard() {
   const { data: classes = [], refetch: refetchClasses } = useClasses();
   const { data: subjects = [], refetch: refetchSubjects } = useSubjects();
   const { data: activeSchedule, refetch: refetchSchedule } = useActiveSchedule();
-  const { data: config } = useSchoolConfig();
+  const { data: config, refetch: refetchConfig } = useSchoolConfig();
+  const [demoModalOpen, setDemoModalOpen] = React.useState(false);
 
-  const [preloading, setPreloading] = React.useState(false);
-
-  const handlePreloadDemo = async () => {
-    setPreloading(true);
-    try {
-      await service.preloadDemoData();
-      await Promise.all([
-        refetchTeachers(),
-        refetchClasses(),
-        refetchSubjects(),
-        refetchSchedule(),
-      ]);
-    } finally {
-      setPreloading(false);
-    }
+  const handleDemoSuccess = async () => {
+    await Promise.all([
+      refetchConfig(),
+      refetchTeachers(),
+      refetchClasses(),
+      refetchSubjects(),
+      refetchSchedule(),
+    ]);
   };
 
   return (
@@ -102,8 +97,7 @@ export function Dashboard() {
               color="teal"
               variant="filled"
               leftSection={<IconSparkles size={18} />}
-              loading={preloading}
-              onClick={handlePreloadDemo}
+              onClick={() => setDemoModalOpen(true)}
             >
               {t('dashboard.preloadDemo')}
             </Button>
@@ -284,6 +278,12 @@ export function Dashboard() {
           </Card>
         </Grid.Col>
       </Grid>
+
+      <DemoDataModal
+        opened={demoModalOpen}
+        onClose={() => setDemoModalOpen(false)}
+        onSuccess={handleDemoSuccess}
+      />
     </div>
   );
 }

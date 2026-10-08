@@ -1,7 +1,7 @@
 import { validateTeacherCapacity } from "school-timetabling-engine";
 import { runSolver, cancelActiveSolver } from './worker/worker-client';
 import { db } from './db';
-import { DEFAULT_SCHOOL_CONFIG, generateArabicK12DemoData } from './demo-data';
+import { DEFAULT_SCHOOL_CONFIG, generateDemoData, type DemoDataOptions } from './demo-data';
 import type {
   IDataService,
   SchoolConfigRecord,
@@ -219,8 +219,8 @@ export class LocalDataService implements IDataService {
     });
   }
 
-  async preloadDemoData(): Promise<void> {
-    const demo = generateArabicK12DemoData();
+  async preloadDemoData(options?: DemoDataOptions): Promise<void> {
+    const demo = generateDemoData(options);
     await this.importBackup({
       version: 1,
       exportedAt: new Date().toISOString(),
