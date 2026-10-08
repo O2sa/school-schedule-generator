@@ -224,7 +224,7 @@ export function ScheduleView() {
             <Button
               color="indigo"
               leftSection={<IconCpu size={16} />}
-              onClick={() => navigate('/generator')}
+              onClick={() => navigate('/app/generator')}
             >
               {t('scheduleView.goToGenerator')}
             </Button>

@@ -12,6 +12,7 @@ import {
   ActionIcon,
   Tooltip,
   Box,
+  Button,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -24,6 +25,7 @@ import {
   IconSettings,
   IconSun,
   IconMoon,
+  IconHome,
 } from '@tabler/icons-react';
 import { ModeToggleBadge } from '../components/common/ModeToggleBadge';
 import { LanguageToggle } from '../components/common/LanguageToggle';
@@ -34,17 +36,19 @@ export function AppLayout() {
   const location = useLocation();
   const { colorScheme, setColorScheme, clearColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const navItems = [
-    { label: t('nav.dashboard'), to: '/', icon: IconDashboard },
-    { label: t('nav.teachers'), to: '/teachers', icon: IconUsers },
-    { label: t('nav.classes'), to: '/classes', icon: IconSchool },
-    { label: t('nav.curriculum'), to: '/curriculum', icon: IconBook },
-    { label: t('nav.generator'), to: '/generator', icon: IconCpu },
-    { label: t('nav.schedule'), to: '/schedule', icon: IconCalendarTime },
-    { label: t('nav.settings'), to: '/settings', icon: IconSettings },
+    { label: t('nav.dashboard'), to: '/app', icon: IconDashboard },
+    { label: t('nav.teachers'), to: '/app/teachers', icon: IconUsers },
+    { label: t('nav.classes'), to: '/app/classes', icon: IconSchool },
+    { label: t('nav.curriculum'), to: '/app/curriculum', icon: IconBook },
+    { label: t('nav.generator'), to: '/app/generator', icon: IconCpu },
+    { label: t('nav.schedule'), to: '/app/schedule', icon: IconCalendarTime },
+    { label: t('nav.settings'), to: '/app/settings', icon: IconSettings },
   ];
+
+  const landingHref = language === 'ar' ? '/ar' : '/en';
 
   return (
     <AppShell
@@ -60,7 +64,13 @@ export function AppLayout() {
         <Group h="100%" px="md" justify="space-between">
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Group gap="xs">
+            <Group
+              component={RouterNavLink}
+              to={landingHref}
+              gap="xs"
+              style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+              title="Return to Landing Page"
+            >
               <IconCalendarTime size={26} color="var(--mantine-color-indigo-6)" />
               <Title order={3} size="h4" visibleFrom="xs">
                 {t('nav.appTitle')}
@@ -69,6 +79,16 @@ export function AppLayout() {
           </Group>
 
           <Group gap="sm">
+            <Button
+              component={RouterNavLink}
+              to={landingHref}
+              variant="subtle"
+              size="xs"
+              leftSection={<IconHome size={14} />}
+              visibleFrom="sm"
+            >
+              {language === 'ar' ? 'الرئيسية' : 'Home'}
+            </Button>
             <ModeToggleBadge />
             <LanguageToggle />
             <Tooltip
@@ -103,8 +123,8 @@ export function AppLayout() {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
-                item.to === '/'
-                  ? location.pathname === '/'
+                item.to === '/app'
+                  ? location.pathname === '/app' || location.pathname === '/app/' || location.pathname === '/app/dashboard'
                   : location.pathname.startsWith(item.to);
 
               return (

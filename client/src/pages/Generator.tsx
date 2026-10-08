@@ -240,7 +240,7 @@ export function Generator() {
                   <Button
                     color="teal"
                     leftSection={<IconCalendarTime size={16} />}
-                    onClick={() => navigate('/schedule')}
+                    onClick={() => navigate('/app/schedule')}
                   >
                     {t('generator.viewSchedule')}
                   </Button>

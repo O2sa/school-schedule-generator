@@ -106,7 +106,7 @@ export function Dashboard() {
               variant="white"
               color="indigo"
               leftSection={<IconCpu size={18} />}
-              onClick={() => navigate('/generator')}
+              onClick={() => navigate('/app/generator')}
             >
               {t('dashboard.generateSchedule')}
             </Button>
@@ -212,7 +212,7 @@ export function Dashboard() {
             radius="md"
             p="md"
             style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/classes')}
+            onClick={() => navigate('/app/classes')}
           >
             <Group>
               <ThemeIcon size="lg" color="indigo" radius="md">
@@ -236,7 +236,7 @@ export function Dashboard() {
             radius="md"
             p="md"
             style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/curriculum')}
+            onClick={() => navigate('/app/curriculum')}
           >
             <Group>
               <ThemeIcon size="lg" color="teal" radius="md">
@@ -260,7 +260,7 @@ export function Dashboard() {
             radius="md"
             p="md"
             style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/schedule')}
+            onClick={() => navigate('/app/schedule')}
           >
             <Group>
               <ThemeIcon size="lg" color="blue" radius="md">
