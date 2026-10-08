@@ -203,3 +203,56 @@ describe('AppLayout Theme Toggle System Integration', () => {
     unmount();
   });
 });
+
+import { BRAND_GRADIENT, BRAND_GRADIENT_HORIZONTAL, SUCCESS_GRADIENT } from '../src/theme/theme';
+import { DashboardMetricCard } from '../src/components/common/DashboardMetricCard';
+import { PageHeader } from '../src/components/common/PageHeader';
+import { IconUsers } from '@tabler/icons-react';
+
+describe('Design Tokens, PageHeader & DashboardMetricCard', () => {
+  it('exports brand gradients matching the landing page palette', () => {
+    expect(BRAND_GRADIENT).toContain('#4f46e5');
+    expect(BRAND_GRADIENT).toContain('#06b6d4');
+    expect(BRAND_GRADIENT_HORIZONTAL).toContain('linear-gradient(90deg');
+    expect(SUCCESS_GRADIENT).toBeDefined();
+  });
+
+  it('renders DashboardMetricCard with title, value, icon, and status badge', () => {
+    render(
+      <MantineProvider theme={theme}>
+        <DashboardMetricCard
+          title="Active Teachers"
+          value={32}
+          icon={IconUsers}
+          gradient="linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)"
+          badgeLabel="Full Capacity"
+          badgeColor="teal"
+          subtext="18 periods assigned weekly"
+        />
+      </MantineProvider>
+    );
+
+    expect(screen.getByText('Active Teachers')).toBeDefined();
+    expect(screen.getByText('32')).toBeDefined();
+    expect(screen.getByText('Full Capacity')).toBeDefined();
+    expect(screen.getByText('18 periods assigned weekly')).toBeDefined();
+  });
+
+  it('renders enhanced PageHeader with category badge and action items', () => {
+    render(
+      <MantineProvider theme={theme}>
+        <PageHeader
+          categoryBadge="System Management"
+          title="Teacher Roster"
+          subtitle="Configure teachers and availability"
+          actions={<button type="button">Add Teacher</button>}
+        />
+      </MantineProvider>
+    );
+
+    expect(screen.getByText('System Management')).toBeDefined();
+    expect(screen.getByText('Teacher Roster')).toBeDefined();
+    expect(screen.getByText('Configure teachers and availability')).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Add Teacher' })).toBeDefined();
+  });
+});
