@@ -119,6 +119,7 @@ export function Settings() {
   return (
     <div>
       <PageHeader
+        categoryBadge={t('nav.settings') || 'إعدادات النظام'}
         title={t('settings.title')}
         subtitle={t('settings.subtitle')}
       />

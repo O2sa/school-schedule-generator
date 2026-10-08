@@ -70,10 +70,18 @@ export function Teachers() {
   return (
     <div>
       <PageHeader
+        categoryBadge={t('nav.teachers') || 'المعلمون'}
         title={t('teachers.title')}
         subtitle={t('teachers.subtitle', { count: teachers.length })}
         actions={
-          <Button leftSection={<IconPlus size={16} />} color="indigo" onClick={handleAdd}>
+          <Button
+            variant="gradient"
+            gradient={{ from: 'indigo', to: 'cyan', deg: 90 }}
+            radius="md"
+            leftSection={<IconPlus size={16} />}
+            onClick={handleAdd}
+            style={{ fontWeight: 700, boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)' }}
+          >
             {t('teachers.add')}
           </Button>
         }

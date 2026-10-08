@@ -190,6 +190,7 @@ export function ScheduleView() {
   return (
     <div>
       <PageHeader
+        categoryBadge={t('nav.schedule') || 'الجداول المدرسية'}
         title={t('scheduleView.title')}
         subtitle={
           schedule
@@ -202,10 +203,13 @@ export function ScheduleView() {
         actions={
           schedule && schedule.assignments.length > 0 && activeTab !== 'print' && activeTab !== 'master' ? (
             <Button
-              variant={editor.isEditing ? 'filled' : 'light'}
-              color={editor.isEditing ? 'teal' : 'indigo'}
+              variant={editor.isEditing ? 'filled' : 'gradient'}
+              gradient={editor.isEditing ? undefined : { from: 'indigo', to: 'cyan', deg: 90 }}
+              color={editor.isEditing ? 'teal' : undefined}
+              radius="md"
               leftSection={editor.isEditing ? <IconCheck size={18} /> : <IconPencil size={18} />}
               onClick={editor.toggleEditMode}
+              style={editor.isEditing ? { fontWeight: 700 } : { fontWeight: 700, boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)' }}
             >
               {editor.isEditing ? t('scheduleView.exitEdit') : t('scheduleView.enterEdit')}
             </Button>
@@ -216,7 +220,7 @@ export function ScheduleView() {
       {isLoading ? (
         <Center p="xl"><Loader /></Center>
       ) : !schedule || schedule.assignments.length === 0 ? (
-        <Card withBorder radius="md" p="xl">
+        <Card withBorder radius="lg" p="xl">
           <Alert color="indigo" title={t('scheduleView.noScheduleTitle')} icon={<IconInfoCircle size={20} />}>
             <Text size="sm" mb="md">
               {t('scheduleView.noScheduleDesc')}
@@ -314,7 +318,7 @@ export function ScheduleView() {
           )}
 
           {/* View Mode Selector Tabs */}
-          <Card withBorder radius="md" p="sm" mb="md" className="no-print">
+          <Card withBorder radius="lg" p="sm" mb="md" className="no-print">
             <Group justify="space-between" align="center" wrap="wrap" gap="sm">
               <Tabs
                 value={activeTab}
