@@ -36,7 +36,7 @@ export function AppLayout() {
   const location = useLocation();
   const { colorScheme, setColorScheme, clearColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
-  const { t, language } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const navItems = [
     { label: t('nav.dashboard'), to: '/app', icon: IconDashboard },
@@ -48,7 +48,7 @@ export function AppLayout() {
     { label: t('nav.settings'), to: '/app/settings', icon: IconSettings },
   ];
 
-  const landingHref = language === 'ar' ? '/ar' : '/en';
+  const landingHref = locale === 'ar' ? '/ar' : '/en';
 
   return (
     <AppShell
@@ -64,18 +64,18 @@ export function AppLayout() {
         <Group h="100%" px="md" justify="space-between">
           <Group>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Group
-              component={RouterNavLink}
+            <RouterNavLink
               to={landingHref}
-              gap="xs"
               style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
               title="Return to Landing Page"
             >
-              <IconCalendarTime size={26} color="var(--mantine-color-indigo-6)" />
-              <Title order={3} size="h4" visibleFrom="xs">
-                {t('nav.appTitle')}
-              </Title>
-            </Group>
+              <Group gap="xs">
+                <IconCalendarTime size={26} color="var(--mantine-color-indigo-6)" />
+                <Title order={3} size="h4" visibleFrom="xs">
+                  {t('nav.appTitle')}
+                </Title>
+              </Group>
+            </RouterNavLink>
           </Group>
 
           <Group gap="sm">
@@ -87,7 +87,7 @@ export function AppLayout() {
               leftSection={<IconHome size={14} />}
               visibleFrom="sm"
             >
-              {language === 'ar' ? 'الرئيسية' : 'Home'}
+              {locale === 'ar' ? 'الرئيسية' : 'Home'}
             </Button>
             <ModeToggleBadge />
             <LanguageToggle />

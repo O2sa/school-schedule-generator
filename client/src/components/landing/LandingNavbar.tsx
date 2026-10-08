@@ -26,11 +26,12 @@ import {
 import { useTranslation } from '../../i18n';
 
 interface LandingNavbarProps {
-  currentLocale: 'ar' | 'en';
+  currentLocale?: 'ar' | 'en';
 }
 
 export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
-  const { t, dir } = useTranslation();
+  const { t, dir, locale } = useTranslation();
+  const effectiveLocale = currentLocale || locale;
   const navigate = useNavigate();
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
@@ -41,7 +42,7 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
     setColorScheme(isDark ? 'light' : 'dark');
   };
 
-  const otherLocale = currentLocale === 'ar' ? 'en' : 'ar';
+  const otherLocale = effectiveLocale === 'ar' ? 'en' : 'ar';
   const otherLocaleLabel = currentLocale === 'ar' ? 'English' : 'العربية';
 
   const scrollTo = (id: string) => {
@@ -68,7 +69,7 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
       <Container size="xl" py="sm">
         <Group justify="space-between" align="center">
           {/* Brand Logo & Title */}
-          <Link to={`/${currentLocale}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to={`/${effectiveLocale}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Group gap="xs">
               <Box
                 style={{
