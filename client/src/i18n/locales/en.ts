@@ -345,7 +345,7 @@ export const en = {
   landing: {
     nav: {
       brandTitle: 'Jadwali',
-      brandBadge: 'v1.0 • AI Constraint Engine',
+      brandBadge: 'v1.0 • CSP Constraint Engine',
       features: 'Features',
       demo: 'Live Demo',
       preview: 'Preview',
@@ -354,7 +354,7 @@ export const en = {
       openGithub: 'GitHub Repository',
     },
     hero: {
-      badge: 'AI-Powered CSP Engine • 100% Client-Side Privacy',
+      badge: 'Automated CSP Engine • 100% Client-Side Privacy',
       title: 'Jadwali — Autonomous School Timetable Generator,',
       titleHighlight: 'Generated in Seconds',
       subtitle: 'Produce conflict-free, pedagogically balanced school schedules with zero teacher or classroom collisions in seconds. Runs 100% locally in your browser with enterprise-grade privacy and speed.',
@@ -396,7 +396,7 @@ export const en = {
     features: {
       tag: 'Enterprise Capabilities',
       sectionTitle: 'Engineered for Modern Educational Institutions',
-      sectionDesc: 'An integrated suite combining autonomous AI solving power with seamless manual editing flexibility, crafted for school administrators.',
+      sectionDesc: 'An integrated suite combining autonomous CSP solving power with seamless manual editing flexibility, crafted for school administrators.',
       f1Title: 'Intelligent CSP Solver',
       f1Desc: 'Mathematically schedules periods while respecting teacher workloads, subject spacing, and daily lecture distribution.',
       f2Title: 'Drag & Drop Timetable Editor',

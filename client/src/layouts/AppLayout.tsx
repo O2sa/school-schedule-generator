@@ -115,7 +115,7 @@ export function AppLayout() {
                       size="xs"
                       visibleFrom="md"
                     >
-                      v1.0 • AI Engine
+                      v1.0 • CSP Engine
                     </Badge>
                   </Group>
                 </div>

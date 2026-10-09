@@ -73,7 +73,7 @@ describe('Bilingual Multi-Sample Demo Data Generator', () => {
       expect(subjectNames).toContain('الفيزياء');
       expect(subjectNames).toContain('الكيمياء');
       expect(subjectNames).toContain('الأحياء');
-      expect(subjectNames).toContain('علوم الحاسب والذكاء الاصطناعي');
+      expect(subjectNames).toContain('علوم الحاسب وتقنية المعلومات');
     });
 
     it('generates secondary classes in English with STEM subjects', () => {

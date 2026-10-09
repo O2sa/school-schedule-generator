@@ -168,12 +168,12 @@ export function buildArabicK12SchoolInput(numRoomsPerGrade = 2): TimetableInput 
     registerTeacher("أ. سعود الرشيد (دراسات اجتماعية)", "social")
   ];
 
-  // Computer & AI (الحاسب وتقنية المعلومات والذكاء الاصطناعي)
+  // Computer & IT (الحاسب وتقنية المعلومات)
   const computerTeachers = [
     registerTeacher("م. عادل بخش (حاسب وتقنية)", "computer"),
     // Part-time IT teacher (working Sun, Tue, Thu)
     registerTeacher("م. منير الصاعدي (حاسب - دوام جزئي)", "computer", [0, 2, 4], undefined, 4),
-    registerTeacher("م. فراس النعيمي (حاسب وذكاء اصطناعي)", "computer"),
+    registerTeacher("م. فراس النعيمي (حاسب وشبكات)", "computer"),
     registerTeacher("م. أنس البشير (حاسب وتقنية)", "computer")
   ];
 
@@ -247,7 +247,7 @@ export function buildArabicK12SchoolInput(numRoomsPerGrade = 2): TimetableInput 
         { teacherId: pickTeacher(chemistryTeachers, 4), classId: c.id, subjectName: "الكيمياء", lecturesPerWeek: 4 },
         { teacherId: pickTeacher(biologyTeachers, 4), classId: c.id, subjectName: "الأحياء", lecturesPerWeek: 4 },
         { teacherId: pickTeacher(englishTeachers, 5), classId: c.id, subjectName: "اللغة الإنجليزية", lecturesPerWeek: 5 },
-        { teacherId: pickTeacher(computerTeachers, 3), classId: c.id, subjectName: "علم البيانات والذكاء الاصطناعي", lecturesPerWeek: 3 },
+        { teacherId: pickTeacher(computerTeachers, 3), classId: c.id, subjectName: "علم البيانات والخوارزميات", lecturesPerWeek: 3 },
         { teacherId: pickTeacher(peTeachers, 2), classId: c.id, subjectName: "التربية البدنية والدفاع عن النفس", lecturesPerWeek: 2 }
       );
     }

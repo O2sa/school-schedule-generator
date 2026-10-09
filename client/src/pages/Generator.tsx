@@ -125,7 +125,7 @@ export function Generator() {
   return (
     <div>
       <PageHeader
-        categoryBadge={t('nav.generator') || 'محرك الذكاء الاصطناعي'}
+        categoryBadge={t('nav.generator') || 'محرك حل القيود (CSP)'}
         title={t('generator.title')}
         subtitle={t('generator.subtitle')}
       />

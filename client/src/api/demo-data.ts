@@ -201,7 +201,7 @@ export function generateDemoData(options: DemoDataOptions = {}): GeneratedDemoDa
 
     const computingPool = [
       registerTeacher(isEn ? 'Eng. Omar Farooq (Computer Science)' : 'م. عمر فاروق (علوم الحاسب)', isEn ? 'Computer Science' : 'علوم الحاسب'),
-      registerTeacher(isEn ? 'Eng. Lisa Chen (AI & Coding)' : 'م. لينا القاسم (ذكاء اصطناعي)', isEn ? 'Computer Science' : 'علوم الحاسب'),
+      registerTeacher(isEn ? 'Eng. Lisa Chen (Algorithms & Coding)' : 'م. لينا القاسم (خوارزميات وبرمجة)', isEn ? 'Computer Science' : 'علوم الحاسب'),
     ];
 
     const englishPool = [
@@ -224,7 +224,7 @@ export function generateDemoData(options: DemoDataOptions = {}): GeneratedDemoDa
         { name: isEn ? 'Physics' : 'الفيزياء', code: 'PHY', cat: 'science' as const, pool: physicsPool, hours: 5 },
         { name: isEn ? 'Chemistry' : 'الكيمياء', code: 'CHM', cat: 'science' as const, pool: chemistryPool, hours: 5 },
         { name: isEn ? 'Biology' : 'الأحياء', code: 'BIO', cat: 'science' as const, pool: biologyPool, hours: 4 },
-        { name: isEn ? 'Computer Science' : 'علوم الحاسب والذكاء الاصطناعي', code: 'CS', cat: 'science' as const, pool: computingPool, hours: 4 },
+        { name: isEn ? 'Computer Science' : 'علوم الحاسب وتقنية المعلومات', code: 'CS', cat: 'science' as const, pool: computingPool, hours: 4 },
         { name: isEn ? 'English Language' : 'اللغة الإنجليزية', code: 'ENG', cat: 'core' as const, pool: englishPool, hours: 5 },
         { name: isEn ? 'Social & Cultural Studies' : 'دراسات اجتماعية وثقافية', code: 'SOC', cat: 'humanities' as const, pool: humanitiesPool, hours: 4 },
         { name: isEn ? 'Physical Education' : 'التربية البدنية', code: 'PE', cat: 'activity' as const, pool: pePool, hours: 2 },
@@ -436,7 +436,7 @@ export function generateDemoData(options: DemoDataOptions = {}): GeneratedDemoDa
     const computerTeachers = [
       registerTeacher(isEn ? 'Eng. Adel Bakhsh (Computer)' : 'م. عادل بخش (حاسب وتقنية)', isEn ? 'Computer' : 'الحاسب الآلي'),
       registerTeacher(isEn ? 'Eng. Muneer (Computer - Part-Time)' : 'م. منير الصاعدي (حاسب - دوام جزئي)', isEn ? 'Computer' : 'الحاسب الآلي', [0, 2, 4], undefined, 4),
-      registerTeacher(isEn ? 'Eng. Firas Al-Nuaimi (AI & Computer)' : 'م. فراس النعيمي (حاسب وذكاء اصطناعي)', isEn ? 'Computer' : 'الحاسب الآلي'),
+      registerTeacher(isEn ? 'Eng. Firas Al-Nuaimi (CS & Networks)' : 'م. فراس النعيمي (حاسب وشبكات)', isEn ? 'Computer' : 'الحاسب الآلي'),
       registerTeacher(isEn ? 'Eng. Anas Al-Basheer (Computer)' : 'م. أنس البشير (حاسب وتقنية)', isEn ? 'Computer' : 'الحاسب الآلي'),
     ];
 
@@ -511,7 +511,7 @@ export function generateDemoData(options: DemoDataOptions = {}): GeneratedDemoDa
           { name: isEn ? 'Chemistry' : 'الكيمياء', code: 'CHM', cat: 'science' as const, pool: chemistryTeachers, hours: 4 },
           { name: isEn ? 'Biology' : 'الأحياء', code: 'BIO', cat: 'science' as const, pool: biologyTeachers, hours: 4 },
           { name: isEn ? 'English Language' : 'اللغة الإنجليزية', code: 'ENG', cat: 'core' as const, pool: englishTeachers, hours: 5 },
-          { name: isEn ? 'AI & Data Science' : 'علم البيانات والذكاء الاصطناعي', code: 'AI', cat: 'science' as const, pool: computerTeachers, hours: 3 },
+          { name: isEn ? 'Data Science & Algorithms' : 'علم البيانات والخوارزميات', code: 'DSA', cat: 'science' as const, pool: computerTeachers, hours: 3 },
           { name: isEn ? 'Physical Education' : 'التربية البدنية', code: 'PE', cat: 'activity' as const, pool: peTeachers, hours: 2 },
         ];
         for (const item of items) {
