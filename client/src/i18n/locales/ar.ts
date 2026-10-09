@@ -345,7 +345,7 @@ export const ar = {
   landing: {
     nav: {
       brandTitle: 'جَدْوَلي',
-      brandBadge: 'إصدار 1.0 • محرك حل القيود (CSP)',
+      brandBadge: 'محرك حل القيود (CSP)',
       features: 'المميزات',
       demo: 'المحاكاة الحية',
       preview: 'معاينة الجدول',

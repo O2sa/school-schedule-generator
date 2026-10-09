@@ -115,7 +115,7 @@ export function AppLayout() {
                       size="xs"
                       visibleFrom="md"
                     >
-                      v1.0 • CSP Engine
+                      {t('landing.nav.brandBadge') || 'CSP Engine'}
                     </Badge>
                   </Group>
                 </div>

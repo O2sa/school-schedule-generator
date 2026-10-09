@@ -345,7 +345,7 @@ export const en = {
   landing: {
     nav: {
       brandTitle: 'Jadwali',
-      brandBadge: 'v1.0 • CSP Constraint Engine',
+      brandBadge: 'CSP Constraint Engine',
       features: 'Features',
       demo: 'Live Demo',
       preview: 'Preview',
