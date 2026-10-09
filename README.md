@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/O2sa/school-schedule-generator/actions/workflows/deploy.yml"><img src="https://github.com/O2sa/school-schedule-generator/actions/workflows/deploy.yml/badge.svg" alt="Deploy to GitHub Pages"></a>
+  <a href="https://github.com/O2sa/Jadwali/actions/workflows/deploy.yml"><img src="https://github.com/O2sa/Jadwali/actions/workflows/deploy.yml/badge.svg" alt="Deploy to GitHub Pages"></a>
   <img src="https://img.shields.io/badge/pnpm-monorepo-orange?logo=pnpm" alt="pnpm monorepo">
   <img src="https://img.shields.io/badge/React-18-blue?logo=react" alt="React 18">
   <img src="https://img.shields.io/badge/Vite-5-purple?logo=vite" alt="Vite 5">
@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-  🌐 <strong>Live Demo:</strong> <a href="https://o2sa.github.io/school-schedule-generator/">https://o2sa.github.io/school-schedule-generator/</a>
+  🌐 <strong>Live Demo:</strong> <a href="https://o2sa.github.io/Jadwali/">https://o2sa.github.io/Jadwali/</a>
 </p>
 
 ---
@@ -105,8 +105,8 @@ school-schedule-generator/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/O2sa/school-schedule-generator.git
-   cd school-schedule-generator
+   git clone https://github.com/O2sa/Jadwali.git
+   cd Jadwali
    ```
 
 2. **Install dependencies:**

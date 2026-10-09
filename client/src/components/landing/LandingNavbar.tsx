@@ -112,7 +112,7 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
             </Button>
             <Button
               component="a"
-              href="https://github.com/O2sa/school-schedule-generator"
+              href="https://github.com/O2sa/Jadwali"
               target="_blank"
               rel="noreferrer"
               variant="subtle"
@@ -217,7 +217,7 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
           </Button>
           <Button
             component="a"
-            href="https://github.com/O2sa/school-schedule-generator"
+            href="https://github.com/O2sa/Jadwali"
             target="_blank"
             rel="noreferrer"
             variant="light"
