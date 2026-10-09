@@ -9,7 +9,7 @@
     "dev:all": "concurrently -k -p \"[{name}]\" -n \"ENGINE,SERVER,CLIENT\" -c \"yellow,blue,green\" \"pnpm --filter school-timetabling-engine watch\" \"pnpm --filter server dev\" \"pnpm --filter client dev\"",
     "build": "pnpm --filter school-timetabling-engine build && pnpm --filter client build",
     "test": "pnpm -r run test",
-    "typecheck": "pnpm -r run typecheck"
+    "typecheck": "pnpm --filter school-timetabling-engine build && pnpm -r run typecheck"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
