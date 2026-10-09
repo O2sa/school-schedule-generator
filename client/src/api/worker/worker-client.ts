@@ -33,16 +33,40 @@ export function runSolver(
   payload: SolverClientPayload,
   onProgress?: (progress: SolverProgress) => void
 ): Promise<SavedScheduleRecord> {
+  const runInline = (
+    resolve: (res: SavedScheduleRecord) => void,
+    reject: (err: unknown) => void
+  ) => {
+    try {
+      const input = buildTimetableInput(payload);
+      const result = solveTimetable(input);
+
+      if (result.status === 'SUCCESS') {
+        const saved = mapSolverResultToSavedSchedule(result, payload);
+        resolve(saved);
+      } else if (result.status === 'INFEASIBLE') {
+        const err = new Error('الجدول غير قابل للحل بالقيود الحالية');
+        (err as unknown as { diagnostics: unknown }).diagnostics = result.diagnostics;
+        reject(err);
+      } else {
+        reject(new Error('انتهت مهلة البحث دون العثور على حل متكامل'));
+      }
+    } catch (err) {
+      reject(err);
+    }
+  };
+
   return new Promise((resolve, reject) => {
     // If running in browser environment with Web Worker support:
     if (typeof window !== 'undefined' && typeof Worker !== 'undefined') {
       try {
         cancelActiveSolver();
-        const workerUrl = new URL('./solver.worker.ts', import.meta.url);
-        workerUrl.searchParams.set('t', Date.now().toString());
-        const worker = new Worker(workerUrl, {
-          type: 'module',
-        });
+        const worker = new Worker(
+          new URL('./solver.worker.ts', import.meta.url),
+          {
+            type: 'module',
+          }
+        );
         activeWorker = worker;
 
         worker.onmessage = (e: MessageEvent) => {
@@ -74,33 +98,18 @@ export function runSolver(
 
         worker.onerror = (err) => {
           activeWorker = null;
-          reject(err);
+          console.warn('[runSolver] Worker execution failed, falling back to inline solver:', err);
+          runInline(resolve, reject);
         };
 
         worker.postMessage({ type: 'START_SOLVE', payload });
         return;
-      } catch {
-        // Fallback to inline if worker creation fails
+      } catch (err) {
+        console.warn('[runSolver] Worker creation failed, falling back to inline solver:', err);
       }
     }
 
-    // Direct synchronous / microtask fallback (e.g. in Node/Vitest test runner)
-    try {
-      const input = buildTimetableInput(payload);
-      const result = solveTimetable(input);
-
-      if (result.status === 'SUCCESS') {
-        const saved = mapSolverResultToSavedSchedule(result, payload);
-        resolve(saved);
-      } else if (result.status === 'INFEASIBLE') {
-        const err = new Error('الجدول غير قابل للحل بالقيود الحالية');
-        (err as unknown as { diagnostics: unknown }).diagnostics = result.diagnostics;
-        reject(err);
-      } else {
-        reject(new Error('انتهى الوقت المحدد دون العثور على حل متكامل'));
-      }
-    } catch (err) {
-      reject(err);
-    }
+    // Direct synchronous / microtask fallback (e.g. in Node/Vitest test runner or when worker is unsupported)
+    runInline(resolve, reject);
   });
 }

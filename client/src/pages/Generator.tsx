@@ -109,7 +109,7 @@ export function Generator() {
           ? t('generator.timeoutDesc')
           : isInf
           ? t('generator.infeasibleDesc')
-          : rawMsg || t('generator.errorTitle');
+          : rawMsg || (dir === 'rtl' ? 'حدث خطأ أثناء إنشاء الجدول، يرجى المحاولة مرة أخرى.' : 'An error occurred while generating the schedule. Please try again.');
         setErrorMsg(displayMsg);
       }
     } finally {

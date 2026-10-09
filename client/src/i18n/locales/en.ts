@@ -256,7 +256,7 @@ export const en = {
     solvedAlert: 'Timetable Generated Successfully!',
     solvedDesc: 'All {count} lectures successfully scheduled with 0 collisions in a record time of {time} ms.',
     viewSchedule: 'Explore & Print Timetable',
-    errorTitle: 'Generation Failed (Infeasible)',
+    errorTitle: 'Generation Failed',
     diagnosticsTitle: 'No Feasible Timetable Found Under Current Constraints',
     diagnosticsDesc: 'The diagnostic engine identified {count} constraint conflicts preventing 100% timetable completion. Review details below to adjust quotas or constraints:',
     diagTeacherCapacity: 'Teacher Capacity Exceeded',
