@@ -112,7 +112,7 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
             </Button>
             <Button
               component="a"
-              href="https://github.com"
+              href="https://github.com/O2sa/school-schedule-generator"
               target="_blank"
               rel="noreferrer"
               variant="subtle"
@@ -214,6 +214,19 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
           </Button>
           <Button variant="light" fullWidth justify="start" onClick={() => scrollTo('preview')}>
             {t('landing.nav.preview')}
+          </Button>
+          <Button
+            component="a"
+            href="https://github.com/O2sa/school-schedule-generator"
+            target="_blank"
+            rel="noreferrer"
+            variant="light"
+            color="gray"
+            fullWidth
+            justify="start"
+            leftSection={<IconBrandGithub size={16} />}
+          >
+            GitHub
           </Button>
           <Button
             component={Link}

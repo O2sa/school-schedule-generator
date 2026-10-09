@@ -134,7 +134,7 @@ export function LandingFooter() {
             <Text fw={700} size="sm" mb="sm">{t('landing.footer.resourcesTitle')}</Text>
             <Stack gap={6}>
               <Anchor
-                href="https://github.com"
+                href="https://github.com/O2sa/school-schedule-generator"
                 target="_blank"
                 rel="noreferrer"
                 size="xs"
