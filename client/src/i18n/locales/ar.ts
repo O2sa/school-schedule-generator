@@ -32,7 +32,7 @@ export const ar = {
     generator: 'توليد الجدول',
     schedule: 'جداول الحصص',
     settings: 'إعدادات النظام',
-    appTitle: 'نظام الجداول الذكي',
+    appTitle: 'جَدْوَلي',
     brandName: 'نظام الجداول المدرسية',
   },
   common: {
@@ -344,7 +344,7 @@ export const ar = {
   },
   landing: {
     nav: {
-      brandTitle: 'مولّد الجداول المدرسية',
+      brandTitle: 'جَدْوَلي',
       brandBadge: 'إصدار 1.0 • محرك ذكي',
       features: 'المميزات',
       demo: 'المحاكاة الحية',

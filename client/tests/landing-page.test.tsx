@@ -83,13 +83,13 @@ describe('Product Landing Page & Application Route Integration', () => {
 
   it('renders Arabic landing page at /ar with Arabic branding', () => {
     renderRoute('/ar');
-    expect(screen.getAllByText(/المولّد الذكي للجداول المدرسية/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/جَدْوَلي|المولّد الذكي/i).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /فتح التطبيق|ابدأ الآن/i }).length).toBeGreaterThan(0);
   });
 
   it('renders English landing page at /en with English branding', () => {
     renderRoute('/en');
-    expect(screen.getAllByText(/Autonomous School Timetable Generator/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Jadwali/i).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /Launch App|Get Started/i }).length).toBeGreaterThan(0);
   });
 

@@ -32,7 +32,7 @@ export const en = {
     generator: 'Timetable Generator',
     schedule: 'Timetables',
     settings: 'Settings',
-    appTitle: 'Smart Timetable System',
+    appTitle: 'Jadwali',
     brandName: 'School Scheduling System',
   },
   common: {
@@ -344,7 +344,7 @@ export const en = {
   },
   landing: {
     nav: {
-      brandTitle: 'School Timetable Generator',
+      brandTitle: 'Jadwali',
       brandBadge: 'v1.0 • AI Constraint Engine',
       features: 'Features',
       demo: 'Live Demo',
@@ -355,7 +355,7 @@ export const en = {
     },
     hero: {
       badge: 'AI-Powered CSP Engine • 100% Client-Side Privacy',
-      title: 'Autonomous School Timetable Generator — Zero Conflicts,',
+      title: 'Jadwali — Autonomous School Timetable Generator,',
       titleHighlight: 'Generated in Seconds',
       subtitle: 'Produce conflict-free, pedagogically balanced school schedules with zero teacher or classroom collisions in seconds. Runs 100% locally in your browser with enterprise-grade privacy and speed.',
       ctaPrimary: 'Launch Free App',

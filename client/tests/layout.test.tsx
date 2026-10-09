@@ -25,7 +25,7 @@ describe('AppLayout Shell', () => {
       </QueryClientProvider>
     );
 
-    expect(screen.getByText('نظام الجداول الذكي')).toBeDefined();
+    expect(screen.getByText('جَدْوَلي')).toBeDefined();
     expect(screen.getByText('المعلمون')).toBeDefined();
     expect(screen.getByText('الفصول والقاعات')).toBeDefined();
     expect(screen.getByText('توليد الجدول')).toBeDefined();

@@ -27,7 +27,7 @@ function renderWithProviders(ui: React.ReactElement, locale: 'ar' | 'en' = 'ar')
 describe('Landing Page Components', () => {
   it('renders LandingNavbar with logo, links, and Launch App button', () => {
     renderWithProviders(<LandingNavbar />);
-    expect(screen.getByText(/مولّد الجداول|School Timetable/i)).toBeDefined();
+    expect(screen.getByText(/Jadwali|جَدْوَلي/i)).toBeDefined();
     expect(screen.getAllByRole('link', { name: /فتح التطبيق|Launch App/i })[0]).toBeDefined();
   });
 
@@ -84,11 +84,11 @@ describe('Landing Page Components', () => {
 
   it('renders LandingPage in Arabic mode with RTL', () => {
     renderWithProviders(<LandingPage forcedLocale="ar" />, 'ar');
-    expect(screen.getAllByText(/المولّد الذكي للجداول المدرسية/i)[0]).toBeDefined();
+    expect(screen.getAllByText(/جَدْوَلي|المولّد الذكي/i)[0]).toBeDefined();
   });
 
   it('renders LandingPage in English mode with LTR', () => {
     renderWithProviders(<LandingPage forcedLocale="en" />, 'en');
-    expect(screen.getAllByText(/Autonomous School Timetable Generator/i)[0]).toBeDefined();
+    expect(screen.getAllByText(/Jadwali/i)[0]).toBeDefined();
   });
 });
