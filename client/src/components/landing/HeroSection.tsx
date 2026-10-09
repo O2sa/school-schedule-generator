@@ -97,32 +97,42 @@ export function HeroSection() {
           </Text>
 
           {/* Action Buttons */}
-          <Group gap="md" mt="xs">
+          <Group gap="xs" mt="xs" justify="center" wrap="nowrap">
             <Button
               component={Link}
               to="/app"
-              size="lg"
+              size="md"
+              h={{ base: 38, sm: 46 }}
+              px={{ base: 12, sm: 22 }}
+              fz={{ base: 'xs', sm: 'sm' }}
               radius="md"
               variant="gradient"
               gradient={{ from: 'indigo', to: 'cyan' }}
-              rightSection={dir === 'rtl' ? <IconArrowLeft size={18} /> : <IconArrowRight size={18} />}
+              rightSection={dir === 'rtl' ? <IconArrowLeft size={16} /> : <IconArrowRight size={16} />}
               style={{
                 boxShadow: '0 6px 20px rgba(79, 70, 229, 0.35)',
                 fontWeight: 700,
+                whiteSpace: 'nowrap',
               }}
             >
               {t('landing.hero.ctaPrimary')}
             </Button>
 
             <Button
-              size="lg"
+              size="md"
+              h={{ base: 38, sm: 46 }}
+              px={{ base: 12, sm: 22 }}
+              fz={{ base: 'xs', sm: 'sm' }}
               radius="md"
               variant="default"
               onClick={() => {
                 const el = document.getElementById('demo');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              style={{ fontWeight: 600 }}
+              style={{
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+              }}
             >
               {t('landing.hero.ctaSecondary')}
             </Button>
