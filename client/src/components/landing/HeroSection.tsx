@@ -97,18 +97,18 @@ export function HeroSection() {
           </Text>
 
           {/* Action Buttons */}
-          <Group gap="xs" mt="xs" justify="center" wrap="nowrap">
+          <Group gap="sm" mt="xs" justify="center" wrap="nowrap">
             <Button
               component={Link}
               to="/app"
-              size="md"
-              h={{ base: 38, sm: 46 }}
-              px={{ base: 12, sm: 22 }}
-              fz={{ base: 'xs', sm: 'sm' }}
+              size="lg"
+              h={{ base: 38, sm: 44, md: 50 }}
+              px={{ base: 12, sm: 20, md: 28 }}
+              fz={{ base: 12.5, sm: 14, md: 16 }}
               radius="md"
               variant="gradient"
               gradient={{ from: 'indigo', to: 'cyan' }}
-              rightSection={dir === 'rtl' ? <IconArrowLeft size={16} /> : <IconArrowRight size={16} />}
+              rightSection={dir === 'rtl' ? <IconArrowLeft size={18} /> : <IconArrowRight size={18} />}
               style={{
                 boxShadow: '0 6px 20px rgba(79, 70, 229, 0.35)',
                 fontWeight: 700,
@@ -119,10 +119,10 @@ export function HeroSection() {
             </Button>
 
             <Button
-              size="md"
-              h={{ base: 38, sm: 46 }}
-              px={{ base: 12, sm: 22 }}
-              fz={{ base: 'xs', sm: 'sm' }}
+              size="lg"
+              h={{ base: 38, sm: 44, md: 50 }}
+              px={{ base: 12, sm: 20, md: 28 }}
+              fz={{ base: 12.5, sm: 14, md: 16 }}
               radius="md"
               variant="default"
               onClick={() => {
