@@ -117,4 +117,35 @@ describe('Product Landing Page & Application Route Integration', () => {
     renderRoute('/some-nonexistent-page');
     expect(screen.getAllByRole('link', { name: /launch app|فتح التطبيق|ابدأ الآن/i }).length).toBeGreaterThan(0);
   });
+
+  it('updates document title and meta description dynamically based on language', () => {
+    const { unmount: unmountAr } = renderRoute('/ar');
+    expect(document.title).toContain('جَدْوَلي');
+    expect(document.documentElement.getAttribute('lang')).toBe('ar');
+    expect(document.documentElement.getAttribute('dir')).toBe('rtl');
+    const metaDescAr = document.querySelector('meta[name="description"]');
+    expect(metaDescAr?.getAttribute('content')).toContain('جَدْوَلي');
+    unmountAr();
+
+    const { unmount: unmountEn } = renderRoute('/en');
+    expect(document.title).toContain('Jadwali');
+    expect(document.documentElement.getAttribute('lang')).toBe('en');
+    expect(document.documentElement.getAttribute('dir')).toBe('ltr');
+    const metaDescEn = document.querySelector('meta[name="description"]');
+    expect(metaDescEn?.getAttribute('content')).toContain('Jadwali');
+    unmountEn();
+  });
+
+  it('renders semantic main element and sections with navigation IDs', () => {
+    const { unmount } = renderRoute('/');
+    const mainElem = document.querySelector('main#main-content');
+    expect(mainElem).toBeDefined();
+    expect(mainElem).not.toBeNull();
+
+    expect(document.getElementById('hero')).not.toBeNull();
+    expect(document.getElementById('features')).not.toBeNull();
+    expect(document.getElementById('demo')).not.toBeNull();
+    expect(document.getElementById('preview')).not.toBeNull();
+    unmount();
+  });
 });

@@ -3,14 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>جَدْوَلي | Jadwali — Autonomous School Timetable Generator</title>
+    <meta name="title" content="جَدْوَلي | Jadwali — Autonomous School Timetable Generator" />
+    <meta name="description" content="جَدْوَلي (Jadwali) — المولّد الذكي للجداول المدرسية بنظام حل القيود (CSP). توليد جداول مدرسية خالية تماماً من التعارضات في ثوانٍ معدودة وبخصوصية تامة 100% محلياً على المتصفح. Autonomous school schedule generator." />
+    <meta name="keywords" content="جدول مدرسي, توزيع الحصص المدرسية, جداول مدرسية, جدول الحصص الأسبوعي, مولد الجداول المدرسية, jadwali, school timetable generator, school schedule maker, timetable solver, CSP schedule solver, conflict-free timetable, automated school timetable" />
+    <meta name="author" content="Jadwali Team" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="application-name" content="Jadwali" />
+    <meta name="apple-mobile-web-app-title" content="Jadwali" />
+
+    <!-- Canonical & Alternate Locales -->
+    <link rel="canonical" href="https://msii.github.io/school-schedule-generator/" />
+    <link rel="alternate" hreflang="ar" href="https://msii.github.io/school-schedule-generator/ar" />
+    <link rel="alternate" hreflang="en" href="https://msii.github.io/school-schedule-generator/en" />
+    <link rel="alternate" hreflang="x-default" href="https://msii.github.io/school-schedule-generator/" />
+
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://msii.github.io/school-schedule-generator/" />
+    <meta property="og:site_name" content="Jadwali (جَدْوَلي)" />
+    <meta property="og:title" content="جَدْوَلي | Jadwali — Autonomous School Timetable Generator" />
+    <meta property="og:description" content="صمم جداول مدرسية نموذجية خالية تماماً من تضارب المعلمين والقاعات في ثوانٍ معدودة. محرك خوارزمي متقدم يعمل محلياً في متصفحك بخصوصية وسرعة فائقة." />
+    <meta property="og:image" content="https://msii.github.io/school-schedule-generator/favicon.svg" />
+    <meta property="og:locale" content="ar_SA" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://msii.github.io/school-schedule-generator/" />
+    <meta name="twitter:title" content="جَدْوَلي | Jadwali — Autonomous School Timetable Generator" />
+    <meta name="twitter:description" content="Produce conflict-free, pedagogically balanced school schedules with zero collisions in seconds. 100% client-side privacy." />
+    <meta name="twitter:image" content="https://msii.github.io/school-schedule-generator/favicon.svg" />
+
+    <!-- Favicon & Touch Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
-    <title>جَدْوَلي | Jadwali — Autonomous School Timetable Generator</title>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-      <script>
+
+    <!-- JSON-LD Structured Data (Schema.org WebApplication) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Jadwali (جَدْوَلي)",
+      "alternateName": "Jadwali School Timetable Generator",
+      "url": "https://msii.github.io/school-schedule-generator/",
+      "description": "Autonomous school timetable and schedule generator utilizing advanced Constraint Satisfaction Problem (CSP) algorithms to create conflict-free school schedules with 100% client-side privacy.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All modern web browsers",
+      "browserRequirements": "Requires JavaScript. Requires HTML5 IndexedDB support.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Automated CSP Constraint Solver",
+        "Drag & Drop Interactive Timetable Matrix Editor",
+        "Teacher Workload & Part-Time Availability Management",
+        "Bilingual Native RTL and LTR Support (Arabic & English)",
+        "Multi-Format Universal Export (Excel, PDF, JSON)",
+        "Zero Cloud Tracking - 100% Client-Side Privacy with IndexedDB"
+      ],
+      "inLanguage": ["ar", "en"]
+    }
+    </script>
+
+    <!-- Mantine Color Scheme Pre-Hydration -->
+    <script>
       try {
         var _cs = window.localStorage.getItem("mantine-color-scheme-value");
         var cs = _cs === "light" || _cs === "dark" || _cs === "auto" ? _cs : "auto";

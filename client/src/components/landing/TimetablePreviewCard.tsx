@@ -75,7 +75,7 @@ export function TimetablePreviewCard() {
   ];
 
   return (
-    <Box id="preview" py={{ base: 40, md: 70 }}>
+    <Box component="section" id="preview" aria-label={t('landing.preview.sectionTitle')} py={{ base: 40, md: 70 }}>
       <Container size="xl">
         <Stack align="center" gap="xs" mb={40} style={{ textAlign: 'center' }}>
           <Badge size="md" variant="light" color="teal">

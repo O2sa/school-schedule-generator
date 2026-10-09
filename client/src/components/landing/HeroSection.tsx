@@ -29,6 +29,9 @@ export function HeroSection() {
 
   return (
     <Box
+      component="section"
+      id="hero"
+      aria-label={t('landing.hero.title')}
       py={{ base: 40, md: 70 }}
       style={{
         position: 'relative',

@@ -67,6 +67,8 @@ export function LiveSolverDemo() {
 
   return (
     <Card
+      id="demo"
+      aria-label={t('landing.solver.title')}
       withBorder
       radius="lg"
       p="lg"
