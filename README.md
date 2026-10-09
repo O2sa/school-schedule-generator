@@ -1,7 +1,7 @@
 # 📅 Jadwali (جَدْوَلي) — Autonomous School Timetable Generator
 
 <p align="center">
-  <img src="./assets/jadwali-showcase-mockup.jpg" alt="Jadwali — Autonomous School Timetable Generator Mockup" width="900"/>
+  <img src="./assets/jadwali_mockup.png" alt="Jadwali — Autonomous School Timetable Generator Mockup" width="900"/>
 </p>
 
 <p align="center">
@@ -31,9 +31,10 @@
 Manually crafting academic timetables that satisfy complex real-world institutional constraints—teacher availability, class periods, maximum daily workloads, room allocations, and subject spacing—is a tedious and error-prone puzzle.
 
 **Jadwali (جَدْوَلي)** automates school timetable generation using an advanced deterministic **Constraint Satisfaction Problem (CSP)** engine featuring:
-* **Backtracking with Forward Checking** for strict constraint pruning.
-* **Minimum Remaining Values (MRV)** heuristic for optimal variable ordering.
-* **Least-Constraining Value (LCV)** heuristic for value selection.
+
+- **Backtracking with Forward Checking** for strict constraint pruning.
+- **Minimum Remaining Values (MRV)** heuristic for optimal variable ordering.
+- **Least-Constraining Value (LCV)** heuristic for value selection.
 
 The platform is designed to be **100% local-first and client-driven**: all calculations run client-side inside Web Workers and persist locally in IndexedDB (zero cloud tracking, absolute institutional privacy), while also supporting an optional full-stack Express & MongoDB backend mode.
 
@@ -104,17 +105,20 @@ school-schedule-generator/
 ### Quick Start (Client / In-Browser Mode)
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/O2sa/Jadwali.git
    cd Jadwali
    ```
 
 2. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 3. **Start the development server:**
+
    ```bash
    pnpm --filter client dev
    ```
@@ -169,6 +173,7 @@ pnpm build
 The repository includes a GitHub Actions workflow in `.github/workflows/deploy.yml` that builds and deploys the application to GitHub Pages on every push to `development` or `main`.
 
 To enable it:
+
 1. Go to **Settings** > **Pages** in your GitHub repository.
 2. Under **Build and deployment** > **Source**, choose **GitHub Actions**.
 3. Push to `development` or `main` to trigger the automated build and deployment.
