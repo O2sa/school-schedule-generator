@@ -1,11 +1,13 @@
-# 📅 School Schedule Generator
+# 📅 Jadwali (جَدْوَلي) — Autonomous School Timetable Generator
 
 <p align="center">
-  <img src="./school-schedule.png" alt="School Schedule Generator Interface Screenshot" width="820"/>
+  <img src="./assets/jadwali-showcase-mockup.jpg" alt="Jadwali — Autonomous School Timetable Generator Mockup" width="900"/>
 </p>
 
 <p align="center">
-  <strong>⚡ An intelligent, conflict-free school timetable generator & interactive scheduling platform.</strong>
+  <strong>⚡ An autonomous, conflict-free school timetable generator & interactive scheduling platform powered by deterministic CSP algorithms.</strong>
+  <br />
+  <em>جَدْوَلي — المولّد الذكي للجداول المدرسية بنظام حل القيود الخوارزمي، خالي تماماً من التعارضات بخصوصية وسرعة فائقة.</em>
 </p>
 
 <p align="center">
@@ -24,39 +26,47 @@
 
 ---
 
-## 📖 About The Project
+## 📖 About Jadwali (جَدْوَلي)
 
-Manually creating academic schedules that satisfy complex real-world constraints—teacher availability, class periods, maximum daily workloads, and subject quotas—is a tedious and error-prone puzzle.
+Manually crafting academic timetables that satisfy complex real-world institutional constraints—teacher availability, class periods, maximum daily workloads, room allocations, and subject spacing—is a tedious and error-prone puzzle.
 
-**School Schedule Generator** automates academic scheduling using an intelligent constraint-satisfaction engine with forward checking, minimum remaining values (MRV), and least-constraining value (LCV) heuristics.
+**Jadwali (جَدْوَلي)** automates school timetable generation using an advanced deterministic **Constraint Satisfaction Problem (CSP)** engine featuring:
+* **Backtracking with Forward Checking** for strict constraint pruning.
+* **Minimum Remaining Values (MRV)** heuristic for optimal variable ordering.
+* **Least-Constraining Value (LCV)** heuristic for value selection.
 
-The platform is designed to be **local-first and client-driven**: it can run completely inside the browser using Web Workers and IndexedDB (no database setup required), while also supporting an optional full-stack Express & MongoDB backend mode.
+The platform is designed to be **100% local-first and client-driven**: all calculations run client-side inside Web Workers and persist locally in IndexedDB (zero cloud tracking, absolute institutional privacy), while also supporting an optional full-stack Express & MongoDB backend mode.
+
+<p align="center">
+  <img src="./assets/jadwali-timetable-mockup.jpg" alt="Jadwali Interactive Timetable Matrix Preview" width="900"/>
+</p>
 
 ---
 
-## ✨ Key Features
+## ✨ Key Capabilities
 
-- ⚡ **Background Solver Engine**: Timetables are generated inside a dedicated Web Worker using deterministic constraint backtracking, keeping the UI responsive at 60 FPS even during intensive calculations.
-- 💾 **Local-First & Offline Ready**: All data (teachers, classes, subjects, constraints, and generated schedules) is saved locally in IndexedDB via Dexie.js. No server installation needed.
-- 🌍 **Full Bilingual Localization (English & Arabic RTL)**:
-  - Automatic system language detection (`navigator.language`) with Arabic priority.
-  - Native RTL/LTR layout transitions powered by Mantine's `DirectionProvider`.
+- ⚡ **Automated CSP Solver Engine**: Timetables are generated inside a dedicated background Web Worker using mathematically proven constraint resolution, ensuring conflict-free schedules and 60 FPS UI responsiveness.
+- 🔒 **100% Client-Side Privacy**: All institutional data (teachers, classes, subjects, constraints, and schedules) stays securely on your machine in IndexedDB via Dexie.js. No telemetry or server dependencies required.
+- 🌍 **Native Bilingual RTL & LTR Support**:
+  - Full Arabic and English localization with automatic locale detection.
+  - Native RTL/LTR transitions powered by Mantine's `DirectionProvider`.
   - Modern Arabic typography with Cairo and Tajawal Google fonts.
-  - Interactive language switcher in the navigation bar.
-- 🌓 **Adaptive System Dark / Light Theme**:
-  - Automatically matches system color scheme (`prefers-color-scheme`).
-  - Refined high-contrast dark mode styling for timetable grids and teacher availability matrices.
-  - Instant theme toggle in the header.
-- 📅 **Interactive Timetable Editor & Multi-View**:
-  - Responsive multi-view tabs: **Class Timetable**, **Teacher Timetable**, and **All Classes Master View**.
-  - Interactive drag/swap of lecture slots with real-time constraint validation.
+  - Interactive one-click language switcher in the header.
+- 🌓 **Adaptive System Dark & Light Themes**:
+  - Automatically honors system preferences (`prefers-color-scheme`) with manual toggle.
+  - Elevated glassmorphic styling, high-contrast dark timetable matrix, and accessible status indicators.
+- 📅 **Interactive Drag & Drop Timetable Matrix**:
+  - Multi-view inspection: **Class Timetable**, **Teacher Timetable**, and **Master School Matrix**.
+  - Move and swap lecture periods with real-time constraint validation, visual collision cues, and multi-step Undo/Redo.
 - ⚙️ **Customizable Academic Calendar**:
   - Configurable working days per week (5, 6, or 7 days).
-  - Flexible lecture periods per day (e.g. 6 to 8 periods).
-  - Fine-grained teacher availability slot matrix and weekly period capacity enforcement.
+  - Flexible daily lecture periods (6 to 8 periods).
+  - Teacher availability matrices, part-time schedules, and weekly workload capacity enforcement.
+- 📤 **Multi-Format Universal Export**:
+  - One-click export to formatted Excel spreadsheets, print-ready PDFs, and portable JSON backups.
 - 🚀 **Automated GitHub Pages CI/CD**:
-  - Automated deployment workflow via GitHub Actions (`.github/workflows/deploy.yml`).
-  - SPA 404 fallback routing for seamless page refreshes on GitHub Pages.
+  - Continuous integration and deployment via GitHub Actions (`.github/workflows/deploy.yml`).
+  - SPA 404 fallback routing for reliable direct link navigation.
 
 ---
 
@@ -65,16 +75,16 @@ The platform is designed to be **local-first and client-driven**: it can run com
 ```text
 school-schedule-generator/
 ├── packages/
-│   └── school-timetabling-engine/  # Standalone solver package (CJS, ESM, d.ts)
-├── client/                         # React 18 + Vite + Mantine UI v7 frontend
+│   └── school-timetabling-engine/  # Standalone deterministic CSP solver package (CJS, ESM, d.ts)
+├── client/                         # React 18 + Vite + Mantine UI v7 client
 │   ├── src/
-│   │   ├── api/                    # Data context (Local IndexedDB or Server API)
-│   │   ├── components/             # Reusable UI components & modals
-│   │   ├── i18n/                   # Bilingual translations & RTL provider
-│   │   ├── layouts/                # Responsive navigation & header shell
-│   │   ├── pages/                  # Dashboard, Teachers, Classes, Generator, etc.
-│   │   └── theme/                  # Mantine theme & dark mode tokens
-│   └── tests/                      # Vitest + Testing Library test suite
+│   │   ├── api/                    # Data context (Local IndexedDB Dexie / Remote API)
+│   │   ├── components/             # Reusable UI components, modals, and landing sections
+│   │   ├── i18n/                   # Bilingual translations & RTL context
+│   │   ├── layouts/                # Glassmorphic AppLayout & floating sidebar navigation
+│   │   ├── pages/                  # LandingPage, Dashboard, Teachers, Classes, Generator, etc.
+│   │   └── theme/                  # Brand tokens, colors, and dark mode styling
+│   └── tests/                      # Vitest + React Testing Library test suite
 ├── server/                         # Optional Node.js + Express REST API
 │   ├── controllers/                # Route controllers
 │   ├── models/                     # Mongoose models (Teacher, Class, Subject)
@@ -104,26 +114,26 @@ school-schedule-generator/
    pnpm install
    ```
 
-3. **Start the client development server:**
+3. **Start the development server:**
    ```bash
    pnpm --filter client dev
    ```
 
 4. **Open your browser:**
-   Navigate to `http://localhost:5173` to use the application with local storage and Web Worker solving.
+   Navigate to `http://localhost:5173` to explore the landing page and start generating schedules.
 
 ---
 
-### Optional: Running Full-Stack with Server & MongoDB
+### Optional: Full-Stack Mode with Express & MongoDB
 
-If you wish to use the centralized MongoDB backend:
+If you prefer using a centralized database:
 
-1. **Ensure MongoDB is running locally** (default `mongodb://localhost:27017/school-scheduler`).
-2. **Start the server:**
+1. **Ensure MongoDB is running** (`mongodb://localhost:27017/school-scheduler`).
+2. **Start the API server:**
    ```bash
    pnpm --filter server dev
    ```
-3. **Run all services concurrently:**
+3. **Run both concurrently:**
    ```bash
    pnpm dev:all
    ```
@@ -145,40 +155,23 @@ pnpm --filter client test
 pnpm --filter school-timetabling-engine test
 ```
 
----
-
-## 📦 Building for Production
-
-Compile all packages and generate optimized static assets for deployment:
+Typecheck and production build:
 
 ```bash
+pnpm --filter client typecheck
 pnpm build
 ```
 
-The production bundle will be generated in `client/dist/`, complete with `index.html` and `404.html` ready for static hosting.
-
 ---
 
-## 🚢 GitHub Pages Deployment
+## 🚢 Deployment
 
-The repository includes a GitHub Actions workflow in `.github/workflows/deploy.yml` that automatically builds and publishes the website to GitHub Pages on every push to `development` or `main`.
+The repository includes a GitHub Actions workflow in `.github/workflows/deploy.yml` that builds and deploys the application to GitHub Pages on every push to `development` or `main`.
 
 To enable it:
-1. Navigate to **Settings** > **Pages** in your GitHub repository.
-2. Under **Build and deployment** > **Source**, select **GitHub Actions**.
-3. Push to your repository to trigger the automated deployment.
-
----
-
-## 🤝 Contributing
-
-Contributions and ideas to enhance the constraint algorithm or UI are welcome!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Go to **Settings** > **Pages** in your GitHub repository.
+2. Under **Build and deployment** > **Source**, choose **GitHub Actions**.
+3. Push to `development` or `main` to trigger the automated build and deployment.
 
 ---
 
