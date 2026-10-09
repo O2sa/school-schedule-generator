@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://msii.github.io/school-schedule-generator/sitemap.xml
+Sitemap: https://o2sa.github.io/Jadwali/sitemap.xml

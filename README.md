@@ -74,7 +74,7 @@ The platform is designed to be **100% local-first and client-driven**: all calcu
 ## 🏗️ Architecture & Monorepo Structure
 
 ```text
-school-schedule-generator/
+Jadwali/
 ├── packages/
 │   └── school-timetabling-engine/  # Standalone deterministic CSP solver package (CJS, ESM, d.ts)
 ├── client/                         # React 18 + Vite + Mantine UI v7 client
