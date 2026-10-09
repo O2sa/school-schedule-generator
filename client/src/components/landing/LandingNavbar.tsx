@@ -10,6 +10,7 @@ import {
   Burger,
   Drawer,
   Stack,
+  Divider,
   useMantineColorScheme,
   useComputedColorScheme,
 } from '@mantine/core';
@@ -66,15 +67,16 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
         transition: 'all 0.25s ease',
       }}
     >
-      <Container size="xl" py="sm">
-        <Group justify="space-between" align="center">
+      <Container size="xl" py="sm" px={{ base: 'xs', sm: 'md' }}>
+        <Group justify="space-between" align="center" wrap="nowrap">
           {/* Brand Logo & Title */}
           <Link to={`/${effectiveLocale}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Group gap="xs">
+            <Group gap="xs" wrap="nowrap">
               <Box
                 style={{
                   width: 38,
                   height: 38,
+                  minWidth: 38,
                   borderRadius: 10,
                   background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
                   display: 'flex',
@@ -87,11 +89,11 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
                 <IconCalendarEvent size={22} stroke={2.2} />
               </Box>
               <div>
-                <Group gap={6} align="center">
+                <Group gap={6} align="center" wrap="nowrap">
                   <Text fw={800} size="md" style={{ letterSpacing: '-0.3px', lineHeight: 1.2 }}>
                     {t('landing.nav.brandTitle')}
                   </Text>
-                  <Badge size="xs" variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}>
+                  <Badge size="xs" variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }} visibleFrom="sm">
                     {t('landing.nav.brandBadge')}
                   </Badge>
                 </Group>
@@ -125,7 +127,7 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
           </Group>
 
           {/* Actions: Lang toggle, Theme, Launch CTA */}
-          <Group gap="xs">
+          <Group gap="xs" wrap="nowrap">
             {/* Language Switcher Route Link */}
             <Button
               variant="default"
@@ -134,8 +136,15 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
               leftSection={<IconLanguage size={16} />}
               onClick={() => navigate(`/${otherLocale}`)}
               style={{ fontWeight: 600 }}
+              px={{ base: 8, sm: 'xs' }}
+              aria-label="Toggle language"
             >
-              {otherLocaleLabel}
+              <Text component="span" size="xs" fw={700} visibleFrom="sm">
+                {otherLocaleLabel}
+              </Text>
+              <Text component="span" size="xs" fw={800} hiddenFrom="sm">
+                {effectiveLocale === 'ar' ? 'EN' : 'ع'}
+              </Text>
             </Button>
 
             {/* Dark / Light Toggle */}
@@ -149,7 +158,7 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
               {isDark ? <IconSun size={18} color="#f59e0b" /> : <IconMoon size={18} color="#4f46e5" />}
             </ActionIcon>
 
-            {/* Launch App Primary CTA */}
+            {/* Launch App Primary CTA (Desktop/Tablet) */}
             <Button
               component={Link}
               to="/app"
@@ -205,7 +214,29 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
         padding="md"
         size="xs"
       >
-        <Stack gap="sm" mt="md">
+        <Stack gap="sm" mt="xs">
+          {/* Prominent Launch App CTA on Mobile */}
+          <Button
+            component={Link}
+            to="/app"
+            size="md"
+            radius="md"
+            variant="gradient"
+            gradient={{ from: 'indigo', to: 'cyan' }}
+            rightSection={dir === 'rtl' ? <IconArrowLeft size={16} /> : <IconArrowRight size={16} />}
+            fullWidth
+            onClick={() => setOpened(false)}
+            style={{
+              boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)',
+              fontWeight: 700,
+            }}
+            mb="xs"
+          >
+            {t('landing.nav.launchApp')}
+          </Button>
+
+          <Divider my="xs" />
+
           <Button variant="light" fullWidth justify="start" onClick={() => scrollTo('features')}>
             {t('landing.nav.features')}
           </Button>
@@ -227,17 +258,6 @@ export function LandingNavbar({ currentLocale }: LandingNavbarProps) {
             leftSection={<IconBrandGithub size={16} />}
           >
             GitHub
-          </Button>
-          <Button
-            component={Link}
-            to="/app"
-            fullWidth
-            variant="gradient"
-            gradient={{ from: 'indigo', to: 'cyan' }}
-            rightSection={dir === 'rtl' ? <IconArrowLeft size={16} /> : <IconArrowRight size={16} />}
-            mt="md"
-          >
-            {t('landing.nav.launchApp')}
           </Button>
         </Stack>
       </Drawer>

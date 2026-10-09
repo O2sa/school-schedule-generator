@@ -65,8 +65,8 @@ export function FeatureGrid() {
   ];
 
   return (
-    <Box component="section" id="features" aria-label={t('landing.features.sectionTitle')} py={{ base: 40, md: 70 }}>
-      <Container size="xl">
+    <Box component="section" id="features" aria-label={t('landing.features.sectionTitle')} py={{ base: 30, sm: 50, md: 70 }}>
+      <Container size="xl" px={{ base: "xs", sm: "md" }}>
         <Stack align="center" gap="xs" mb={40} style={{ textAlign: 'center' }}>
           <Badge size="md" variant="light" color="indigo">
             {t('landing.features.tag')}

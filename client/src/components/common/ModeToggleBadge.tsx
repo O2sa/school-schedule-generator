@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Badge, Button, Group, Modal, Stack, Text, ThemeIcon } from '@mantine/core';
+import { Badge, Button, Group, Modal, Stack, Text, ThemeIcon, Tooltip } from '@mantine/core';
 import { IconDeviceDesktop, IconCloud, IconArrowsExchange } from '@tabler/icons-react';
 import { useStorageMode } from '../../api/data-context';
 import { useTranslation } from '../../i18n';
@@ -16,24 +16,31 @@ export function ModeToggleBadge() {
     setOpened(false);
   };
 
+  const modeLabel = isClient ? t('common.modeClient') : t('common.modeServer');
+
   return (
     <>
-      <Badge
-        size="lg"
-        variant="light"
-        color={isClient ? 'teal' : 'blue'}
-        style={{ cursor: 'pointer', textTransform: 'none' }}
-        leftSection={
-          isClient ? (
-            <IconDeviceDesktop size={14} style={{ display: 'block' }} />
-          ) : (
-            <IconCloud size={14} style={{ display: 'block' }} />
-          )
-        }
-        onClick={() => setOpened(true)}
-      >
-        {isClient ? t('common.modeClient') : t('common.modeServer')}
-      </Badge>
+      <Tooltip label={modeLabel}>
+        <Badge
+          size="lg"
+          variant="light"
+          color={isClient ? 'teal' : 'blue'}
+          style={{ cursor: 'pointer', textTransform: 'none' }}
+          px={{ base: 8, sm: 12 }}
+          leftSection={
+            isClient ? (
+              <IconDeviceDesktop size={14} style={{ display: 'block' }} />
+            ) : (
+              <IconCloud size={14} style={{ display: 'block' }} />
+            )
+          }
+          onClick={() => setOpened(true)}
+        >
+          <Text component="span" size="xs" fw={700} visibleFrom="sm">
+            {modeLabel}
+          </Text>
+        </Badge>
+      </Tooltip>
 
       <Modal
         opened={opened}

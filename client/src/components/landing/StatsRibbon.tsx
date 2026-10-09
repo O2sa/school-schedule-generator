@@ -41,7 +41,7 @@ export function StatsRibbon() {
   ];
 
   return (
-    <Container component="section" id="stats" aria-label="Key Performance Metrics" size="xl" py={{ base: 30, md: 50 }}>
+    <Container component="section" id="stats" aria-label="Key Performance Metrics" size="xl" px={{ base: "xs", sm: "md" }} py={{ base: 30, md: 50 }}>
       <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
         {stats.map((s, idx) => (
           <Card

@@ -34,7 +34,7 @@ export function LandingFooter() {
         paddingBottom: 40,
       }}
     >
-      <Container size="xl">
+      <Container size="xl" px={{ base: 'xs', sm: 'md' }}>
         {/* Pre-Footer Action Box */}
         <Box
           p="xl"

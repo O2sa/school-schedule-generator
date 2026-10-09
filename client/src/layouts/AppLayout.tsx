@@ -80,8 +80,8 @@ export function AppLayout() {
           transition: 'all 0.2s ease',
         }}
       >
-        <Group h="100%" px="md" justify="space-between">
-          <Group gap="sm">
+        <Group h="100%" px="xs" justify="space-between">
+          <Group gap="xs">
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             <RouterNavLink
               to={landingHref}

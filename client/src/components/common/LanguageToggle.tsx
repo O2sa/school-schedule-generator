@@ -15,10 +15,13 @@ export function LanguageToggle() {
         leftSection={<IconLanguage size={16} />}
         aria-label="Toggle Language"
         radius="md"
-        px="xs"
+        px={{ base: 8, sm: 'xs' }}
       >
-        <Text size="xs" fw={700}>
+        <Text size="xs" fw={700} visibleFrom="sm">
           {locale === 'ar' ? 'English' : 'العربية'}
+        </Text>
+        <Text size="xs" fw={800} hiddenFrom="sm">
+          {locale === 'ar' ? 'EN' : 'ع'}
         </Text>
       </Button>
     </Tooltip>

@@ -32,7 +32,7 @@ export function HeroSection() {
       component="section"
       id="hero"
       aria-label={t('landing.hero.title')}
-      py={{ base: 40, md: 70 }}
+      py={{ base: 30, sm: 50, md: 70 }}
       style={{
         position: 'relative',
         overflow: 'hidden',
@@ -41,7 +41,7 @@ export function HeroSection() {
           : 'radial-gradient(circle at 50% 10%, rgba(79, 70, 229, 0.08) 0%, rgba(255, 255, 255, 0) 70%)',
       }}
     >
-      <Container size="xl">
+      <Container size="xl" px={{ base: 'xs', sm: 'md' }}>
         <Stack align="center" gap="lg" style={{ textAlign: 'center' }}>
           {/* Top Innovation Pill */}
           <Badge
@@ -65,7 +65,7 @@ export function HeroSection() {
           <Title
             order={1}
             style={{
-              fontSize: 'clamp(2rem, 4.5vw, 3.6rem)',
+              fontSize: 'clamp(1.75rem, 5.5vw, 3.6rem)',
               fontWeight: 900,
               lineHeight: 1.15,
               letterSpacing: '-1px',

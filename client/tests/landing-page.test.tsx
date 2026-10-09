@@ -118,6 +118,13 @@ describe('Product Landing Page & Application Route Integration', () => {
     expect(screen.getAllByRole('link', { name: /launch app|فتح التطبيق|ابدأ الآن/i }).length).toBeGreaterThan(0);
   });
 
+
+  it('renders responsive navigation with language toggle and mobile burger', () => {
+    renderRoute('/en');
+    expect(screen.getByRole('button', { name: /toggle navigation/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /toggle language/i })).toBeDefined();
+  });
+
   it('updates document title and meta description dynamically based on language', () => {
     const { unmount: unmountAr } = renderRoute('/ar');
     expect(document.title).toContain('جَدْوَلي');
