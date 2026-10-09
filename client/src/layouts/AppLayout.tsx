@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
+import { Outlet, Link, NavLink as RouterNavLink, useLocation } from 'react-router-dom';
 import {
   AppShell,
   Burger,
@@ -185,7 +185,7 @@ export function AppLayout() {
               return (
                 <NavLink
                   key={item.to}
-                  component={RouterNavLink}
+                  component={Link}
                   to={item.to}
                   label={item.label}
                   leftSection={<Icon size={19} stroke={isActive ? 2.2 : 1.6} />}
